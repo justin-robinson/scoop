@@ -1,0 +1,3 @@
+<?
+
+Database_Connection::disconnect();
