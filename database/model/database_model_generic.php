@@ -24,14 +24,21 @@ class Database_Model_Generic {
         // log the query
         self::$sqlHistoryArray[] = $sql;
 
+        // start sql transaction
+        Database_Connection::begin_transaction();
+
         // run the query
         $result = Database_Connection::query($sql);
 
         // check for errors
         if ( ! $result ) {
+            Database_Connection::rollback();
             trigger_error('MySQL Error Number ( ' . Database_Connection::errno() . ' )' . Database_Connection::error() );
             var_dump($sql);
         }
+
+        // commit this transaction
+        Database_Connection::commit();
 
         // was this a select?
         $hasRows = is_object($result) && is_a($result, 'mysqli_result');
@@ -87,6 +94,10 @@ class Database_Model_Generic {
             $this->orignalDBValues[$columnName] = $this->$columnName;
         }
 
+    }
+
+    public static function strip_comments($sql) {
+        // TODO implement strip comments function
     }
 }
 

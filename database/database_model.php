@@ -18,12 +18,12 @@ abstract class Database_Model extends Database_Model_Generic {
     public static function fetch( $limit = 1000 ) {
 
         // build sql
-        $sql = "
-        SELECT
-            *
-        FROM
-          " . static::get_sql_table_name() . "
-        LIMIT {$limit}";
+        $sql =
+            "SELECT
+                *
+            FROM
+              " . static::get_sql_table_name() . "
+            LIMIT {$limit}";
 
         // run sql
         return self::query($sql);

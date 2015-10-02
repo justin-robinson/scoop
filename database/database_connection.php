@@ -33,6 +33,9 @@ class Database_Connection {
                     . self::$mysqli->connect_error);
             }
 
+            // we will manually commit our sql changes
+            self::autocommit(false);
+
         } else {
             throw new Error('failed to open db credentials file at ' . $configFilepath);
         }

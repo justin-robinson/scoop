@@ -10,8 +10,6 @@ foreach ( $frameworkConfig as $option => $value ) {
     $_SERVER['R_' . $option] = $value;
 }
 
-var_dump($_SERVER);die;
-
 // the autoloader
 require_once($_SERVER['R_DOCUMENT_ROOT'] . '/autoloader.php');
 
