@@ -1,5 +1,6 @@
 <?
 
+require_once dirname(__FILE__) . "/../base.php";
 /*
  * Generates db models from all user created schemas
  */
@@ -55,8 +56,8 @@ foreach ( $rows as $index => $row ) {
         $coreName = 'DBCore_' . $safeSchema . '_' . $safeTable;
 
         // create file path
-        $filepath = strtolower('/usr/share/www/db/' . $safeSchema . '/' . $name . '.php');
-        $coreFilepath = strtolower('/usr/share/www/dbcore/' . $safeSchema . '/' . $coreName . '.php');
+        $filepath = strtolower( $_SERVER['R_DOCUMENT_ROOT'] . '/db/' . $safeSchema . '/' . $name . '.php');
+        $coreFilepath = strtolower($_SERVER['R_DOCUMENT_ROOT'] . '/dbcore/' . $safeSchema . '/' . $coreName . '.php');
 
         $generator = new Class_Generator(new Class_Class($name, $coreName), $filepath);
         $coreGenerator = new Class_Generator(new Class_Class($coreName, 'Database_Model'), $coreFilepath);

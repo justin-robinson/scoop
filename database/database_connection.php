@@ -9,7 +9,7 @@ class Database_Connection {
     static function connect() {
 
         // configs file is here
-        $configFilepath = $_SERVER['DOCUMENT_ROOT'] . '/configs/db.json';
+        $configFilepath = $_SERVER['R_DOCUMENT_ROOT'] . '/configs/db.json';
 
         // open file
         $config = file_get_contents($configFilepath);
