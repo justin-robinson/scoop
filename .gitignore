@@ -1,3 +1,5 @@
 .idea
 db
 dbcore
+sites/*
+!sites/README.md
