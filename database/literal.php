@@ -1,6 +1,8 @@
 <?
 
-class Database_Literal {
+namespace Database;
+
+class Literal {
 
     public $value;
 

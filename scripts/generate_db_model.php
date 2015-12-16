@@ -1,6 +1,7 @@
 <?
 
 require_once dirname(__FILE__) . "/../base.php";
+
 /*
  * Generates db models from all user created schemas
  */
@@ -20,7 +21,7 @@ $getAllSchemas = "
              table_name,
              ordinal_position";
 
-$rows = Database_Model_Generic::query($getAllSchemas);
+$rows = \Database\Model\Generic::query($getAllSchemas);
 $schema = null;
 $table = null;
 
@@ -52,19 +53,21 @@ foreach ( $rows as $index => $row ) {
         }
 
         // create class name
-        $name = 'DB_' . $safeSchema . '_' . $safeTable;
-        $coreName = 'DBCore_' . $safeSchema . '_' . $safeTable;
+        $namespace = 'DB\\' . $safeSchema;
+        $name = $safeTable;
+        $coreNamespace = 'DBCore\\' . $safeSchema;
+        $coreName = $safeTable;
 
         // create file path
         $filepath = strtolower( $_SERVER['R_DOCUMENT_ROOT'] . '/db/' . $safeSchema . '/' . $name . '.php');
         $coreFilepath = strtolower($_SERVER['R_DOCUMENT_ROOT'] . '/dbcore/' . $safeSchema . '/' . $coreName . '.php');
 
-        $generator = new Class_Generator(new Class_Class($name, $coreName), $filepath);
-        $coreGenerator = new Class_Generator(new Class_Class($coreName, 'Database_Model'), $coreFilepath);
+        $generator = new \ClassGen\ClassGenGenerator(new \ClassGen\ClassGenClass($name, '\\' . $coreNamespace . '\\' .$coreName, $namespace), $filepath);
+        $coreGenerator = new \ClassGen\ClassGenGenerator(new \ClassGen\ClassGenClass($coreName, '\Database\Model', $coreNamespace), $coreFilepath);
 
         // add table and schema name
-        $schemaProperty = new Class_Property('schema', $row->TABLE_SCHEMA);
-        $tableProperty = new Class_Property('table', $row->TABLE_NAME);
+        $schemaProperty = new \ClassGen\ClassGenProperty('schema', $row->TABLE_SCHEMA);
+        $tableProperty = new \ClassGen\ClassGenProperty('table', $row->TABLE_NAME);
 
         $schemaProperty->set_const();
         $tableProperty->set_const();
@@ -99,7 +102,7 @@ foreach ( $rows as $index => $row ) {
     }
 
     // add this column to the current file
-    $property = new Class_Property($row->COLUMN_NAME);
+    $property = new \ClassGen\ClassGenProperty($row->COLUMN_NAME);
 
     $coreGenerator->addProperty($property);
 
@@ -109,14 +112,14 @@ foreach ( $rows as $index => $row ) {
     // add special properties
     if ( $row->COLUMN_KEY === 'PRI' ) {
         $primaryKeys[] = $row->COLUMN_NAME;
-        $DBColumnsArray[$row->COLUMN_NAME][] = Database_Model::PRIMARY_KEY;
+        $DBColumnsArray[$row->COLUMN_NAME][] = \Database\Model::PRIMARY_KEY;
     }
 
     // parse extra column properties into array
     $extras = explode(',', $row->EXTRA);
     if ( in_array('auto_increment', $extras) ) {
         $autoIncrementColumn = $row->COLUMN_NAME;
-        $DBColumnsArray[$row->COLUMN_NAME][] = Database_Model::AUTO_INCREMENT;
+        $DBColumnsArray[$row->COLUMN_NAME][] = \Database\Model::AUTO_INCREMENT;
     }
 
 
@@ -151,15 +154,15 @@ function save () {
     global $generator, $coreGenerator, $autoIncrementColumn, $primaryKeys, $DBColumnsArray;
 
     // add the primary keys and autoincrement columns
-    $AIProperty = new Class_Property('autoIncrementColumn', $autoIncrementColumn);
+    $AIProperty = new \ClassGen\ClassGenProperty('autoIncrementColumn', $autoIncrementColumn);
     $AIProperty->set_const();
 
-    $primaryKeys = new Class_Property('primaryKeys', $primaryKeys);
+    $primaryKeys = new \ClassGen\ClassGenProperty('primaryKeys', $primaryKeys);
     $primaryKeys->set_const();
 
     $coreGenerator->addProperty($AIProperty);
     $coreGenerator->addProperty($primaryKeys);
-    $coreGenerator->addProperty(new Class_Property('DBColumnsArray', $DBColumnsArray));
+    $coreGenerator->addProperty(new \ClassGen\ClassGenProperty('DBColumnsArray', $DBColumnsArray));
 
     // save file if we have one
     if (isset($coreGenerator)) {

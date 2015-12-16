@@ -1,6 +1,8 @@
 <?
 
-abstract class Class_Abstract {
+namespace ClassGen;
+
+abstract class ClassGenAbstract {
 
     const VISIBILITY_PUBLIC = 0;
     const VISIBILITY_PRIVATE = 1;

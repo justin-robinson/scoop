@@ -1,17 +1,35 @@
 <?
 
-class Class_Class extends Class_Abstract {
+namespace ClassGen;
+
+class ClassGenClass extends \ClassGen\ClassGenAbstract {
 
     public $name;
     public $extends;
     public $implements;
     public $phpDoc = '';
+    public $namespace;
 
-    public function __construct ( $name, $extends = null, $implements = [] ) {
+    public function __construct ( $name, $extends = null, $namespace = '', $implements = [] ) {
         $this->name = $name;
         $this->extends = $extends;
+        $this->namespace = $namespace;
         $this->implements = $implements;
     }
+
+    public function set_name ( $name ) {
+        $this->name = $name;
+    }
+    public function set_extends ( $extends ) {
+        $this->extends = $extends;
+    }
+    public function set_implements ( array $implements ) {
+        $this->implements = $implements;
+    }
+    public function set_namespace ( $namespace ) {
+        $this->namespace = $namespace;
+    }
+
 
     public function getHeader() : string {
 
@@ -40,6 +58,7 @@ class Class_Class extends Class_Abstract {
         $header =
 "<?
 {$this->phpDoc}
+namespace {$this->namespace};
 " . $classModifier . "class {$this->name} ";
 
         // class extends

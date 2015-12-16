@@ -1,6 +1,6 @@
 <?
-
-class Database_Connection {
+namespace Database;
+class Connection {
 
     // the mysqli resource
     private static $mysqli;
@@ -21,7 +21,7 @@ class Database_Connection {
             $config = json_decode($config);
 
             // attempt to connect to the db
-            self::$mysqli = new mysqli(
+            self::$mysqli = new \mysqli(
                 $config->host,
                 $config->user,
                 $config->password,

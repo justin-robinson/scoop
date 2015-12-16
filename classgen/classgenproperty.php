@@ -1,6 +1,8 @@
 <?
 
-class Class_Property extends Class_Abstract {
+namespace ClassGen;
+
+class ClassGenProperty extends \ClassGen\ClassGenAbstract {
 
     public $name;
     public $value;
@@ -20,10 +22,10 @@ class Class_Property extends Class_Abstract {
         $propertyValue = var_export($this->value, true);
 
         if ( is_array($this->value) ) {
-            $propertyValue = PHP_EOL . preg_replace('/^/m', Class_Generator::$indentation . Class_Generator::$indentation, $propertyValue);
+            $propertyValue = PHP_EOL . preg_replace('/^/m', \ClassGen\ClassGenGenerator::$indentation . \ClassGen\ClassGenGenerator::$indentation, $propertyValue);
         }
 
-        $line = Class_Generator::$indentation;
+        $line = \ClassGen\ClassGenGenerator::$indentation;
 
         if ( $this->is_const() ) {
             $line .= 'const ';

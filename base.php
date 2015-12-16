@@ -14,7 +14,7 @@ foreach ( $frameworkConfig as $option => $value ) {
 require_once($_SERVER['R_DOCUMENT_ROOT'] . '/autoloader.php');
 
 // connect to mysql server
-Database_Connection::connect();
+\Database\Connection::connect();
 
 function serverError($message) {
     header($_SERVER['SERVER_PROTOCOL'] . '500 Internal Server Error', true, 500);
@@ -24,7 +24,7 @@ function serverError($message) {
 
 // makes sql safe
 function r3a($sqlString, $quoteChar = "'") {
-    $sqlString = Database_Connection::real_escape_string($sqlString);
+    $sqlString = \Database\Connection::real_escape_string($sqlString);
     return $quoteChar . addslashes($sqlString) . $quoteChar;
 }
 

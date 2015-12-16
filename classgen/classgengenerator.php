@@ -3,8 +3,9 @@
 /*
  * Generates and saves a php class to a given file name
  */
+namespace ClassGen;
 
-class Class_Generator {
+class ClassGenGenerator {
 
     // file indentation to be used
     public static $indentation = '    ';
@@ -18,14 +19,14 @@ class Class_Generator {
     public $functionsArray = [];
     public $filepath;
 
-    public function __construct ( Class_Class $class, $filepath = null ) {
+    public function __construct ( \ClassGen\ClassGenClass $class, $filepath = null ) {
 
         $this->class = $class;
         $this->filepath = $filepath;
 
     }
 
-    public function addProperty ( Class_Property $property ) {
+    public function addProperty ( \ClassGen\ClassGenProperty $property ) {
 
         // add property to the right array
         if ( $property->isStatic ) {

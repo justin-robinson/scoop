@@ -1,22 +1,22 @@
 <?
 
-function r_autoloader( $class ) {
+function r_autoloader( $fullClassPath ) {
 
     // class names can be uppercase but files are lower case
-    $class = strtolower($class);
+    $fullClassPath = strtolower($fullClassPath);
 
     // an array containing each folder to get to the file
-    $foldersArray = explode('_', $class);
+    $foldersArray = explode('\\', $fullClassPath);
 
-    // last folder is just the file name so we can kill it
-    array_pop($foldersArray);
+    // last item is the file and class name
+    $className = array_pop($foldersArray);
 
     // glue folders together
     $folders = implode('/', $foldersArray);
 
     // full path to the file
-    $butt = '/' . $folders . '/' . $class . '.php';
-    $filepath = $_SERVER['DOCUMENT_ROOT'] . $butt;
+    $butt = '/' . $folders . '/' . $className . '.php';
+    $filepath = $_SERVER['R_DOCUMENT_ROOT'] . $butt;
 
     // check in project folder first, then global folder
     if ( file_exists($filepath) ) {
@@ -28,7 +28,7 @@ function r_autoloader( $class ) {
         if ( file_exists($filepath) ) {
             include_once($filepath);
         } else {
-            throw new Error( "Class : '{$class}', was not found at '{$filepath}'");
+            throw new Error( "Class : '{$fullClassPath}', was not found at '{$filepath}'");
         }
 
     }

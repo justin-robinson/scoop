@@ -1,6 +1,8 @@
 <?
 
-class Database_Rows implements Iterator, ArrayAccess, JsonSerializable {
+namespace Database;
+
+class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
 
     public $numRows;
 

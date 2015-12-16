@@ -1,6 +1,8 @@
 <?
 
-class Database_Model_Generic {
+namespace Database\Model;
+
+class Generic {
 
     protected $loadedFromDB = false;
     protected $orignalDBValues;
@@ -25,20 +27,20 @@ class Database_Model_Generic {
         self::$sqlHistoryArray[] = $sql;
 
         // start sql transaction
-        Database_Connection::begin_transaction();
+        \Database\Connection::begin_transaction();
 
         // run the query
-        $result = Database_Connection::query($sql);
+        $result = \Database\Connection::query($sql);
 
         // check for errors
         if ( ! $result ) {
-            Database_Connection::rollback();
-            trigger_error('MySQL Error Number ( ' . Database_Connection::errno() . ' )' . Database_Connection::error() );
+            \Database\Connection::rollback();
+            trigger_error('MySQL Error Number ( ' . \Database\Connection::errno() . ' )' . \Database\Connection::error() );
             var_dump($sql);
         }
 
         // commit this transaction
-        Database_Connection::commit();
+        \Database\Connection::commit();
 
         // was this a select?
         $hasRows = is_object($result) && is_a($result, 'mysqli_result');
@@ -47,7 +49,7 @@ class Database_Model_Generic {
         if ( $hasRows ) {
 
             // create a container for the rows
-            $rows = new Database_Rows();
+            $rows = new \Database\Rows();
 
             // put all rows in the container
             while ( $row = $result->fetch_assoc() ) {
