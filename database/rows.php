@@ -32,6 +32,16 @@ class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
         return $this->key() === ($this->numRows - 1);
     }
 
+    public function to_array ( array $columnsToInclude = [] ) {
+        $array = [];
+
+        foreach ( $this as $row ) {
+            $array[] = $row->to_stdclass($columnsToInclude);
+        }
+
+        return $array;
+    }
+
     /* Iterator functions */
 
     public function rewind() {

@@ -84,6 +84,25 @@ class Generic {
         }
     }
 
+    public function to_stdclass(array $columnsToInclude = []) {
+
+        if ( empty($columnsToInclude) ) {
+            $columnsToInclude = $this->get_column_names();
+        }
+
+        $stdClass = new \StdClass();
+
+        foreach ($columnsToInclude as $columnName ) {
+            $stdClass->$columnName = $this->$columnName;
+        }
+
+        return $stdClass;
+    }
+
+    public function get_column_names () {
+        return array_keys($this->DBColumnsArray);
+    }
+
     public static function get_sql_history() {
         return self::$sqlHistoryArray;
     }
