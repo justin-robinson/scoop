@@ -24,9 +24,9 @@ class Config {
 
     /**
      * @var
-     * cache for get_root_class_path()
+     * cache for get_site_class_path()
      */
-    private static $rootClassPath;
+    private static $siteClassPath;
 
     /**
      * @return array
@@ -38,7 +38,7 @@ class Config {
 
             $classPaths = [];
 
-            $classPaths[] = self::get_root_class_path();
+            $classPaths[] = self::get_site_class_path();
             $classPaths[] = self::get_phpr_class_path();
             $classPaths[] = self::get_shared_class_path();
 
@@ -82,22 +82,40 @@ class Config {
      * @return string
      * Gets classpath for the current site
      */
-    public static function get_root_class_path() {
+    public static function get_site_class_path() {
 
-        if ( is_null(self::$rootClassPath) ) {
-            self::$rootClassPath = $_SERVER['DOCUMENT_ROOT'] . $_SERVER['R_CLASSPATH_FOLDER_NAME'];
+        if ( is_null(self::$siteClassPath) ) {
+
+            if ( !empty($_SERVER['DOCUMENT_ROOT']) ) {
+                self::$siteClassPath = $_SERVER['DOCUMENT_ROOT'];
+            } else if ( array_key_exists('R_SITE_NAME', $_SERVER) ) {
+                self::$siteClassPath = self::get_sites_folder() . '/' . $_SERVER['R_SITE_NAME'];
+            }
+
+            self::$siteClassPath .= '/'. $_SERVER['R_CLASSPATH_FOLDER_NAME'];
         }
-        return self::$rootClassPath;
+        return self::$siteClassPath;
     }
 
-    public static function get_root_class_path_by_site ( $siteName ) {
+    public static function get_site_class_path_by_name ($siteName ) {
 
-        return self::get_sites_folder() . '/'.  $siteName . '/' . $_SERVER['R_CLASSPATH_FOLDER_NAME'];;
+        self::$siteClassPath =  self::get_sites_folder() . '/'.  $siteName . '/' . $_SERVER['R_CLASSPATH_FOLDER_NAME'];
+
+        return self::$siteClassPath;
     }
 
     public static function get_sites_folder () {
 
         return Path::make_absolute($_SERVER['R_SITES_FOLDER']);
 
+    }
+
+    public static function get_db_config () {
+
+        require_once self::get_phpr_class_path() . '/configs/db.php';
+
+        include_once self::get_site_class_path() . '/../phpr-configs/db.php';
+
+        return $phprDB;
     }
 }

@@ -1,7 +1,5 @@
 #!/usr/bin/php
 <?php
-require_once dirname(__FILE__) . "/../base.php";
-
 $opts = getopt(
     "",
     [
@@ -9,7 +7,13 @@ $opts = getopt(
     ]);
 
 if ( array_key_exists('site', $opts) ) {
-    $outPath = phpr\Config::get_root_class_path_by_site($opts['site']);
+    $_SERVER['R_SITE_NAME'] = $opts['site'];
+}
+require_once dirname(__FILE__) . "/../base.php";
+
+
+if ( array_key_exists('site', $opts) ) {
+    $outPath = phpr\Config::get_site_class_path_by_name($opts['site']);
 } else {
     $outPath = phpr\Config::get_shared_class_path();
 }

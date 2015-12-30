@@ -8,24 +8,18 @@ class Connection {
     // call this to initiate a db connection
     static function connect() {
 
-        // configs file is here
-        $configFilepath = $_SERVER['R_DOCUMENT_ROOT'] . '/configs/db.json';
-
-        // open file
-        $config = file_get_contents($configFilepath);
+       $config = \phpr\Config::get_db_config();
 
         // did we get the file?
         if ( $config ) {
 
-            // decode the json
-            $config = json_decode($config);
-
             // attempt to connect to the db
             self::$mysqli = new \mysqli(
-                $config->host,
-                $config->user,
-                $config->password,
-                null);
+                $config['host'],
+                $config['user'],
+                $config['password'],
+                '',
+                $config['port']);
 
             // die on error
             if ( self::$mysqli->connect_error ) {
@@ -37,7 +31,7 @@ class Connection {
             self::autocommit(false);
 
         } else {
-            throw new Error('failed to open db credentials file at ' . $configFilepath);
+            throw new Error('failed to load db credentials');
         }
 
     }
