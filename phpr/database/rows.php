@@ -1,6 +1,6 @@
 <?
 
-namespace Database;
+namespace phpr\Database;
 
 class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
 

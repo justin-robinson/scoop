@@ -1,6 +1,9 @@
 <?
 
-namespace Database\Model;
+namespace phpr\Database\Model;
+
+use phpr\Database\Connection;
+use phpr\Database\Rows;
 
 class Generic {
 
@@ -21,26 +24,30 @@ class Generic {
     }
 
     // run a raw sql query
+    /**
+     * @param $sql
+     * @return Rows
+     */
     public static function query ($sql) {
 
         // log the query
         self::$sqlHistoryArray[] = $sql;
 
         // start sql transaction
-        \Database\Connection::begin_transaction();
+        Connection::begin_transaction();
 
         // run the query
-        $result = \Database\Connection::query($sql);
+        $result = Connection::query($sql);
 
         // check for errors
         if ( ! $result ) {
-            \Database\Connection::rollback();
-            trigger_error('MySQL Error Number ( ' . \Database\Connection::errno() . ' )' . \Database\Connection::error() );
+            Connection::rollback();
+            trigger_error('MySQL Error Number ( ' . Connection::errno() . ' )' . Connection::error() );
             var_dump($sql);
         }
 
         // commit this transaction
-        \Database\Connection::commit();
+        Connection::commit();
 
         // was this a select?
         $hasRows = is_object($result) && is_a($result, 'mysqli_result');
@@ -49,7 +56,7 @@ class Generic {
         if ( $hasRows ) {
 
             // create a container for the rows
-            $rows = new \Database\Rows();
+            $rows = new Rows();
 
             // put all rows in the container
             while ( $row = $result->fetch_assoc() ) {

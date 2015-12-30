@@ -3,7 +3,7 @@
 /*
  * Generates and saves a php class to a given file name
  */
-namespace ClassGen;
+namespace phpr\ClassGen;
 
 class ClassGenGenerator {
 
@@ -19,14 +19,14 @@ class ClassGenGenerator {
     public $functionsArray = [];
     public $filepath;
 
-    public function __construct ( \ClassGen\ClassGenClass $class, $filepath = null ) {
+    public function __construct ( ClassGenClass $class, $filepath = null ) {
 
         $this->class = $class;
         $this->filepath = $filepath;
 
     }
 
-    public function addProperty ( \ClassGen\ClassGenProperty $property ) {
+    public function addProperty ( ClassGenProperty $property ) {
 
         // add property to the right array
         if ( $property->isStatic ) {

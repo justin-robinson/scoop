@@ -1,8 +1,8 @@
 <?
 
-namespace Database;
+namespace phpr\Database;
 
-abstract class Model extends \Database\Model\Generic {
+abstract class Model extends Model\Generic {
 
     const SCHEMA = null;
     const TABLE = null;
@@ -109,7 +109,7 @@ abstract class Model extends \Database\Model\Generic {
             if ( $result ) {
 
                 // get auto incremented id if one was generated
-                if ( $ID = \Database\Connection::insert_id() ) {
+                if ( $ID = Connection::insert_id() ) {
 
                     $IDColumn = static::AUTO_INCREMENT_COLUMN;
 
@@ -212,7 +212,7 @@ abstract class Model extends \Database\Model\Generic {
     }
 
     public function set_literal($key, $value) {
-        $this->$key = new \Database\Literal($value);
+        $this->$key = new Literal($value);
     }
 
     public function loaded_from_database () {

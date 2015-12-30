@@ -1,33 +1,49 @@
 <?
 
-namespace ClassGen;
+namespace phpr\ClassGen;
 
-class ClassGenClass extends \ClassGen\ClassGenAbstract {
+class ClassGenClass extends ClassGenAbstract {
 
     public $name;
     public $extends;
     public $implements;
     public $phpDoc = '';
     public $namespace;
+    public $use = [];
 
     public function __construct ( $name, $extends = null, $namespace = '', $implements = [] ) {
         $this->name = $name;
         $this->extends = $extends;
         $this->namespace = $namespace;
         $this->implements = $implements;
+
+        return $this;
     }
 
     public function set_name ( $name ) {
         $this->name = $name;
+        return $this;
     }
     public function set_extends ( $extends ) {
         $this->extends = $extends;
+        return $this;
     }
     public function set_implements ( array $implements ) {
         $this->implements = $implements;
+        return $this;
     }
     public function set_namespace ( $namespace ) {
         $this->namespace = $namespace;
+        return $this;
+    }
+    public function set_use ( array $use ) {
+        $this->use = $use;
+        return $this;
+    }
+
+    public function append_use( $use ) {
+        $this->use[] = $use;
+        return $this;
     }
 
 
@@ -58,8 +74,21 @@ class ClassGenClass extends \ClassGen\ClassGenAbstract {
         $header =
 "<?
 {$this->phpDoc}
-namespace {$this->namespace};
-" . $classModifier . "class {$this->name} ";
+";
+        if ( !empty($this->namespace) ) {
+            $header .= "namespace {$this->namespace};
+
+";
+        }
+
+        if ( !empty($this->use) ) {
+            foreach ( $this->use as $use ) {
+                $header .= "use {$use};
+
+";
+            }
+        }
+        $header .= $classModifier . "class {$this->name} ";
 
         // class extends
         $header .= $this->get_extends_code();

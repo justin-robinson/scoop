@@ -1,20 +1,33 @@
-<?
+<?php
 
-$installDirectory = pathinfo(__FILE__)['dirname'];
+// allow <? as well as <?php for opening php tag
+ini_set('short_open_tag', 'On');
 
+// where phpr is installed
+$installDirectory = pathinfo(__FILE__)['dirname'] . '/';
+
+// set the R variable
 $_SERVER['R_DOCUMENT_ROOT'] = $installDirectory;
 
-$frameworkConfig = json_decode(file_get_contents( $_SERVER['R_DOCUMENT_ROOT'] . '/configs/framework.json'));
-
-foreach ( $frameworkConfig as $option => $value ) {
-    $_SERVER['R_' . $option] = $value;
-}
+// load config into server variable
+require_once $_SERVER['R_DOCUMENT_ROOT'] . '/configs/framework.php';
+$_SERVER = array_merge($_SERVER, $phprConfig);
 
 // the autoloader
 require_once($_SERVER['R_DOCUMENT_ROOT'] . '/autoloader.php');
 
+// show errors for internal ips
+if ( \phpr\Environment::is_internal_ip() ) {
+    ini_set('display_errors', 'On');
+    ini_set('display_startup_errors', 'On');
+} else {
+    ini_set('display_errors', 'Off');
+    ini_set('display_startup_errors', 'Off');
+}
+
+
 // connect to mysql server
-\Database\Connection::connect();
+phpr\Database\Connection::connect();
 
 function serverError($message) {
     header($_SERVER['SERVER_PROTOCOL'] . '500 Internal Server Error', true, 500);
@@ -24,7 +37,7 @@ function serverError($message) {
 
 // makes sql safe
 function r3a($sqlString, $quoteChar = "'") {
-    $sqlString = \Database\Connection::real_escape_string($sqlString);
+    $sqlString = phpr\Database\Connection::real_escape_string($sqlString);
     return $quoteChar . addslashes($sqlString) . $quoteChar;
 }
 

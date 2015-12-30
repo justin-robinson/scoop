@@ -1,5 +1,8 @@
 <?
 
+require_once $_SERVER['R_DOCUMENT_ROOT'] . '/phpr/config.php';
+require_once $_SERVER['R_DOCUMENT_ROOT'] . '/phpr/path.php';
+
 function r_autoloader( $fullClassPath ) {
 
     // class names can be uppercase but files are lower case
@@ -15,22 +18,20 @@ function r_autoloader( $fullClassPath ) {
     $folders = implode('/', $foldersArray);
 
     // full path to the file
-    $butt = '/' . $folders . '/' . $className . '.php';
-    $filepath = $_SERVER['R_DOCUMENT_ROOT'] . $butt;
+    $relativePath = '/' . $folders . '/' . $className . '.php';
 
-    // check in project folder first, then global folder
-    if ( file_exists($filepath) ) {
-        include_once( $filepath );
-    } else {
+    $fileExists = false;
+    foreach ( \phpr\Config::get_class_paths() as $classPath ) {
+        $filepath = $classPath . $relativePath;
 
-        $filepath = $_SERVER['R_DOCUMENT_ROOT'] . $butt;
-
-        if ( file_exists($filepath) ) {
-            include_once($filepath);
-        } else {
-            throw new Error( "Class : '{$fullClassPath}', was not found at '{$filepath}'");
+        if ( $fileExists = file_exists($filepath) ) {
+            include_once( $filepath );
+            break;
         }
+    }
 
+    if ( !$fileExists ) {
+        throw new Error( "Class : '{$fullClassPath}', was not found at '{$filepath}'");
     }
 
 

@@ -1,6 +1,6 @@
 <?
 
-namespace ClassGen;
+namespace phpr\ClassGen;
 
 abstract class ClassGenAbstract {
 
