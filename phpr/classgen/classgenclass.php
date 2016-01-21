@@ -72,7 +72,7 @@ class ClassGenClass extends ClassGenAbstract {
 
         // class name and phpdoc
         $header =
-"<?
+"<?php
 {$this->phpDoc}
 ";
         if ( !empty($this->namespace) ) {
