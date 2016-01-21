@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
  * Generates and saves a php class to a given file name

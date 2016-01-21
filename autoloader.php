@@ -1,4 +1,4 @@
-<?
+<?php
 
 require_once $_SERVER['R_DOCUMENT_ROOT'] . '/phpr/config.php';
 require_once $_SERVER['R_DOCUMENT_ROOT'] . '/phpr/path.php';

@@ -1,5 +1,7 @@
-<?
+<?php
+
 namespace phpr\Database;
+
 class Connection {
 
     // the mysqli resource

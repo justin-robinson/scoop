@@ -1,4 +1,5 @@
 <?php
+
 $phprConfig = [
     'R_VERSION_MAJOR' => 0,
     'R_VERSION_MINOR' => 2,
