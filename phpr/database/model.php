@@ -32,6 +32,10 @@ abstract class Model extends Model\Generic {
 
     }
 
+    public static function fetch_one () {
+        return self::fetch(1)->current();
+    }
+
     public static function fetch_where ($where, $limit = 1000) {
 
         $sql = "
