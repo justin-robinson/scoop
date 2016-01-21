@@ -15,10 +15,11 @@ $phprConfig = [
     'R_SITES_FOLDER' => '../'
 ];
 
-$phrConfig['R_VERSION'] = 
+$phprConfig['R_VERSION'] =
     $phprConfig['R_VERSION_MAJOR'] . '.' .
     $phprConfig['R_VERSION_MINOR'] . '.' .
     $phprConfig['R_VERSION_PATCH'];
 
-return $phprConfig;
+$phprConfig['R_TIMEZONE'] = 'America/New_York';
 
+return $phprConfig;
