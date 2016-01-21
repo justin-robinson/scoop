@@ -4,7 +4,7 @@
 ini_set('short_open_tag', 'On');
 
 // where phpr is installed
-$installDirectory = pathinfo(__FILE__)['dirname'] . '/';
+$installDirectory = pathinfo(__FILE__, PATHINFO_DIRNAME) . '/';
 
 // set the R variable
 $_SERVER['R_DOCUMENT_ROOT'] = $installDirectory;
