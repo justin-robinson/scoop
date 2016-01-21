@@ -29,12 +29,6 @@ function r_autoloader( $fullClassPath ) {
             break;
         }
     }
-
-    if ( !$fileExists ) {
-        throw new Error( "Class : '{$fullClassPath}', was not found at '{$filepath}'");
-    }
-
-
 }
 
 spl_autoload_register('r_autoloader');
