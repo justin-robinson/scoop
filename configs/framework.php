@@ -20,3 +20,5 @@ $phrConfig['R_VERSION'] =
     $phprConfig['R_VERSION_MINOR'] . '.' .
     $phprConfig['R_VERSION_PATCH'];
 
+return $phprConfig;
+

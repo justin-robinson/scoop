@@ -1,6 +1,6 @@
 <?php
 
-$phprDB = [
+return [
     'host' => 'localhost',
     'user' => 'root',
     'password' => 'password',

@@ -10,7 +10,7 @@ $installDirectory = pathinfo(__FILE__)['dirname'] . '/';
 $_SERVER['R_DOCUMENT_ROOT'] = $installDirectory;
 
 // load config into server variable
-require_once $_SERVER['R_DOCUMENT_ROOT'] . '/configs/framework.php';
+$phprConfig = require_once $_SERVER['R_DOCUMENT_ROOT'] . '/configs/framework.php';
 $_SERVER = array_merge($_SERVER, $phprConfig);
 
 // the autoloader

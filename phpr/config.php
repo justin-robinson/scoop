@@ -112,9 +112,14 @@ class Config {
 
     public static function get_db_config () {
 
-        require_once self::get_phpr_class_path() . '/configs/db.php';
+        $phprDB = require_once self::get_phpr_class_path() . '/configs/db.php';
 
-        include_once self::get_site_class_path() . '/../phpr-configs/db.php';
+        $siteDBConfigPath = self::get_site_class_path() . '/../phpr-configs/db.php';
+
+        if ( file_exists($siteDBConfigPath) ) {
+            $siteDB = include_once $siteDBConfigPath;
+            $phprDB = array_replace_recursive($phprDB, $siteDB);
+        }
 
         return $phprDB;
     }
