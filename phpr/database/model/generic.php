@@ -4,8 +4,11 @@ namespace phpr\Database\Model;
 
 use phpr\Database\Connection;
 use phpr\Database\Rows;
+use Zend\Di\Display\Console;
 
 class Generic {
+
+    public static $queryParams = [];
 
     protected $loadedFromDB = false;
     protected $orignalDBValues;
@@ -28,7 +31,7 @@ class Generic {
      * @param $sql
      * @return Rows
      */
-    public static function query ($sql) {
+    public static function query ($sql, $queryParams = []) {
 
         // log the query
         self::$sqlHistoryArray[] = $sql;
@@ -36,24 +39,36 @@ class Generic {
         // start sql transaction
         Connection::begin_transaction();
 
-        // run the query
-        $result = Connection::query($sql);
+        // prepare the statement
+        $statement = Connection::prepare($sql);
 
-        // check for errors
-        if ( ! $result ) {
+        // bind params
+        if ( is_array($queryParams) && !empty($queryParams) ) {
+            $bindTypes = '';
+            foreach ( $queryParams as $name => $value ) {
+                $bindTypes .= self::get_bind_type($value);
+            }
+
+            $statement->bind_param($bindTypes, ...$queryParams);
+
+        }
+
+        // execute statement
+        if ( !$statement->execute() ) {
             Connection::rollback();
             trigger_error('MySQL Error Number ( ' . Connection::errno() . ' )' . Connection::error() );
             var_dump($sql);
         }
 
+        // get the result
+        $result = $statement->get_result();
+
         // commit this transaction
         Connection::commit();
 
-        // was this a select?
-        $hasRows = is_object($result) && is_a($result, 'mysqli_result');
 
         // format the data if it was a select
-        if ( $hasRows ) {
+        if ( !empty($result->num_rows) ) {
 
             // create a container for the rows
             $rows = new Rows();
@@ -70,14 +85,17 @@ class Generic {
 
             }
 
-
-            // give the container back
-            return $rows;
+        } else if ( !empty( $statement->affected_rows ) ) {
+            $rows = $statement->affected_rows;
         } else {
-
-            // return raw result if no data was given back to us
-            return $result;
+            $rows = false;
         }
+
+        if ( method_exists($result, 'free') ) {
+            $result->free();
+        }
+
+        return $rows;
 
     }
 
@@ -127,6 +145,29 @@ class Generic {
     public static function strip_comments($sql) {
         // TODO implement strip comments function
     }
+
+    public static function get_bind_type ( $value ) {
+
+        $valueType = gettype($value);
+
+        switch ( $valueType ) {
+            case "string":
+                $bindType = 's';
+                break;
+            case "integer":
+            case "boolean":
+                $bindType = 'i';
+                break;
+            case "double":
+                $bindType = 'd';
+                break;
+            default:
+                throw new \Exception("Query param has type of {$valueType}");
+        }
+
+        return $bindType;
+    }
+
 }
 
 

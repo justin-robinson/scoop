@@ -103,6 +103,7 @@ foreach ( $rows as $index => $row ) {
         // reset these
         $autoIncrementColumn = '';
         $primaryKeys = [];
+        $nonNullColumns = [];
         $DBColumnsArray = [];
 
         // add comments to the class
@@ -138,6 +139,10 @@ foreach ( $rows as $index => $row ) {
     if ( $row->COLUMN_KEY === 'PRI' ) {
         $primaryKeys[] = $row->COLUMN_NAME;
         $DBColumnsArray[$row->COLUMN_NAME][] = phpr\Database\Model::PRIMARY_KEY;
+    }
+
+    if ( $row->IS_NULLABLE === 'NO' ) {
+        $nonNullColumns[] = $row->COLUMN_NAME;
     }
 
     // parse extra column properties into array
@@ -176,7 +181,7 @@ function classSafeName ( $name ) {
 
 function save () {
 
-    global $generator, $coreGenerator, $autoIncrementColumn, $primaryKeys, $DBColumnsArray;
+    global $generator, $coreGenerator, $autoIncrementColumn, $primaryKeys, $nonNullColumns, $DBColumnsArray;
 
     // add the primary keys and autoincrement columns
     $AIProperty = new phpr\ClassGen\ClassGenProperty('autoIncrementColumn', $autoIncrementColumn);
@@ -185,8 +190,12 @@ function save () {
     $primaryKeys = new phpr\ClassGen\ClassGenProperty('primaryKeys', $primaryKeys);
     $primaryKeys->set_const();
 
+    $nonNullColumns = new phpr\ClassGen\ClassGenProperty('nonNullColumns', $nonNullColumns);
+    $nonNullColumns->set_const();
+
     $coreGenerator->addProperty($AIProperty);
     $coreGenerator->addProperty($primaryKeys);
+    $coreGenerator->addProperty($nonNullColumns);
     $coreGenerator->addProperty(new phpr\ClassGen\ClassGenProperty('DBColumnsArray', $DBColumnsArray));
 
     // save file if we have one

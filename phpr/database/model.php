@@ -36,7 +36,7 @@ abstract class Model extends Model\Generic {
         return self::fetch(1)->current();
     }
 
-    public static function fetch_where ($where, $limit = 1000) {
+    public static function fetch_where ( $where, $limit = 1000, array $queryParams = [] ) {
 
         $sql = "
             SELECT
@@ -47,12 +47,13 @@ abstract class Model extends Model\Generic {
             LIMIT {$limit}";
 
         // run sql
-        return self::query($sql);
+        return self::query($sql, $queryParams);
 
     }
 
-    public static function fetch_one_where($where) {
-        $rows = static::fetch_where($where, 1);
+    public static function fetch_one_where( $where, array $queryParams = [] ) {
+
+        $rows = static::fetch_where($where, 1, $queryParams);
 
         if ( $rows->numRows === 1 ) {
             return $rows[0];
@@ -89,10 +90,18 @@ abstract class Model extends Model\Generic {
             $this->update();
         } else {
 
-        if ( property_exists($this, 'dateTimeAdded') ) {
-            $this->set_literal('dateTimeAdded', 'NOW()');
-        }
+            if ( property_exists($this, 'dateTimeAdded') ) {
+                $this->set_literal('dateTimeAdded', 'NOW()');
+            }
+
             $columns = $this->get_columns();
+
+            // remove non null columns that are indeed null
+            foreach ( static::NON_NULL_COLUMNS as $columnName ) {
+                if ( is_null($columns[$columnName]) ) {
+                    unset($columns[$columnName]);
+                }
+            }
 
             // column names to insert
             $names = array_keys($columns);
