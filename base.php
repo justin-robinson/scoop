@@ -46,7 +46,7 @@ function r3a($sqlString, $quoteChar = "'") {
 function print_sql($value, $quoteChar = "'"){
     if ( is_null($value) ) {
         $sqlValue = 'NULL';
-    } else if ( is_object($value) && is_a($value, 'Database_Literal') ) {
+    } else if ( is_object($value) && is_a($value, get_class(phpr\Database\Literal)) ) {
         $sqlValue = (string)$value;
     } else {
         $sqlValue = r3a($value, $quoteChar);
