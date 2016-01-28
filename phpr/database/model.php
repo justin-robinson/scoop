@@ -67,9 +67,9 @@ abstract class Model extends Model\Generic {
         $row = false;
 
         if ( !empty(static::AUTO_INCREMENT_COLUMN) ) {
-            $where = '`' . static::AUTO_INCREMENT_COLUMN . '` = ' . r3a($ID);
+            $where = '`' . static::AUTO_INCREMENT_COLUMN . '` = ?';
 
-            $row = static::fetch_one_where($where);
+            $row = static::fetch_one_where($where, [$ID]);
         }
 
         return $row;
@@ -110,7 +110,7 @@ abstract class Model extends Model\Generic {
             $sql =
                 "INSERT INTO
               " . static::get_sql_table_name() . "
-              ( " . self::array_to_sql_safe_string($names, '`'). ")
+              ( " . self::array_to_sql_safe_string($names, '`') . ")
               VALUES
               ( " . self::array_to_sql_safe_string($columns) . ")";
 
