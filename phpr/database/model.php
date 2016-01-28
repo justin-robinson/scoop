@@ -55,7 +55,7 @@ abstract class Model extends Model\Generic {
 
         $rows = static::fetch_where($where, 1, $queryParams);
 
-        if ( $rows->numRows === 1 ) {
+        if ( !empty($rows) ) {
             return $rows[0];
         } else {
             return false;
@@ -96,9 +96,9 @@ abstract class Model extends Model\Generic {
 
             $columns = $this->get_columns();
 
-            // remove non null columns that are indeed null
+            // remove columns marked by the db to be NON NULL but we have them locally as null
             foreach ( static::NON_NULL_COLUMNS as $columnName ) {
-                if ( is_null($columns[$columnName]) ) {
+                if ( array_key_exists($columnName, $columns) && is_null($columns[$columnName]) ) {
                     unset($columns[$columnName]);
                 }
             }
