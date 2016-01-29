@@ -11,7 +11,6 @@ $_SERVER['R_DOCUMENT_ROOT'] = $installDirectory;
 
 // load config into server variable
 $phprConfig = require_once $_SERVER['R_DOCUMENT_ROOT'] . '/configs/framework.php';
-date_default_timezone_set($phprConfig['R_TIMEZONE']);
 $_SERVER = array_merge($_SERVER, $phprConfig);
 
 // the autoloader
@@ -30,6 +29,11 @@ if ( \phpr\Environment::is_internal_ip() ) {
 // connect to mysql server
 phpr\Database\Connection::connect();
 
+// setup mysqli statement cache
+phpr\Database\Model\Generic::$statementCache = new phpr\Database\Cache\Statement();
+
+date_default_timezone_set($phprConfig['R_TIMEZONE']);
+
 function serverError($message) {
     header($_SERVER['SERVER_PROTOCOL'] . '500 Internal Server Error', true, 500);
     echo $message;
@@ -46,7 +50,7 @@ function r3a($sqlString, $quoteChar = "'") {
 function print_sql($value, $quoteChar = "'"){
     if ( is_null($value) ) {
         $sqlValue = 'NULL';
-    } else if ( is_object($value) && is_a($value, get_class(phpr\Database\Literal)) ) {
+    } else if ( is_object($value) && is_a($value, 'phpr\Database\Literal') ) {
         $sqlValue = (string)$value;
     } else {
         $sqlValue = r3a($value, $quoteChar);

@@ -2,9 +2,9 @@
 
 namespace phpr\Database\Model;
 
+use phpr\Database\Cache\Statement;
 use phpr\Database\Connection;
 use phpr\Database\Rows;
-use Zend\Di\Display\Console;
 
 class Generic {
 
@@ -15,6 +15,11 @@ class Generic {
     protected $DBColumnsArray = [];
 
     private static $sqlHistoryArray = [];
+
+    /**
+     * @var Statement
+     */
+    public static $statementCache;
 
     public function __construct($dataArray = []) {
 
@@ -39,8 +44,7 @@ class Generic {
         // start sql transaction
         Connection::begin_transaction();
 
-        // prepare the statement
-        $statement = Connection::prepare($sql);
+        $statement = static::get_statement($sql, $queryParams);
 
         // bind params
         if ( is_array($queryParams) && !empty($queryParams) ) {
@@ -166,6 +170,28 @@ class Generic {
         }
 
         return $bindType;
+    }
+
+    /**
+     * @param $sql
+     * @return \mysqli_stmt|null
+     * @throws \Exception
+     */
+    public static function get_statement ( $sql ) {
+
+        $key = md5($sql);
+
+        if ( empty(self::$statementCache->get($key)) ) {
+
+            // prepare the statement
+            $statement = Connection::prepare($sql);
+
+            self::$statementCache->set($key, $statement);
+        }
+
+        return self::$statementCache->get($key);
+
+
     }
 
 }

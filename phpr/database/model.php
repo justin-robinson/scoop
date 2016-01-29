@@ -107,6 +107,7 @@ abstract class Model extends Model\Generic {
             $names = array_keys($columns);
 
             // build sql statement
+            // todo replace sql safe string function with mysqli binding setup
             $sql =
                 "INSERT INTO
               " . static::get_sql_table_name() . "
