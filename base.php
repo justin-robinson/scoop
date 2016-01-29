@@ -13,6 +13,11 @@ $_SERVER['R_DOCUMENT_ROOT'] = $installDirectory;
 $phprConfig = require_once $_SERVER['R_DOCUMENT_ROOT'] . '/configs/framework.php';
 $_SERVER = array_merge($_SERVER, $phprConfig);
 
+// set the timezone if one was provided
+if ( isset( $_SERVER['R_TIMEZONE'] ) ) {
+    date_default_timezone_set($_SERVER['R_TIMEZONE']);
+}
+
 // the autoloader
 require_once($_SERVER['R_DOCUMENT_ROOT'] . '/autoloader.php');
 
