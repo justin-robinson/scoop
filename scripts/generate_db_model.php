@@ -1,16 +1,22 @@
 #!/usr/bin/php
 <?php
+
+// parse script options
 $opts = getopt (
     "",
     [
         "site:"
     ] );
 
+// set site name if one was provided
 if ( array_key_exists ( 'site', $opts ) ) {
     $_SERVER['R_SITE_NAME'] = $opts['site'];
 }
+
+// get the base
 require_once dirname ( __FILE__ ) . "/../base.php";
 
+// global or site specific class path?
 if ( array_key_exists ( 'site', $opts ) ) {
     $outPath = phpr\Config::get_site_class_path_by_name ( $opts['site'] );
 } else {
