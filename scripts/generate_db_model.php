@@ -23,8 +23,6 @@ if ( array_key_exists ( 'site', $opts ) ) {
     $outPath = phpr\Config::get_shared_class_path ();
 }
 
-$tst = \DB\JorPw\Test::fetch();
-
 /*
  * Generates db models from all user created schemas
  */
