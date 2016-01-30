@@ -202,15 +202,13 @@ class Generic {
     }
 
     /**
-     *
+     * Mark this object as loaded from the database
      */
     public function loaded_from_database () {
 
         $this->loadedFromDb = true;
 
-        foreach ( static::$dBColumnPropertiesArray as $columnName => $properties ) {
-            $this->orignalDbValuesArray[$columnName] = $this->$columnName;
-        }
+        $this->orignalDbValuesArray = $this->dBValuesArray;
 
     }
 

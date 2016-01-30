@@ -308,15 +308,4 @@ abstract class Model extends Model\Generic {
 
         $this->$key = new Literal( $value );
     }
-
-    /**
-     * Mark this object as loaded from the database
-     */
-    public function loaded_from_database () {
-
-        $this->loadedFromDb = true;
-
-        $this->orignalDbValuesArray = $this->dBValuesArray;
-
-    }
 }
