@@ -2,7 +2,7 @@
 
 $phprConfig = [
     'R_VERSION_MAJOR'                     => 0,
-    'R_VERSION_MINOR'                     => 2,
+    'R_VERSION_MINOR'                     => 3,
     'R_VERSION_PATCH'                     => 0,
 
     /*
