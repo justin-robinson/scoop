@@ -2,37 +2,44 @@
 
 namespace phpr;
 
+/**
+ * Class Environment
+ * @package phpr
+ */
 class Environment {
 
     /**
      * Environment constants
      */
     const ENV_PROD = 1;
+
     const ENV_STAGING = 2;
+
     const ENV_TEST = 3;
+
     const ENV_LOCAL = 4;
 
     /**
-     * @var
+     * @var boolean
      * cache for is_iternal_ip()
      */
     private static $isInternalIP;
 
     /**
-     * @var
+     * @var string
      * Cache for get_environment()
      */
     private static $environment;
 
     /**
-     * @return mixed
+     * @return string
      *
      * gets integer representation of environment
      */
     public static function get_environment () {
 
-        if ( !isset(self::$environment) ) {
-            self::detect_environment();
+        if ( !isset( self::$environment ) ) {
+            self::detect_environment ();
         }
 
         return self::$environment;
@@ -44,9 +51,9 @@ class Environment {
      */
     private static function detect_environment () {
 
-        $hostnameParts = explode('.', self::get_server_name());
+        $hostnameParts = explode ( '.', self::get_server_name () );
 
-        switch($hostnameParts[0]) {
+        switch ( $hostnameParts[0] ) {
             case 'localhost':
                 self::$environment = self::ENV_LOCAL;
                 break;
@@ -69,14 +76,13 @@ class Environment {
      */
     public static function get_server_name () {
 
-        if ( array_key_exists('SERVER_NAME', $_SERVER) && !empty($_SERVER['SERVER_NAME']) ){
+        if ( array_key_exists ( 'SERVER_NAME', $_SERVER ) && !empty( $_SERVER['SERVER_NAME'] ) ) {
             $hostname = $_SERVER['SERVER_NAME'];
-        } else if ( array_key_exists('HOSTNAME', $_SERVER) && !empty($_SERVER['HOSTNAME']) ){
+        } else if ( array_key_exists ( 'HOSTNAME', $_SERVER ) && !empty( $_SERVER['HOSTNAME'] ) ) {
             $hostname = $_SERVER['HOSTNAME'];
         } else {
-            $hostname = gethostname();
+            $hostname = gethostname ();
         }
-
 
         return $hostname;
 
@@ -89,12 +95,12 @@ class Environment {
      */
     public static function is_internal_ip () {
 
-        if ( is_null(self::$isInternalIP) ) {
+        if ( is_null ( self::$isInternalIP ) ) {
 
-            $clientIP = array_key_exists('REMOTE_ADDR', $_SERVER) ? $_SERVER['REMOTE_ADDR'] : '0.0.0.0';
-            $serverIP = array_key_exists('SERVER_ADDR', $_SERVER) ? $_SERVER['SERVER_ADDR'] : '0.0.0.0';
+            $clientIP = array_key_exists ( 'REMOTE_ADDR', $_SERVER ) ? $_SERVER['REMOTE_ADDR'] : '0.0.0.0';
+            $serverIP = array_key_exists ( 'SERVER_ADDR', $_SERVER ) ? $_SERVER['SERVER_ADDR'] : '0.0.0.0';
 
-            $octets = explode('.', $clientIP);
+            $octets = explode ( '.', $clientIP );
 
             /*
              * The Internet Assigned Numbers Authority (IANA) has reserved the following three blocks
@@ -105,13 +111,13 @@ class Environment {
              * 192.168.0.0 - 192.168.255.255 (192.168/16 prefix)
              */
             $isLocalIP =
-                   $octets[0] === '10'
-                || $octets[0] === '172' && ($octets[1] >= '16' && $octets[1] <= '31')
-                || ($octets[0] === '192' && $octets[1] === '168')
+                $octets[0] === '10'
+                || $octets[0] === '172' && ( $octets[1] >= '16' && $octets[1] <= '31' )
+                || ( $octets[0] === '192' && $octets[1] === '168' )
                 || $octets[0] === '127';
             $isOurPublicIP = $clientIP === $serverIP;
 
-            self::$isInternalIP = ($isLocalIP || $isOurPublicIP);
+            self::$isInternalIP = ( $isLocalIP || $isOurPublicIP );
         }
 
         return self::$isInternalIP;

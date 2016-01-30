@@ -2,6 +2,10 @@
 
 namespace phpr\Database\Cache;
 
+/**
+ * Class Statement
+ * @package phpr\Database\Cache
+ */
 class Statement {
 
     /**

@@ -11,12 +11,19 @@ class ClassGenGenerator {
     public static $indentation = '    ';
 
     public $class;
-    public $constantPropertiesArray = [];
-    public $publicPropertiesArray = [];
-    public $staticPropertiesArray = [];
-    public $protectedPropertiesArray = [];
-    public $privatePropertiesArray = [];
-    public $functionsArray = [];
+
+    public $constantPropertiesArray = [ ];
+
+    public $publicPropertiesArray = [ ];
+
+    public $staticPropertiesArray = [ ];
+
+    public $protectedPropertiesArray = [ ];
+
+    public $privatePropertiesArray = [ ];
+
+    public $functionsArray = [ ];
+
     public $filepath;
 
     public function __construct ( ClassGenClass $class, $filepath = null ) {
@@ -31,10 +38,10 @@ class ClassGenGenerator {
         // add property to the right array
         if ( $property->isStatic ) {
             $this->staticPropertiesArray[] = $property;
-        } else if ( $property->is_const() ) {
+        } else if ( $property->is_const () ) {
             $this->constantPropertiesArray[] = $property;
         } else {
-            switch( $property->get_visibility() ) {
+            switch ( $property->get_visibility () ) {
                 case 'public' :
                     $this->publicPropertiesArray[] = $property;
                     break;
@@ -51,7 +58,8 @@ class ClassGenGenerator {
     }
 
     public function addFunction ( $function ) {
-        array_push($this->functionsArray, $function);
+
+        array_push ( $this->functionsArray, $function );
     }
 
 
@@ -59,19 +67,19 @@ class ClassGenGenerator {
     public function save () {
 
         // open php tag and declare class
-        $fileContents = $this->class->getHeader();
+        $fileContents = $this->class->getHeader ();
 
         /* START PROPERTY GENERATION */
 
         // generate constants
         foreach ( $this->constantPropertiesArray as $constantProperty ) {
-            $fileContents .= $constantProperty->get();
+            $fileContents .= $constantProperty->get ();
         }
 
         // generate static properties
         foreach ( $this->staticPropertiesArray as $staticProperty ) {
 
-            $fileContents .= $staticProperty->get();
+            $fileContents .= $staticProperty->get ();
 
         }
 
@@ -80,7 +88,7 @@ class ClassGenGenerator {
         // generate public properties
         foreach ( $this->publicPropertiesArray as $publicProperty ) {
 
-            $fileContents .= $publicProperty->get();
+            $fileContents .= $publicProperty->get ();
 
         }
 
@@ -89,7 +97,7 @@ class ClassGenGenerator {
         // generate protected properties
         foreach ( $this->protectedPropertiesArray as $protectedProperty ) {
 
-            $fileContents .= $protectedProperty->get();
+            $fileContents .= $protectedProperty->get ();
 
         }
 
@@ -98,7 +106,7 @@ class ClassGenGenerator {
         // generate private properties
         foreach ( $this->privatePropertiesArray as $privateProperty ) {
 
-            $fileContents .= $privateProperty->get();
+            $fileContents .= $privateProperty->get ();
 
         }
 
@@ -107,18 +115,18 @@ class ClassGenGenerator {
         // generate functions
         foreach ( $this->functionsArray as $method ) {
 
-            $fileContents .= $method->get();
+            $fileContents .= $method->get ();
         }
 
         // close the class
-        $fileContents .= $this->class->getFooter();
+        $fileContents .= $this->class->getFooter ();
 
         // ensure path to output file exists
-        $this->createPath();
+        $this->createPath ();
 
         // save file and set permissions
-        if ( file_put_contents($this->filepath, $fileContents) ) {
-            chmod($this->filepath, 0777);
+        if ( file_put_contents ( $this->filepath, $fileContents ) ) {
+            chmod ( $this->filepath, 0777 );
         }
 
     }
@@ -126,18 +134,18 @@ class ClassGenGenerator {
     private function createPath () {
 
         // break file path up
-        $pathParts = (object)pathinfo($this->filepath);
+        $pathParts = (object) pathinfo ( $this->filepath );
 
         // check that final directory exists
-        $created = file_exists($pathParts->dirname);
+        $created = file_exists ( $pathParts->dirname );
 
         // create directory if it doesn't exist
         if ( !$created ) {
-            $created = mkdir($pathParts->dirname, 0777, true);
+            $created = mkdir ( $pathParts->dirname, 0777, true );
         }
 
         if ( !$created ) {
-            throw new Error('failed to create directory at ' . $pathParts->dirname);
+            throw new Error( 'failed to create directory at ' . $pathParts->dirname );
         }
     }
 

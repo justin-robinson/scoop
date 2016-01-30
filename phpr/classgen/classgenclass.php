@@ -73,7 +73,7 @@ class ClassGenClass extends ClassGenAbstract {
         // class name and phpdoc
         $header =
 "<?php
-{$this->phpDoc}
+
 ";
         if ( !empty($this->namespace) ) {
             $header .= "namespace {$this->namespace};
@@ -88,6 +88,7 @@ class ClassGenClass extends ClassGenAbstract {
 ";
             }
         }
+        $header .= $this->phpDoc . PHP_EOL;
         $header .= $classModifier . "class {$this->name} ";
 
         // class extends

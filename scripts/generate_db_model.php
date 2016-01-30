@@ -110,6 +110,8 @@ foreach ( $rows as $index => $row ) {
         $date = date('Y/m/d');
         $generator->class->phpDoc =
 "/**
+  * Class {$name}
+  * @package {$namespace}
   * @author jrobinson (robotically)
   * @date {$date}
   * This file is only generated once
@@ -118,6 +120,8 @@ foreach ( $rows as $index => $row ) {
 
         $coreGenerator->class->phpDoc =
 "/**
+  * Class {$coreName}
+  * @package {$coreNamespace}
   * @author jrobinson (robotically)
   * @date {$date}
   * AUTO-GENERATED FILE

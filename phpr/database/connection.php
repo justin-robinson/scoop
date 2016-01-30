@@ -2,15 +2,24 @@
 
 namespace phpr\Database;
 
+/**
+ * Class Connection
+ * @package phpr\Database
+ */
 class Connection {
 
-    // the mysqli resource
+    /**
+     * @var \mysqli
+     */
     private static $mysqli;
 
-    // call this to initiate a db connection
-    static function connect() {
+    /**
+     * Connects to database
+     * @throws Error
+     */
+    static function connect () {
 
-       $config = \phpr\Config::get_db_config();
+        $config = \phpr\Config::get_db_config ();
 
         // did we get the file?
         if ( $config ) {
@@ -21,50 +30,59 @@ class Connection {
                 $config['user'],
                 $config['password'],
                 '',
-                $config['port']);
+                $config['port'] );
 
             // die on error
             if ( self::$mysqli->connect_error ) {
                 die( 'Connect Error (' . self::$mysqli->connect_errno . ') '
-                    . self::$mysqli->connect_error);
+                    . self::$mysqli->connect_error );
             }
 
             // we will manually commit our sql changes
-            self::autocommit(false);
+            self::autocommit ( false );
 
         } else {
-            throw new Error('failed to load db credentials');
+            throw new Error( 'failed to load db credentials' );
         }
 
     }
 
-    // call this to close the connection
+    /**
+     * Closes mysqli connection
+     */
     static function disconnect () {
 
-        if ( ! self::close() ) {
+        if ( !self::close () ) {
             die( 'Error closing connection' );
         }
     }
 
-    // pass all missing static function calls the $mysqli resource
-    public static function __callStatic( $name, $arguments ) {
+
+    /**
+     * pass all missing static function calls the $mysqli resource
+     * @param $name
+     * @param $arguments
+     * @return mixed
+     */
+    public static function __callStatic ( $name, $arguments ) {
 
         // does the unimplemented function exist on the mysqli resource?
-        if ( method_exists( self::$mysqli, $name ) ) {
+        if ( method_exists ( self::$mysqli, $name ) ) {
 
             // well call it!
-            return call_user_func_array(
-                array(
+            return call_user_func_array (
+                [
                     self::$mysqli,
                     $name
-                ),
-                $arguments);
+                ],
+                $arguments );
         }
 
         // how about a property on the mysqli resource?
-        if ( isset(self::$mysqli->$name) ) {
+        if ( isset( self::$mysqli->$name ) ) {
             return self::$mysqli->$name;
         }
     }
 }
+
 ?>

@@ -5,10 +5,12 @@ namespace phpr\ClassGen;
 class ClassGenProperty extends ClassGenAbstract {
 
     public $name;
+
     public $value;
+
     public $isStatic;
 
-    public function __construct ($name, $value = null, $isStatic = false, $visibility = self::VISIBILITY_PUBLIC) {
+    public function __construct ( $name, $value = null, $isStatic = false, $visibility = self::VISIBILITY_PUBLIC ) {
 
         $this->name = $name;
         $this->value = $value;
@@ -19,27 +21,27 @@ class ClassGenProperty extends ClassGenAbstract {
 
     public function getHeader () : string {
 
-        $propertyValue = var_export($this->value, true);
+        $propertyValue = var_export ( $this->value, true );
 
-        if ( is_array($this->value) ) {
-            $propertyValue = PHP_EOL . preg_replace('/^/m', ClassGenGenerator::$indentation . ClassGenGenerator::$indentation, $propertyValue);
+        if ( is_array ( $this->value ) ) {
+            $propertyValue = PHP_EOL . preg_replace ( '/^/m', ClassGenGenerator::$indentation . ClassGenGenerator::$indentation, $propertyValue );
         }
 
         $line = ClassGenGenerator::$indentation;
 
-        if ( $this->is_const() ) {
+        if ( $this->is_const () ) {
             $line .= 'const ';
 
             // convert camel and snake case to underscores
-            $nameParts = preg_split('/([A-Z]+[^A-Z]+)/', $this->name, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-            $this->name = strtoupper(implode('_', $nameParts));
+            $nameParts = preg_split ( '/([A-Z]+[^A-Z]+)/', $this->name, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY );
+            $this->name = strtoupper ( implode ( '_', $nameParts ) );
 
         } else {
-            $line .= $this->get_visibility();
-            $line .= ($this->isStatic) ? ' static ' : ' ';
+            $line .= $this->get_visibility ();
+            $line .= ( $this->isStatic ) ? ' static ' : ' ';
         }
 
-        $line .= $this->is_const() ? '' : '$';
+        $line .= $this->is_const () ? '' : '$';
         $line .= $this->name . ' = ' . $propertyValue;
         $line .= ';' . PHP_EOL;
 
