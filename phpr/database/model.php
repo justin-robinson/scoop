@@ -28,6 +28,11 @@ abstract class Model extends Model\Generic {
      */
     const PRIMARY_KEYS = null;
 
+    /**
+     * array of non null columns
+     */
+    const NON_NULL_COLUMNS = null;
+
     const PROP_AUTO_INCREMENT = 0;
 
     const PROP_PRIMARY_KEY = 1;
@@ -138,7 +143,7 @@ abstract class Model extends Model\Generic {
             $this->set_literal ( 'dateTimeUpdated', 'NOW()' );
         }
 
-        if ( $this->loadedFromDB ) {
+        if ( $this->loadedFromDb ) {
             $this->update ();
         } else {
 
@@ -146,7 +151,7 @@ abstract class Model extends Model\Generic {
                 $this->set_literal ( 'dateTimeAdded', 'NOW()' );
             }
 
-            $columns = $this->get_columns ();
+            $columns = $this->get_db_values_array ();
 
             // remove columns marked by the db to be NON NULL but we have them locally as null
             foreach ( static::NON_NULL_COLUMNS as $columnName ) {
@@ -174,7 +179,7 @@ abstract class Model extends Model\Generic {
             if ( $result ) {
 
                 // get auto incremented id if one was generated
-                if ( $ID = Connection::insert_id () ) {
+                if ( $ID = Connection::get_insert_id () ) {
 
                     $IDColumn = static::AUTO_INCREMENT_COLUMN;
 
@@ -182,7 +187,6 @@ abstract class Model extends Model\Generic {
 
                 }
 
-                $this->log_history ();
                 $this->loaded_from_database ();
             }
         }
@@ -221,7 +225,6 @@ abstract class Model extends Model\Generic {
             $result = self::query ( $sql );
 
             if ( $result ) {
-                $this->log_history ();
                 $this->loaded_from_database ();
             }
 
@@ -233,23 +236,9 @@ abstract class Model extends Model\Generic {
      * get column names of the model
      * @return array
      */
-    public function get_columns () {
+    public function get_db_values_array () {
 
-        // associate array of column names and values
-        $columns = [ ];
-
-        // build column values array
-        foreach ( $this->DBColumnsArray as $columnName => $properties ) {
-
-            // don't insert on auto increment columns
-            if ( $columnName !== static::AUTO_INCREMENT_COLUMN ) {
-
-                $columns[$columnName] = $this->$columnName;
-
-            }
-        }
-
-        return $columns;
+        return $this->dBValuesArray;
     }
 
     /**
@@ -258,8 +247,13 @@ abstract class Model extends Model\Generic {
      */
     public function get_dirty_columns () {
 
-        if ( $this->loadedFromDB ) {
-            $dirtyColumns = array_diff_assoc ( $this->get_columns (), $this->orignalDBValues );
+        $dbValuesArray = $this->get_db_values_array ();
+
+        // auto increment columns should never be marked as dirty
+        unset( $dbValuesArray[static::AUTO_INCREMENT_COLUMN] );
+
+        if ( $this->loadedFromDb ) {
+            $dirtyColumns = array_diff_assoc ( $dbValuesArray, $this->orignalDbValuesArray );
 
             // we don't care about timestamps
             if ( isset( $dirtyColumns['dateTimeAdded'] ) ) {
@@ -269,7 +263,7 @@ abstract class Model extends Model\Generic {
                 unset( $dirtyColumns['dateTimeUpdated'] );
             }
         } else {
-            $dirtyColumns = $this->get_columns ();
+            $dirtyColumns = $dbValuesArray;
         }
 
         return $dirtyColumns;
@@ -320,11 +314,9 @@ abstract class Model extends Model\Generic {
      */
     public function loaded_from_database () {
 
-        $this->loadedFromDB = true;
+        $this->loadedFromDb = true;
 
-        foreach ( $this->DBColumnsArray as $columnName => $properties ) {
-            $this->orignalDBValues[$columnName] = $this->$columnName;
-        }
+        $this->orignalDbValuesArray = $this->dBValuesArray;
 
     }
 }

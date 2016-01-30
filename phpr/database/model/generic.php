@@ -8,14 +8,34 @@ use phpr\Database\Rows;
 
 class Generic {
 
-    public static $queryParams = [ ];
+    /**
+     * instance specific model values
+     */
+    protected $dBValuesArray = [ ];
 
-    protected $loadedFromDB = false;
+    /**
+     * @var array
+     */
+    protected $orignalDbValuesArray;
 
-    protected $orignalDBValues;
+    /**
+     * @var array
+     */
+    protected static $dBColumnPropertiesArray = [ ];
 
-    protected $DBColumnsArray = [ ];
+    /**
+     * @var array
+     */
+    protected static $dBColumnDefaultValuesArray = [ ];
 
+    /**
+     * @var bool
+     */
+    protected $loadedFromDb = false;
+
+    /**
+     * @var string[]
+     */
     private static $sqlHistoryArray = [ ];
 
     /**
@@ -24,17 +44,42 @@ class Generic {
     public static $statementCache;
 
     /**
+     * @var \mysqli_stmt
+     */
+    public static $lastStatementUsed;
+
+    /**
      * Generic constructor.
      * @param array $dataArray
      */
     public function __construct ( $dataArray = [ ] ) {
 
         // by default all values are null
-        $this->orignalDBValues = array_fill_keys (
-            array_keys ( $this->DBColumnsArray ),
-            null );
+        $this->orignalDbValuesArray = static::$dBColumnDefaultValuesArray;
+
+        $dataArray = array_replace ( static::$dBColumnDefaultValuesArray, (array) $dataArray );
 
         $this->populate ( $dataArray );
+    }
+
+    /**
+     * @param $name
+     * @return mixed
+     */
+    public function __get ( $name ) {
+
+        if ( isset( $this->dBValuesArray[$name] ) ) {
+            return $this->dBValuesArray[$name];
+        }
+    }
+
+    /**
+     * @param $name
+     * @param $value
+     */
+    public function __set ( $name, $value ) {
+
+        $this->dBValuesArray[$name] = $value;
     }
 
     // run a raw sql query
@@ -76,8 +121,11 @@ class Generic {
         // commit this transaction
         Connection::commit ();
 
+        // save info for latest query
+        Connection::set_last_statement_used ( $statement );
+
         // format the data if it was a select
-        if ( !empty( $result->num_rows ) ) {
+        if ( $result && !empty( $result->num_rows ) ) {
 
             // create a container for the rows
             $rows = new Rows();
@@ -114,11 +162,8 @@ class Generic {
      */
     public function populate ( $dataArray ) {
 
-        $dataArray = (array) $dataArray;
+        $this->dBValuesArray = (array) $dataArray;
 
-        foreach ( $dataArray as $colName => $colValue ) {
-            $this->$colName = $colValue;
-        }
     }
 
     /**
@@ -145,7 +190,7 @@ class Generic {
      */
     public function get_column_names () {
 
-        return array_keys ( $this->DBColumnsArray );
+        return array_keys ( $this->dBColumnPropertiesArray );
     }
 
     /**
@@ -161,10 +206,10 @@ class Generic {
      */
     public function loaded_from_database () {
 
-        $this->loadedFromDB = true;
+        $this->loadedFromDb = true;
 
-        foreach ( $this->DBColumnsArray as $columnName => $properties ) {
-            $this->orignalDBValues[$columnName] = $this->$columnName;
+        foreach ( static::$dBColumnPropertiesArray as $columnName => $properties ) {
+            $this->orignalDbValuesArray[$columnName] = $this->$columnName;
         }
 
     }

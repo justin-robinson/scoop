@@ -14,6 +14,11 @@ class Connection {
     private static $mysqli;
 
     /**
+     * @var \mysqli_stmt
+     */
+    private static $lastStatementUsed;
+
+    /**
      * Connects to database
      * @throws Error
      */
@@ -70,18 +75,42 @@ class Connection {
         if ( method_exists ( self::$mysqli, $name ) ) {
 
             // well call it!
-            return call_user_func_array (
+            $return = call_user_func_array (
                 [
                     self::$mysqli,
                     $name
                 ],
                 $arguments );
+        } // how about a property on the mysqli resource?
+        else if ( isset( self::$mysqli->$name ) ) {
+            $return = self::$mysqli->$name;
+        } else {
+            $return = null;
         }
 
-        // how about a property on the mysqli resource?
-        if ( isset( self::$mysqli->$name ) ) {
-            return self::$mysqli->$name;
+        return $return;
+    }
+
+    /**
+     * @param $statement \mysqli_stmt
+     */
+    public static function set_last_statement_used ( $statement ) {
+
+        static::$lastStatementUsed = $statement;
+    }
+
+    /**
+     * @return int|null
+     */
+    public static function get_insert_id () {
+
+        if ( isset( static::$lastStatementUsed->insert_id ) ) {
+            $insertId = static::$lastStatementUsed->insert_id;
+        } else {
+            $insertId = null;
         }
+
+        return $insertId;
     }
 }
 
