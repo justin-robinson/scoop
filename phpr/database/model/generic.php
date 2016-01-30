@@ -8,27 +8,33 @@ use phpr\Database\Rows;
 
 class Generic {
 
-    public static $queryParams = [];
+    public static $queryParams = [ ];
 
     protected $loadedFromDB = false;
-    protected $orignalDBValues;
-    protected $DBColumnsArray = [];
 
-    private static $sqlHistoryArray = [];
+    protected $orignalDBValues;
+
+    protected $DBColumnsArray = [ ];
+
+    private static $sqlHistoryArray = [ ];
 
     /**
      * @var Statement
      */
     public static $statementCache;
 
-    public function __construct($dataArray = []) {
+    /**
+     * Generic constructor.
+     * @param array $dataArray
+     */
+    public function __construct ( $dataArray = [ ] ) {
 
         // by default all values are null
-        $this->orignalDBValues = array_fill_keys(
-            array_keys($this->DBColumnsArray),
-            null);
+        $this->orignalDBValues = array_fill_keys (
+            array_keys ( $this->DBColumnsArray ),
+            null );
 
-        $this->populate($dataArray);
+        $this->populate ( $dataArray );
     }
 
     // run a raw sql query
@@ -36,56 +42,55 @@ class Generic {
      * @param $sql
      * @return Rows
      */
-    public static function query ($sql, $queryParams = []) {
+    public static function query ( $sql, $queryParams = [ ] ) {
 
         // log the query
         self::$sqlHistoryArray[] = $sql;
 
         // start sql transaction
-        Connection::begin_transaction();
+        Connection::begin_transaction ();
 
-        $statement = static::get_statement($sql, $queryParams);
+        $statement = static::get_statement ( $sql, $queryParams );
 
         // bind params
-        if ( is_array($queryParams) && !empty($queryParams) ) {
+        if ( is_array ( $queryParams ) && !empty( $queryParams ) ) {
             $bindTypes = '';
             foreach ( $queryParams as $name => $value ) {
-                $bindTypes .= self::get_bind_type($value);
+                $bindTypes .= self::get_bind_type ( $value );
             }
 
-            $statement->bind_param($bindTypes, ...$queryParams);
+            $statement->bind_param ( $bindTypes, ...$queryParams );
 
         }
 
         // execute statement
-        if ( !$statement->execute() ) {
-            Connection::rollback();
-            trigger_error('MySQL Error Number ( ' . Connection::errno() . ' )' . Connection::error() );
-            var_dump($sql);
+        if ( !$statement->execute () ) {
+            Connection::rollback ();
+            trigger_error ( 'MySQL Error Number ( ' . Connection::errno () . ' )' . Connection::error () );
+            var_dump ( $sql );
         }
 
         // get the result
-        $result = $statement->get_result();
+        $result = $statement->get_result ();
 
         // commit this transaction
-        Connection::commit();
-
+        Connection::commit ();
 
         // format the data if it was a select
-        if ( !empty($result->num_rows) ) {
+        if ( !empty( $result->num_rows ) ) {
 
             // create a container for the rows
             $rows = new Rows();
 
             // put all rows in the container
-            while ( $row = $result->fetch_assoc() ) {
+            while ( $row = $result->fetch_assoc () ) {
 
-                $dbObject = new static($row);
+                $dbObject = new static( $row );
 
                 // make that this came from the DB
-                $dbObject->loaded_from_database();
+                $dbObject->loaded_from_database ();
 
-                $rows->addRow($dbObject);
+                $rows->addRow ( $dbObject );
 
             }
 
@@ -95,47 +100,65 @@ class Generic {
             $rows = false;
         }
 
-        if ( method_exists($result, 'free') ) {
-            $result->free();
+        if ( method_exists ( $result, 'free' ) ) {
+            $result->free ();
         }
 
         return $rows;
 
     }
 
-    // generate a new instance of this class from an associative array
+    /**
+     * generate a new instance of this class from an associative array
+     * @param $dataArray array
+     */
     public function populate ( $dataArray ) {
 
-        $dataArray = (array)$dataArray;
+        $dataArray = (array) $dataArray;
 
         foreach ( $dataArray as $colName => $colValue ) {
             $this->$colName = $colValue;
         }
     }
 
-    public function to_stdclass(array $columnsToInclude = []) {
+    /**
+     * @param array $columnsToInclude
+     * @return \StdClass
+     */
+    public function to_stdclass ( array $columnsToInclude = [ ] ) {
 
-        if ( empty($columnsToInclude) ) {
-            $columnsToInclude = $this->get_column_names();
+        if ( empty( $columnsToInclude ) ) {
+            $columnsToInclude = $this->get_column_names ();
         }
 
         $stdClass = new \StdClass();
 
-        foreach ($columnsToInclude as $columnName ) {
+        foreach ( $columnsToInclude as $columnName ) {
             $stdClass->$columnName = $this->$columnName;
         }
 
         return $stdClass;
     }
 
+    /**
+     * @return array
+     */
     public function get_column_names () {
-        return array_keys($this->DBColumnsArray);
+
+        return array_keys ( $this->DBColumnsArray );
     }
 
-    public static function get_sql_history() {
+    /**
+     * @return array
+     */
+    public static function get_sql_history () {
+
         return self::$sqlHistoryArray;
     }
 
+    /**
+     *
+     */
     public function loaded_from_database () {
 
         $this->loadedFromDB = true;
@@ -146,13 +169,21 @@ class Generic {
 
     }
 
-    public static function strip_comments($sql) {
+    /**
+     * @param $sql
+     */
+    public static function strip_comments ( $sql ) {
         // TODO implement strip comments function
     }
 
+    /**
+     * @param $value
+     * @return string
+     * @throws \Exception
+     */
     public static function get_bind_type ( $value ) {
 
-        $valueType = gettype($value);
+        $valueType = gettype ( $value );
 
         switch ( $valueType ) {
             case "string":
@@ -166,7 +197,7 @@ class Generic {
                 $bindType = 'd';
                 break;
             default:
-                throw new \Exception("Query param has type of {$valueType}");
+                throw new \Exception( "Query param has type of {$valueType}" );
         }
 
         return $bindType;
@@ -179,18 +210,17 @@ class Generic {
      */
     public static function get_statement ( $sql ) {
 
-        $key = md5($sql);
+        $key = md5 ( $sql );
 
-        if ( empty(self::$statementCache->get($key)) ) {
+        if ( empty( self::$statementCache->get ( $key ) ) ) {
 
             // prepare the statement
-            $statement = Connection::prepare($sql);
+            $statement = Connection::prepare ( $sql );
 
-            self::$statementCache->set($key, $statement);
+            self::$statementCache->set ( $key, $statement );
         }
 
-        return self::$statementCache->get($key);
-
+        return self::$statementCache->get ( $key );
 
     }
 

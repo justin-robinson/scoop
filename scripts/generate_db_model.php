@@ -42,6 +42,9 @@ $rows = phpr\Database\Model\Generic::query($getAllSchemas);
 $schema = null;
 $table = null;
 
+/**
+ * @var  $row \phpr\Database\Model
+ */
 // each row is a new column in a specific table
 foreach ( $rows as $index => $row ) {
 
