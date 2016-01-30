@@ -1,0 +1,15 @@
+{
+  "name": "jor.pw/phpr",
+  "description": "phpr framework",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "justin robinson",
+      "email": "jrob09bhs@gmail.com"
+    }
+  ],
+  "require": {
+    "kevinlebrun/colors.php": "0.4.1"
+  }
+}

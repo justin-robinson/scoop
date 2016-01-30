@@ -1,4 +1,4 @@
-#!/usr/bin/php
+#!/usr/bin/env php
 <?php
 
 // parse script options
@@ -23,6 +23,8 @@ if ( array_key_exists ( 'site', $opts ) ) {
     $outPath = phpr\Config::get_shared_class_path ();
 }
 
+$tst = \DB\JorPw\Test::fetch();
+
 /*
  * Generates db models from all user created schemas
  */
@@ -45,6 +47,7 @@ $getAllSchemas = "
 $rows = phpr\Database\Model\Generic::query ( $getAllSchemas );
 $schema = null;
 $table = null;
+$c = new \Colors\Color();
 
 /**
  * @var  $row \phpr\Database\Model
@@ -52,23 +55,29 @@ $table = null;
 // each row is a new column in a specific table
 foreach ( $rows as $index => $row ) {
 
-    $newSchema = $schema !== $row->TABLE_SCHEMA;
-    $newTable = $table !== $row->TABLE_NAME;
+    $isNewSchema = $schema !== $row->TABLE_SCHEMA;
+    $isNewTable = $table !== $row->TABLE_NAME;
 
     // new schema?
-    if ( $newSchema ) {
+    if ( $isNewSchema ) {
         $schema = $row->TABLE_SCHEMA;
         $safeSchema = classSafeName ( $schema );
     }
 
     // new table?
-    if ( $newTable ) {
+    if ( $isNewTable ) {
         $table = $row->TABLE_NAME;
         $safeTable = classSafeName ( $table );
     }
 
     // does this row belong to a different table the last one?
-    if ( $newSchema || $newTable ) {
+    if ( $isNewSchema || $isNewTable ) {
+
+        echo 'processing '
+            . $c("`{$schema}`")->black->highlight('cyan')
+            . '.'
+            . $c("`{$table}`")->white->bold->highlight('green')
+            . PHP_EOL;
 
         // save file if we have one
         if ( isset( $coreGenerator ) ) {

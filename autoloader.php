@@ -35,3 +35,8 @@ function r_autoloader ( $fullClassPath ) {
 }
 
 spl_autoload_register ( 'r_autoloader' );
+
+$composerAutoloaderPath = $_SERVER['R_DOCUMENT_ROOT'] . '/vendor/autoload.php';
+if ( file_exists($composerAutoloaderPath) ) {
+    require_once $composerAutoloaderPath;
+}

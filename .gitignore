@@ -1,5 +1,3 @@
 .idea
-db
-dbcore
-sites/*
-!sites/README.md
+vendor
+composer.lock
