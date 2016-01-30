@@ -27,7 +27,7 @@ abstract class Model extends Model\Generic {
      * array of primary keys
      */
     const PRIMARY_KEYS = null;
-    
+
     const PROP_AUTO_INCREMENT = 0;
 
     const PROP_PRIMARY_KEY = 1;
@@ -41,9 +41,10 @@ abstract class Model extends Model\Generic {
 
     /**
      * @param int $limit
+     * @param int $offset
      * @return Rows
      */
-    public static function fetch ( $limit = 1000 ) {
+    public static function fetch ( $limit = 1000, $offset = 0 ) {
 
         // build sql
         $sql =
@@ -51,10 +52,10 @@ abstract class Model extends Model\Generic {
                 *
             FROM
               " . static::get_sql_table_name () . "
-            LIMIT {$limit}";
+            LIMIT ?,?";
 
         // run sql
-        return self::query ( $sql );
+        return self::query ( $sql, [$offset, $limit] );
 
     }
 
@@ -69,10 +70,11 @@ abstract class Model extends Model\Generic {
     /**
      * @param $where
      * @param int $limit
+     * @param int $offset
      * @param array $queryParams
      * @return Rows
      */
-    public static function fetch_where ( $where, $limit = 1000, array $queryParams = [ ] ) {
+    public static function fetch_where ( $where, array $queryParams = [ ], $limit = 1000, $offset = 0 ) {
 
         $sql = "
             SELECT
@@ -80,7 +82,10 @@ abstract class Model extends Model\Generic {
             FROM
               " . static::get_sql_table_name () . "
             WHERE " . $where . "
-            LIMIT {$limit}";
+            LIMIT ?,?";
+
+        $queryParams[] = $offset;
+        $queryParams[] = $limit;
 
         // run sql
         return self::query ( $sql, $queryParams );
@@ -94,7 +99,7 @@ abstract class Model extends Model\Generic {
      */
     public static function fetch_one_where ( $where, array $queryParams = [ ] ) {
 
-        $rows = static::fetch_where ( $where, 1, $queryParams );
+        $rows = static::fetch_where ( $where, $queryParams, 1 );
 
         if ( !empty( $rows ) ) {
             return $rows[0];
