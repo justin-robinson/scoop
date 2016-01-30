@@ -142,7 +142,7 @@ foreach ( $rows as $index => $row ) {
     // add special properties
     if ( $row->COLUMN_KEY === 'PRI' ) {
         $primaryKeys[] = $row->COLUMN_NAME;
-        $DBColumnsArray[$row->COLUMN_NAME][] = phpr\Database\Model::PRIMARY_KEY;
+        $DBColumnsArray[$row->COLUMN_NAME][] = phpr\Database\Model::PROP_PRIMARY_KEY;
     }
 
     if ( $row->IS_NULLABLE === 'NO' ) {
@@ -153,7 +153,7 @@ foreach ( $rows as $index => $row ) {
     $extras = explode(',', $row->EXTRA);
     if ( in_array('auto_increment', $extras) ) {
         $autoIncrementColumn = $row->COLUMN_NAME;
-        $DBColumnsArray[$row->COLUMN_NAME][] = phpr\Database\Model::AUTO_INCREMENT;
+        $DBColumnsArray[$row->COLUMN_NAME][] = phpr\Database\Model::PROP_AUTO_INCREMENT;
     }
 
 

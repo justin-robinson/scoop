@@ -27,16 +27,16 @@ abstract class Model extends Model\Generic {
      * array of primary keys
      */
     const PRIMARY_KEYS = null;
+    
+    const PROP_AUTO_INCREMENT = 0;
 
-    const AUTO_INCREMENT = 0;
+    const PROP_PRIMARY_KEY = 1;
 
-    const PRIMARY_KEY = 1;
+    const PROP_UNIQUE = 2;
 
-    const UNIQUE = 2;
+    const PROP_NOT_NULL = 3;
 
-    const NOT_NULL = 3;
-
-    const NULL = 4;
+    const PROP_NULL = 4;
 
 
     /**
