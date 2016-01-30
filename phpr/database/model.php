@@ -55,7 +55,7 @@ abstract class Model extends Model\Generic {
             LIMIT ?,?";
 
         // run sql
-        return self::query ( $sql, [$offset, $limit] );
+        return self::query ( $sql, [ $offset, $limit ] );
 
     }
 
