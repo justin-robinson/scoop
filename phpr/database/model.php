@@ -151,7 +151,7 @@ abstract class Model extends Model\Generic {
                 $this->set_literal ( 'dateTimeAdded', 'NOW()' );
             }
 
-            $columns = $this->get_db_values_array ();
+            $columns = $this->get_db_values_array();
 
             // remove columns marked by the db to be NON NULL but we have them locally as null
             foreach ( static::NON_NULL_COLUMNS as $columnName ) {
@@ -160,20 +160,37 @@ abstract class Model extends Model\Generic {
                 }
             }
 
-            // column names to insert
-            $names = array_keys ( $columns );
+            // build names of columns we are saving and add query params
+            $columnNames = '';
+            $values = '';
+            $queryParams = [];
+            foreach ( $columns as $columnName => $value ) {
+
+                // add column name
+                $columnNames .= "`{$columnName}`,";
+
+                // value placeholder
+                $values .= '?,';
+
+                // value param
+                $queryParams[] = $value;
+            }
+            // remove last comma
+            $columnNames = rtrim($columnNames,',');
+            $values = rtrim($values, ',');
+
 
             // build sql statement
             // todo replace sql safe string function with mysqli binding setup
             $sql =
                 "INSERT INTO
               " . static::get_sql_table_name () . "
-              ( " . self::array_to_sql_safe_string ( $names, '`' ) . ")
+              ({$columnNames})
               VALUES
-              ( " . self::array_to_sql_safe_string ( $columns ) . ")";
+              ({$values})";
 
             // execute sql statement
-            $result = self::query ( $sql );
+            $result = self::query ( $sql, $queryParams );
 
             // log change on success
             if ( $result ) {
@@ -209,18 +226,23 @@ abstract class Model extends Model\Generic {
             // build the values we are updating
             $updatedValues = '';
             foreach ( $dirtyColumns as $columnName => $value ) {
-                $updatedValues .= '`' . $columnName . '`' . '= ?,';
+                $updatedValues .= "`{$columnName}` = ?,";
                 $queryParams[] = $value;
             }
             $updatedValues = rtrim($updatedValues, ',');
 
-            // build identifier for this row
-            $primaryKeyWhere = '';
-            foreach ( static::PRIMARY_KEYS as $columnName ) {
-                $primaryKeyWhere .= '`' . $columnName . '`' . '= ?,';
-                $queryParams[] = $this->$columnName;
+            // try to identify by primary key or original db values
+            $rowIdentifiers = empty(static::PRIMARY_KEYS)
+                ? array_keys($this->orignalDbValuesArray)
+                : static::PRIMARY_KEYS;
+
+            // identify the row we are updating
+            $where = '';
+            foreach ( $rowIdentifiers as $columnName ) {
+                $where .= "`{$columnName}` = ?,";
+                $queryParams[] = $this->orignalDbValuesArray[$columnName];
             }
-            $primaryKeyWhere = rtrim($primaryKeyWhere, ',');
+            $where = rtrim($where, ',');
 
             $sql =
                 "UPDATE
@@ -228,7 +250,7 @@ abstract class Model extends Model\Generic {
                SET
                 {$updatedValues}
                WHERE
-                {$primaryKeyWhere}";
+                {$where}";
 
             $result = self::query ( $sql, $queryParams );
 
@@ -283,19 +305,6 @@ abstract class Model extends Model\Generic {
     public static function get_sql_table_name () {
 
         return "`" . static::SCHEMA . "`.`" . static::TABLE . "`";
-    }
-
-    /**
-     * @param $array
-     * @param string $quoteChar
-     * @return string
-     */
-    public static function array_to_sql_safe_string ( &$array, $quoteChar = "'" ) {
-
-        r3a_array ( $array, $quoteChar );
-
-        return implode ( ',', $array );
-
     }
 
     /**
