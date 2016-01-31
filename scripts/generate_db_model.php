@@ -22,7 +22,6 @@ if ( array_key_exists ( 'site', $args ) ) {
     $outPath = phpr\Config::get_shared_class_path ();
 }
 
-
 $where = [
     "table_schema NOT IN (
                'information_schema',

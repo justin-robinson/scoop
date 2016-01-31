@@ -61,9 +61,13 @@ class Generic {
         // by default all values are null
         $this->orignalDbValuesArray = static::$dBColumnDefaultValuesArray;
 
-        $dataArray = array_replace ( static::$dBColumnDefaultValuesArray, (array) $dataArray );
+        if ( is_array ( $dataArray ) || is_object ( $dataArray ) ) {
+            $dataArray = array_replace ( static::$dBColumnDefaultValuesArray, (array) $dataArray );
 
-        $this->populate ( $dataArray );
+            $this->populate ( $dataArray );
+
+        }
+
     }
 
     /**
@@ -90,10 +94,12 @@ class Generic {
         $this->dBValuesArray[$name] = $value;
     }
 
-    // run a raw sql query
     /**
+     * run a raw sql query
      * @param $sql
-     * @return Rows
+     * @param array $queryParams
+     * @return bool|int|Rows
+     * @throws \Exception
      */
     public static function query ( $sql, $queryParams = [ ] ) {
 
@@ -101,7 +107,7 @@ class Generic {
         self::$sqlHistoryArray[] = $sql;
 
         // start sql transaction
-        Connection::begin_transaction();
+        Connection::begin_transaction ();
 
         $statement = static::get_statement ( $sql );
 
@@ -139,9 +145,7 @@ class Generic {
             $rows = new Rows();
 
             // put all rows in the container
-            while ( $row = $result->fetch_assoc () ) {
-
-                $dbObject = new static( $row );
+            while ( $dbObject = $result->fetch_object ( get_called_class (), [ -1 ] ) ) {
 
                 // make that this came from the DB
                 $dbObject->loaded_from_database ();
@@ -218,13 +222,6 @@ class Generic {
 
         $this->orignalDbValuesArray = $this->dBValuesArray;
 
-    }
-
-    /**
-     * @param $sql
-     */
-    public static function strip_comments ( $sql ) {
-        // TODO implement strip comments function
     }
 
     /**
