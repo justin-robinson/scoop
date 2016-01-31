@@ -6,6 +6,10 @@ use phpr\Database\Cache\Statement;
 use phpr\Database\Connection;
 use phpr\Database\Rows;
 
+/**
+ * Class Generic
+ * @package phpr\Database\Model
+ */
 class Generic {
 
     /**
@@ -69,8 +73,12 @@ class Generic {
     public function __get ( $name ) {
 
         if ( isset( $this->dBValuesArray[$name] ) ) {
-            return $this->dBValuesArray[$name];
+            $property = $this->dBValuesArray[$name];
+        } else {
+            $property = null;
         }
+
+        return $property;
     }
 
     /**
@@ -176,7 +184,7 @@ class Generic {
             $columnsToInclude = $this->get_column_names ();
         }
 
-        $stdClass = new \StdClass();
+        $stdClass = new \stdClass();
 
         foreach ( $columnsToInclude as $columnName ) {
             $stdClass->$columnName = $this->$columnName;
