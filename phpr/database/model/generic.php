@@ -148,7 +148,7 @@ class Generic {
             // put all rows in the container
             while ( $dbObject = $result->fetch_object ( get_called_class (), [ -1 ] ) ) {
 
-                // make that this came from the DB
+                // mark that this came from the DB
                 $dbObject->loaded_from_database ();
 
                 $rows->addRow ( $dbObject );
