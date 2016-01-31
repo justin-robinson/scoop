@@ -28,7 +28,7 @@ if ( \phpr\Environment::is_internal_ip () ) {
 }
 
 // connect to mysql server
-phpr\Database\Connection::connect ();
+phpr\Database\Connection::get_instance();
 
 // setup mysqli statement cache
 phpr\Database\Model\Generic::$statementCache = new phpr\Database\Cache\Statement();
@@ -90,16 +90,3 @@ function r3a_array ( &$array, $quoteChar ) {
     }
 
 }
-
-/**
- * Everything we need to do when done
- */
-function shutdown () {
-
-    phpr\Database\Connection::disconnect ();
-}
-
-register_shutdown_function('shutdown');
-pcntl_signal(SIGTERM, 'shutdown');
-pcntl_signal(SIGHUP,  'shutdown');
-pcntl_signal(SIGUSR1, 'shutdown');

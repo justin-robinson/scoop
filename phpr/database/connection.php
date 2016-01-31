@@ -2,6 +2,7 @@
 
 namespace phpr\Database;
 use phpr\Environment;
+use phpr\Config;
 
 /**
  * Class Connection
@@ -10,9 +11,14 @@ use phpr\Environment;
 class Connection {
 
     /**
+     * @var Connection
+     */
+    private static $instance;
+
+    /**
      * @var \mysqli
      */
-    private static $mysqli;
+    private $mysqli;
 
     /**
      * @var \mysqli_stmt
@@ -20,21 +26,20 @@ class Connection {
     private static $lastStatementUsed;
 
     /**
-     * Connects to database
-     * @throws Error
+     * Connection constructor.
      */
-    static function connect () {
+    protected function __construct () {
 
-        $config = \phpr\Config::get_db_config ();
+        $config = Config::get_db_config ();
 
         // did we get the file?
         if ( $config ) {
 
-            mysqli_report(MYSQLI_REPORT_STRICT);
+            mysqli_report ( MYSQLI_REPORT_STRICT );
 
             try {
                 // attempt to connect to the db
-                self::$mysqli = new \mysqli(
+                $this->mysqli = new \mysqli(
                     $config['host'],
                     $config['user'],
                     $config['password'],
@@ -42,73 +47,54 @@ class Connection {
                     $config['port'] );
 
                 // die on error
-                if ( self::$mysqli->connect_error ) {
-                    die( 'Connect Error (' . self::$mysqli->connect_errno . ') '
-                        . self::$mysqli->connect_error );
+                if ( $this->mysqli->connect_error ) {
+                    die( 'Connect Error (' . $this->mysqli->connect_errno . ') '
+                        . $this->mysqli->connect_error );
                 }
 
                 // we will manually commit our sql changes
-                self::autocommit ( false );
+                $this->mysqli->autocommit ( false );
             } catch ( \mysqli_sql_exception $e ) {
-                if ( Environment::constant_is_defined_and_equals('NO_DB_CONNECT') ) {
+                if ( Environment::constant_is_defined_and_equals ( 'NO_DB_CONNECT' ) ) {
                     // ignore it
                 } else {
                     throw $e;
                 }
             }
 
-
         } else {
-            throw new Error( 'failed to load db credentials' );
+            throw new \Exception( 'failed to load db credentials' );
         }
-
     }
 
     /**
-     * Closes mysqli connection
+     * Connection destructor
      */
-    static function disconnect () {
+    public function __destruct () {
 
-        if ( Environment::constant_is_defined_and_equals('NO_DB_CONNECT', false) && !self::close () ) {
-            die( 'Error closing connection' );
-        }
+        $threadId = $this->mysqli->thread_id;
+        $this->mysqli->kill ( $threadId );
+        $this->mysqli->close ();
     }
 
-
     /**
-     * pass all missing static function calls the $mysqli resource
-     * @param $name
-     * @param $arguments
-     * @return mixed
+     * @return Connection
      */
-    public static function __callStatic ( $name, $arguments ) {
+    public static function get_instance () {
 
-        // does the unimplemented function exist on the mysqli resource?
-        if ( method_exists ( self::$mysqli, $name ) ) {
-
-            // well call it!
-            $return = call_user_func_array (
-                [
-                    self::$mysqli,
-                    $name
-                ],
-                $arguments );
-        } // how about a property on the mysqli resource?
-        else if ( isset( self::$mysqli->$name ) ) {
-            $return = self::$mysqli->$name;
-        } else {
-            $return = null;
+        if ( empty( static::$instance ) ) {
+            static::$instance = new static();
         }
 
-        return $return;
+        return static::$instance;
     }
 
     /**
      * @param $statement \mysqli_stmt
      */
-    public static function set_last_statement_used ( $statement ) {
+    public static function set_last_statement_used ( &$statement ) {
 
-        static::$lastStatementUsed = $statement;
+        static::$lastStatementUsed = &$statement;
     }
 
     /**
@@ -124,6 +110,37 @@ class Connection {
 
         return $insertId;
     }
+
+    /**
+     * pass all missing static function calls the $mysqli resource
+     * @param $name
+     * @param $arguments
+     * @return mixed
+     */
+    public static function __callStatic ( $name, $arguments ) {
+
+        $instance = static::get_instance ();
+
+        // does the unimplemented function exist on the mysqli resource?
+        if ( method_exists ( $instance->mysqli, $name ) ) {
+
+            // well call it!
+            $return = call_user_func_array (
+                [
+                    $instance->mysqli,
+                    $name
+                ],
+                $arguments );
+        } // how about a property on the mysqli resource?
+        else if ( isset( $instance->mysqli->$name ) ) {
+            $return = $instance->mysqli->$name;
+        } else {
+            $return = null;
+        }
+
+        return $return;
+    }
+
 }
 
 ?>

@@ -93,9 +93,9 @@ class Generic {
         self::$sqlHistoryArray[] = $sql;
 
         // start sql transaction
-        Connection::begin_transaction ();
+        Connection::begin_transaction();
 
-        $statement = static::get_statement ( $sql, $queryParams );
+        $statement = static::get_statement ( $sql );
 
         // bind params
         if ( is_array ( $queryParams ) && !empty( $queryParams ) ) {
