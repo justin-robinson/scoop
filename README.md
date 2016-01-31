@@ -19,6 +19,8 @@ cd phpr
 
 ######Note: $_SERVER\['R_SITE_NAME'\] needs to be set to the name of your site.  This needs to correlate to name of the folder the site's configs live in
 
+
+###Features
 * Built for speed and efficiency
 * Mysqli based and caches prepared statements
 * All classes are autoloaded based on the full namespace, so no messy autoload config files
@@ -31,6 +33,8 @@ cd phpr
 
 PS. do a `composer install` for some colorized output on db model generation
 
+
+###Example
 ```php
 <?php
 
