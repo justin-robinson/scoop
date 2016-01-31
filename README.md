@@ -3,7 +3,14 @@
 
 ######Note: still a work in progress and only for php7. There is a php56 branch for php 5.6 but that isn't maintained
 
-`git clone git@github.com:justin-robinson/phpr.git`
+###Setup
+```bash
+git clone git@github.com:justin-robinson/phpr.git
+cd phpr
+# edit configs/db.php
+./scripts/generate_db_model.php
+```
+Classes will be generated in ../phpr-classes.  Just include phpr/base.php in your php file and you are all set
 
 * Built for speed and efficiency
 * Mysqli based and caches prepared statements
