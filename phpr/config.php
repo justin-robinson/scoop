@@ -61,7 +61,7 @@ class Config {
         if ( is_null ( self::$sharedClassPath ) ) {
 
             $sharedClassPath = Path::make_absolute (
-                $_SERVER['R_SHARED_CLASSPATH_PARENT_DIRECTORY'] . $_SERVER['R_CLASSPATH_FOLDER_NAME'] );
+                $_SERVER['R_SHARED_CLASSPATH_PARENT_DIRECTORY'] . static::get_classpath_folder_name () );
 
             self::$sharedClassPath = $sharedClassPath;
         }
@@ -97,7 +97,7 @@ class Config {
                 self::$siteClassPath = self::get_sites_folder () . '/' . $_SERVER['R_SITE_NAME'];
             }
 
-            self::$siteClassPath .= '/' . $_SERVER['R_CLASSPATH_FOLDER_NAME'];
+            self::$siteClassPath .= '/' . static::get_classpath_folder_name ();
         }
 
         return self::$siteClassPath;
@@ -130,7 +130,7 @@ class Config {
 
         $phprDB = require_once self::get_phpr_class_path () . '/configs/db.php';
 
-        $siteDBConfigPath = self::get_site_class_path () . '/../phpr-configs/db.php';
+        $siteDBConfigPath = self::get_site_class_path () . '/../'. static::get_configpath_folder_name() .' /db.php';
 
         if ( file_exists ( $siteDBConfigPath ) ) {
             $siteDB = include_once $siteDBConfigPath;
@@ -138,5 +138,25 @@ class Config {
         }
 
         return $phprDB;
+    }
+
+    /**
+     * @return string
+     */
+    public static function get_classpath_folder_name () {
+
+        return isset( $_SERVER['R_CLASSPATH_FOLDER_NAME'] )
+            ? $_SERVER['R_CLASSPATH_FOLDER_NAME']
+            : '../';
+    }
+
+    /**
+     * @return string
+     */
+    public static function get_configpath_folder_name () {
+
+        return isset( $_SERVER['R_CONFIGPATH_FOLDER_NAME'] )
+            ? $_SERVER['R_CONFIGPATH_FOLDER_NAME']
+            : '../';
     }
 }

@@ -123,4 +123,14 @@ class Environment {
         return self::$isInternalIP;
 
     }
+
+    /**
+     * @param $value
+     * @param $equals
+     * @return bool
+     */
+    public static function constant_is_defined_and_equals ( $value, $equals = true ) {
+
+        return defined ( $value ) && constant ( $value ) === $equals;
+    }
 }

@@ -1,6 +1,7 @@
 <?php
 
 namespace phpr\Database;
+use phpr\Environment;
 
 /**
  * Class Connection
@@ -29,22 +30,33 @@ class Connection {
         // did we get the file?
         if ( $config ) {
 
-            // attempt to connect to the db
-            self::$mysqli = new \mysqli(
-                $config['host'],
-                $config['user'],
-                $config['password'],
-                '',
-                $config['port'] );
+            mysqli_report(MYSQLI_REPORT_STRICT);
 
-            // die on error
-            if ( self::$mysqli->connect_error ) {
-                die( 'Connect Error (' . self::$mysqli->connect_errno . ') '
-                    . self::$mysqli->connect_error );
+            try {
+                // attempt to connect to the db
+                self::$mysqli = new \mysqli(
+                    $config['host'],
+                    $config['user'],
+                    $config['password'],
+                    '',
+                    $config['port'] );
+
+                // die on error
+                if ( self::$mysqli->connect_error ) {
+                    die( 'Connect Error (' . self::$mysqli->connect_errno . ') '
+                        . self::$mysqli->connect_error );
+                }
+
+                // we will manually commit our sql changes
+                self::autocommit ( false );
+            } catch ( \mysqli_sql_exception $e ) {
+                if ( Environment::constant_is_defined_and_equals('NO_DB_CONNECT') ) {
+                    // ignore it
+                } else {
+                    throw $e;
+                }
             }
 
-            // we will manually commit our sql changes
-            self::autocommit ( false );
 
         } else {
             throw new Error( 'failed to load db credentials' );
@@ -57,7 +69,7 @@ class Connection {
      */
     static function disconnect () {
 
-        if ( !self::close () ) {
+        if ( Environment::constant_is_defined_and_equals('NO_DB_CONNECT', false) && !self::close () ) {
             die( 'Error closing connection' );
         }
     }

@@ -1,20 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-// parse script options
-$opts = getopt (
-    "",
-    [
-        "site:"
-    ] );
-
-// set site name if one was provided
-if ( array_key_exists ( 'site', $opts ) ) {
-    $_SERVER['R_SITE_NAME'] = $opts['site'];
-}
-
-// get the base
-require_once dirname ( __FILE__ ) . "/../base.php";
+$opts = require_once dirname ( __FILE__ ) . '/_script_header.php';
 
 // global or site specific class path?
 if ( array_key_exists ( 'site', $opts ) ) {
@@ -46,7 +33,7 @@ $rows = phpr\Database\Model\Generic::query ( $getAllSchemas );
 $schema = null;
 $table = null;
 
-if ( class_exists('\Colors\Color') ){
+if ( class_exists ( '\Colors\Color' ) ) {
     $c = new \Colors\Color();
 }
 
@@ -76,7 +63,7 @@ foreach ( $rows as $index => $row ) {
 
         echo 'processing ';
 
-        if ( isset($c) ) {
+        if ( isset( $c ) ) {
             echo $c( "`{$schema}`" )->black->highlight ( 'cyan' );
             echo '.';
             echo $c( "`{$table}`" )->white->bold->highlight ( 'green' );
