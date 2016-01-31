@@ -17,12 +17,12 @@ cd phpr
 `./scripts/generate_db_model.php`
 
 ####Args
-    `--site=example.com`
-        stores configs in example.com classpath
-    `--schema=schemaName`
-        only generate for this schema
-    `--table=tableName`
-        only generate for this table ( only valid when --schema is specified )
+`--site=example.com`
+    stores configs in example.com classpath
+`--schema=schemaName`
+    only generate for this schema
+`--table=tableName`
+    only generate for this table ( only valid when --schema is specified )
 
 ###Setting up a site
 1. In configs/framework.php, `'R_SITES_FOLDER'` is set to `'../'` by default.  You can change this to a path relative to the phpr installation or hardcode an absolute path
