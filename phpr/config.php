@@ -43,8 +43,8 @@ class Config {
             $classPaths = [ ];
 
             $classPaths[] = self::get_site_class_path ();
-            $classPaths[] = self::get_phpr_class_path ();
             $classPaths[] = self::get_shared_class_path ();
+            $classPaths[] = self::get_phpr_class_path ();
 
             self::$classPaths = $classPaths;
         }
@@ -130,7 +130,7 @@ class Config {
 
         $phprDB = require_once self::get_phpr_class_path () . '/configs/db.php';
 
-        $siteDBConfigPath = self::get_site_class_path () . '/../'. static::get_configpath_folder_name() . '/db.php';
+        $siteDBConfigPath = self::get_site_class_path () . '/../' . static::get_configpath_folder_name () . '/db.php';
 
         if ( file_exists ( $siteDBConfigPath ) ) {
             $siteDB = include_once $siteDBConfigPath;
