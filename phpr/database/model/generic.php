@@ -111,7 +111,7 @@ class Generic {
         // execute statement
         if ( !$statement->execute () ) {
             Connection::rollback ();
-            trigger_error ( 'MySQL Error Number ( ' . Connection::errno () . ' )' . Connection::error () );
+            trigger_error ( 'MySQL Error Number ( ' . $statement->errno . ' )' . $statement->error );
             var_dump ( $sql );
         }
 

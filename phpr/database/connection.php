@@ -78,6 +78,20 @@ class Connection {
     }
 
     /**
+     * Private clone method to prevent cloning of the instance of the
+     * *Singleton* instance.
+     */
+    private function __clone () {
+    }
+
+    /**
+     * Private unserialize method to prevent unserializing of the *Singleton*
+     * instance.
+     */
+    private function __wakeup () {
+    }
+
+    /**
      * @return Connection
      */
     public static function get_instance () {
@@ -112,6 +126,39 @@ class Connection {
     }
 
     /**
+     * @param int $flags
+     */
+    public static function begin_transaction ( $flags = 0 ) {
+
+        self::get_instance ()->mysqli->begin_transaction ( $flags );
+    }
+
+    /**
+     *
+     */
+    public static function rollback () {
+
+        self::get_instance ()->mysqli->rollback ();
+    }
+
+    /**
+     *
+     */
+    public static function commit () {
+
+        self::get_instance ()->mysqli->commit ();
+    }
+
+    /**
+     * @param $sql
+     * @return \mysqli_stmt
+     */
+    public static function prepare ( $sql ) {
+
+        return self::get_instance ()->mysqli->prepare ( $sql );
+    }
+
+    /**
      * pass all missing static function calls the $mysqli resource
      * @param $name
      * @param $arguments
@@ -132,6 +179,7 @@ class Connection {
                 ],
                 $arguments );
         } // how about a property on the mysqli resource?
+
         else if ( isset( $instance->mysqli->$name ) ) {
             $return = $instance->mysqli->$name;
         } else {
