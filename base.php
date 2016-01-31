@@ -1,8 +1,5 @@
 <?php
 
-// allow <? as well as <?php for opening php tag
-ini_set ( 'short_open_tag', 'On' );
-
 // where phpr is installed
 $installDirectory = pathinfo ( __FILE__, PATHINFO_DIRNAME ) . '/';
 
