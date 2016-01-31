@@ -61,6 +61,7 @@ class Generic {
         // by default all values are null
         $this->orignalDbValuesArray = static::$dBColumnDefaultValuesArray;
 
+        // have to have a way to stop the populate since mysqli->fetch_object runs our __set before our __construct
         if ( is_array ( $dataArray ) || is_object ( $dataArray ) ) {
             $dataArray = array_replace ( static::$dBColumnDefaultValuesArray, (array) $dataArray );
 
