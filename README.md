@@ -3,6 +3,8 @@
 
 ######Note: still a work in progress and only for php7. There is a php56 branch for php 5.6 but that isn't maintained
 
+`git clone git@github.com:justin-robinson/phpr.git`
+
 * Built for speed and efficiency
 * Mysqli based and caches prepared statements
 * All classes are autoloaded based on the full namespace, so no messy autoload config files
