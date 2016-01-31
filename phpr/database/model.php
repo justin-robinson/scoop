@@ -202,27 +202,35 @@ abstract class Model extends Model\Generic {
         $dirtyColumns = $this->get_dirty_columns ();
 
         // did we change any?
-        if ( count ( $dirtyColumns ) > 0 ) {
+        if ( !empty ( $dirtyColumns ) > 0 ) {
 
-            $sqlColumnChanges = [ ];
+            $queryParams = [];
+
+            // build the values we are updating
+            $updatedValues = '';
             foreach ( $dirtyColumns as $columnName => $value ) {
-                $sqlColumnChanges[] = r3a ( $columnName, '`' ) . '=' . print_sql ( $value );
+                $updatedValues .= '`' . $columnName . '`' . '= ?,';
+                $queryParams[] = $value;
             }
+            $updatedValues = rtrim($updatedValues, ',');
 
-            $primaryKeyWhere = [ ];
+            // build identifier for this row
+            $primaryKeyWhere = '';
             foreach ( static::PRIMARY_KEYS as $columnName ) {
-                $primaryKeyWhere[] = r3a ( $columnName, '`' ) . '=' . print_sql ( $this->$columnName );
+                $primaryKeyWhere .= '`' . $columnName . '`' . '= ?,';
+                $queryParams[] = $this->$columnName;
             }
+            $primaryKeyWhere = rtrim($primaryKeyWhere, ',');
 
             $sql =
                 "UPDATE
                 " . $this->get_sql_table_name () . "
                SET
-               " . implode ( ',', $sqlColumnChanges ) . "
+                {$updatedValues}
                WHERE
-               " . implode ( ' AND ', $primaryKeyWhere );
+                {$primaryKeyWhere}";
 
-            $result = self::query ( $sql );
+            $result = self::query ( $sql, $queryParams );
 
             if ( $result ) {
                 $this->loaded_from_database ();

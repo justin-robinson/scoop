@@ -22,6 +22,11 @@ if ( array_key_exists ( 'site', $args ) ) {
     $outPath = phpr\Config::get_shared_class_path ();
 }
 
+$ts = \DB\JorPw\Test::fetch_one();
+
+$ts->name = rand(0, 100000);
+$ts->save();
+
 $where = [
     "table_schema NOT IN (
                'information_schema',
