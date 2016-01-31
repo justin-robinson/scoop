@@ -36,7 +36,7 @@ foreach ( $rows as $row ) {
     $row->column = 'new value';
     echo $row->column;
     
-    // easy save ( this will actually do an update ) 
+    // easy save ( this will actually do an update because we loaded this row from the database ) 
     $row->save();
 }
 
