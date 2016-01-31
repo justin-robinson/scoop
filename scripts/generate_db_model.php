@@ -1,14 +1,47 @@
 #!/usr/bin/env php
 <?php
 
-$opts = require_once dirname ( __FILE__ ) . '/_script_header.php';
+/**
+ * Genereate phpr db models
+ *
+ * args
+ *  --site=example.com
+ *      stores configs in example.com classpath
+ *  --schema=schemaName
+ *      only generate for this schema
+ *  --table=tableName
+ *      only generate for this table ( only valid when --schema is specified )
+ */
+
+$args = require_once dirname ( __FILE__ ) . '/_script_header.php';
 
 // global or site specific class path?
-if ( array_key_exists ( 'site', $opts ) ) {
-    $outPath = phpr\Config::get_site_class_path_by_name ( $opts['site'] );
+if ( array_key_exists ( 'site', $args ) ) {
+    $outPath = phpr\Config::get_site_class_path_by_name ( $args['site'] );
 } else {
     $outPath = phpr\Config::get_shared_class_path ();
 }
+
+$where = [
+    "table_schema NOT IN (
+               'information_schema',
+               'mysql',
+               'performance_schema')"
+];
+$queryParams = [ ];
+// process table and schema longopts
+if ( isset( $args['schema'] ) ) {
+    $where[] = 'table_schema = ?';
+    $queryParams[] = $args['schema'];
+
+    // table is only recognized when a schema a specified
+    if ( isset( $args['table'] ) ) {
+        $where[] = 'table_name = ?';
+        $queryParams[] = $args['table'];
+    }
+}
+
+$where = implode ( ' AND ', $where );
 
 /*
  * Generates db models from all user created schemas
@@ -20,16 +53,13 @@ $getAllSchemas = "
            FROM
              INFORMATION_SCHEMA.COLUMNS
            WHERE
-             table_schema NOT IN (
-               'information_schema',
-               'mysql',
-               'performance_schema')
+             {$where}
            ORDER BY
              table_schema,
              table_name,
              ordinal_position";
 
-$rows = phpr\Database\Model\Generic::query ( $getAllSchemas );
+$rows = phpr\Database\Model\Generic::query ( $getAllSchemas, $queryParams );
 $schema = null;
 $table = null;
 

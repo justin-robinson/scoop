@@ -1,23 +1,20 @@
 <?php
 
+require_once dirname(__FILE__) . '/../phpr/commandline.php';
+
 // parse script options
-$opts = getopt (
-    "",
-    [
-        "site:",
-        "no-db"
-    ] );
+$args = phpr\CommandLine::parseArgs( $_SERVER['argv']);
 
 // set site name if one was provided
-if ( array_key_exists ( 'site', $opts ) ) {
-    $_SERVER['R_SITE_NAME'] = $opts['site'];
+if ( array_key_exists ( 'site', $args ) ) {
+    $_SERVER['R_SITE_NAME'] = $args['site'];
 }
 
-if ( isset($opts['no-db'])) {
+if ( isset( $args['no-db'])) {
     define('NO_DB_CONNECT', true);
 }
 
 // get the base
 require_once dirname ( __FILE__ ) . "/../base.php";
 
-return $opts;
+return $args;

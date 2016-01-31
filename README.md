@@ -13,9 +13,24 @@ cd phpr
 # Just include phpr/base.php in your php file and you are all set
 ```
 
+###Generate DB Models
+`./scripts/generate_db_model.php`
+
+####Args
+    `--site=example.com`
+        stores configs in example.com classpath
+    `--schema=schemaName`
+        only generate for this schema
+    `--table=tableName`
+        only generate for this table ( only valid when --schema is specified )
+
 ###Setting up a site
 1. In configs/framework.php, `'R_SITES_FOLDER'` is set to `'../'` by default.  You can change this to a path relative to the phpr installation or hardcode an absolute path
 2. run `scripts/generate_site_folders.php --site=yoursite.com`
+
+####(Optional) Generate site isolated db models
+`./scripts/generate_db_model.php --site=example.com`
+
 
 ######Note: $_SERVER\['R_SITE_NAME'\] needs to be set to the name of your site.  This needs to correlate to name of the folder the site's configs live in
 
