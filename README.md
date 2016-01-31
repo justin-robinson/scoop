@@ -9,8 +9,9 @@ git clone git@github.com:justin-robinson/phpr.git
 cd phpr
 # edit configs/db.php
 ./scripts/generate_db_model.php
+# Classes will be generated in ../phpr-classes.
+# Just include phpr/base.php in your php file and you are all set
 ```
-Classes will be generated in ../phpr-classes.  Just include phpr/base.php in your php file and you are all set
 
 * Built for speed and efficiency
 * Mysqli based and caches prepared statements
