@@ -15,7 +15,7 @@
 
 PS. do a `composer install` for some colorized output on db model generation
 
-```
+```php
 <?php
 
 // sets up autoloader and db connections
