@@ -45,7 +45,10 @@ $getAllSchemas = "
 $rows = phpr\Database\Model\Generic::query ( $getAllSchemas );
 $schema = null;
 $table = null;
-$c = new \Colors\Color();
+
+if ( class_exists('\Colors\Color') ){
+    $c = new \Colors\Color();
+}
 
 /**
  * @var  $row \phpr\Database\Model
@@ -71,11 +74,17 @@ foreach ( $rows as $index => $row ) {
     // does this row belong to a different table the last one?
     if ( $isNewSchema || $isNewTable ) {
 
-        echo 'processing '
-            . $c("`{$schema}`")->black->highlight('cyan')
-            . '.'
-            . $c("`{$table}`")->white->bold->highlight('green')
-            . PHP_EOL;
+        echo 'processing ';
+
+        if ( isset($c) ) {
+            echo $c( "`{$schema}`" )->black->highlight ( 'cyan' );
+            echo '.';
+            echo $c( "`{$table}`" )->white->bold->highlight ( 'green' );
+        } else {
+            echo "`{$schema}`.`{$table}";
+        }
+
+        echo PHP_EOL;
 
         // save file if we have one
         if ( isset( $coreGenerator ) ) {
