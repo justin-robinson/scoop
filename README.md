@@ -13,6 +13,12 @@ cd phpr
 # Just include phpr/base.php in your php file and you are all set
 ```
 
+###Setting up a site
+1. In configs/framework.php, `'R_SITES_FOLDER'` is set to `'../'` by default.  You can change this to a path relative to the phpr installation or hardcode an absolute path
+2. run `scripts/generate_site_folders.php --site=yoursite.com`
+
+######Note: $_SERVER\['R_SITE_NAME'\] needs to be set to the name of your site.  This needs to correlate to name of the folder the site's configs live in
+
 * Built for speed and efficiency
 * Mysqli based and caches prepared statements
 * All classes are autoloaded based on the full namespace, so no messy autoload config files
@@ -87,10 +93,3 @@ $sql=
 \DB\Model\Generic::fetch($sql);
 
 ```
-
-
-###Setting up a site
-1. In configs/framework.php, `'R_SITES_FOLDER'` is set to `'../'` by default.  You can change this to a path relative to the phpr installation or hardcode an absolute path
-2. run `scripts/generate_site_folders.php --site=yoursite.com`
-
-######Note: $_SERVER\['R_SITE_NAME'\] needs to be set to the name of your site.  This needs to correlate to name of the folder the site's configs live in
