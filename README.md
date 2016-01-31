@@ -1,5 +1,5 @@
 #phpr
-##multi site php 7 framework and orm
+##Multi site php 7 framework and orm for apache 2.4+
 
 ######Note: still a work in progress and only for php7. There is a php56 branch for php 5.6 but that isn't maintained
 
@@ -87,3 +87,10 @@ $sql=
 \DB\Model\Generic::fetch($sql);
 
 ```
+
+
+###Setting up a site
+1. In configs/framework.php, 'R_SITES_FOLDER' is set to '../' by default.  You can change this to a path relative to the phpr installation or hardcode an absolute path
+2. run `scripts/generate_site_folders.php --site=yoursite.com`
+
+######Note: $_SERVER\['R_SITE_NAME'\] needs to be set to the name of your site.  This needs to correlate to name of the folder the site's configs live in
