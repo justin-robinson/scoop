@@ -2,6 +2,8 @@
 
 namespace phpr\Database;
 
+use phpr\Database\Model\Generic;
+
 /**
  * Class Rows
  * @package phpr\Database
@@ -38,7 +40,7 @@ class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
     /**
      * @param $row Model
      */
-    public function addRow ( Model $row ) {
+    public function addRow ( Generic $row ) {
 
         $this->rowsStorageArray[] = $row;
         $this->numRows++;
