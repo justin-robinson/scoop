@@ -266,7 +266,7 @@ abstract class Model extends Model\Generic {
      * get column names of the model
      * @return array
      */
-    public function get_db_values_array () {
+    public function get_db_values_array () : array {
 
         return $this->dBValuesArray;
     }
@@ -275,7 +275,7 @@ abstract class Model extends Model\Generic {
      * Get columns that have changed since we loaded from the db
      * @return array
      */
-    public function get_dirty_columns () {
+    public function get_dirty_columns () : array {
 
         $dbValuesArray = $this->get_db_values_array ();
 
@@ -302,7 +302,7 @@ abstract class Model extends Model\Generic {
     /**
      * @return string
      */
-    public static function get_sql_table_name () {
+    public static function get_sql_table_name () : string {
 
         return "`" . static::SCHEMA . "`.`" . static::TABLE . "`";
     }
@@ -310,7 +310,7 @@ abstract class Model extends Model\Generic {
     /**
      * @return bool
      */
-    public function has_id () {
+    public function has_id () : bool {
 
         $IDColumn = static::AUTO_INCREMENT_COLUMN;
 

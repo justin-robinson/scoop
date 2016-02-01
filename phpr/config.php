@@ -36,7 +36,7 @@ class Config {
      * @return array
      * Gets all possible class paths
      */
-    public static function get_class_paths () {
+    public static function get_class_paths () : array {
 
         if ( is_null ( self::$classPaths ) ) {
 
@@ -56,7 +56,7 @@ class Config {
      * @return string
      * Gets classpath shared by all sites
      */
-    public static function get_shared_class_path () {
+    public static function get_shared_class_path () : string {
 
         if ( is_null ( self::$sharedClassPath ) ) {
 
@@ -71,10 +71,10 @@ class Config {
     }
 
     /**
-     * @return mixed
+     * @return string
      * Gets classpath for native phpr classes
      */
-    public static function get_phpr_class_path () {
+    public static function get_phpr_class_path () : string {
 
         if ( is_null ( self::$phprClassPath ) ) {
             self::$phprClassPath = $_SERVER['R_DOCUMENT_ROOT'];
@@ -87,7 +87,7 @@ class Config {
      * @return string
      * Gets classpath for the current site
      */
-    public static function get_site_class_path () {
+    public static function get_site_class_path () : string {
 
         if ( is_null ( self::$siteClassPath ) ) {
 
@@ -117,16 +117,16 @@ class Config {
     /**
      * @return string
      */
-    public static function get_sites_folder () {
+    public static function get_sites_folder () : string {
 
         return Path::make_absolute ( $_SERVER['R_SITES_FOLDER'] );
 
     }
 
     /**
-     * @return array|mixed
+     * @return array
      */
-    public static function get_db_config () {
+    public static function get_db_config () : array {
 
         $phprDB = require_once self::get_phpr_class_path () . '/configs/db.php';
 
@@ -143,7 +143,7 @@ class Config {
     /**
      * @return string
      */
-    public static function get_classpath_folder_name () {
+    public static function get_classpath_folder_name () : string {
 
         return isset( $_SERVER['R_CLASSPATH_FOLDER_NAME'] )
             ? $_SERVER['R_CLASSPATH_FOLDER_NAME']
@@ -153,7 +153,7 @@ class Config {
     /**
      * @return string
      */
-    public static function get_configpath_folder_name () {
+    public static function get_configpath_folder_name () : string {
 
         return isset( $_SERVER['R_CONFIGPATH_FOLDER_NAME'] )
             ? $_SERVER['R_CONFIGPATH_FOLDER_NAME']

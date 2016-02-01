@@ -35,7 +35,7 @@ class Statement {
      * @param $key
      * @return bool
      */
-    public function exists ( $key ) {
+    public function exists ( $key ) : bool {
 
         return isset( $this->cache[$key] );
     }

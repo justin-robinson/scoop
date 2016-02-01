@@ -88,7 +88,7 @@ class Connection {
     /**
      * @return Connection
      */
-    public static function get_instance () {
+    public static function get_instance () : Connection {
 
         if ( empty( static::$instance ) ) {
             static::$instance = new static();

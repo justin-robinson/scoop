@@ -183,7 +183,7 @@ class Generic {
      * @param array $columnsToInclude
      * @return \StdClass
      */
-    public function to_stdclass ( array $columnsToInclude = [ ] ) {
+    public function to_stdclass ( array $columnsToInclude = [ ] ) : \stdClass {
 
         if ( empty( $columnsToInclude ) ) {
             $columnsToInclude = $this->get_column_names ();
@@ -201,7 +201,7 @@ class Generic {
     /**
      * @return array
      */
-    public function get_column_names () {
+    public function get_column_names () : array {
 
         return array_keys ( $this->dBColumnPropertiesArray );
     }
@@ -209,7 +209,7 @@ class Generic {
     /**
      * @return array
      */
-    public static function get_sql_history () {
+    public static function get_sql_history () : array {
 
         return self::$sqlHistoryArray;
     }
@@ -230,7 +230,7 @@ class Generic {
      * @return string
      * @throws \Exception
      */
-    public static function get_bind_type ( $value ) {
+    public static function get_bind_type ( $value ) : string {
 
         $valueType = gettype ( $value );
 
@@ -257,7 +257,7 @@ class Generic {
      * @return \mysqli_stmt|null
      * @throws \Exception
      */
-    public static function get_statement ( $sql ) {
+    public static function get_statement ( $sql ) : \mysqli_stmt {
 
         $key = md5 ( $sql );
 

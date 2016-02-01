@@ -38,7 +38,7 @@ class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
     /**
      * @param $row Model
      */
-    public function addRow ( $row ) {
+    public function addRow ( Model $row ) {
 
         $this->rowsStorageArray[] = $row;
         $this->numRows++;
@@ -55,7 +55,7 @@ class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
     /**
      * @return bool
      */
-    public function isLastRow () {
+    public function isLastRow () : bool {
 
         return $this->key () === ( $this->numRows - 1 );
     }
