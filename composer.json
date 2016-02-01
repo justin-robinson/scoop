@@ -1,15 +1,17 @@
 {
-  "name": "jor.pw/phpr",
-  "description": "phpr framework",
+  "name": "justin-robinson/phpr",
+  "description": "phpr7 framework and orm",
+  "version" : "0.3.1",
   "minimum-stability": "stable",
-  "license": "proprietary",
+  "license": "Apache License 2.0",
   "authors": [
     {
-      "name": "justin robinson",
+      "name": "Justin Robinson",
       "email": "jrob09bhs@gmail.com"
     }
   ],
   "require": {
+    "php": ">=7.0.0",
     "kevinlebrun/colors.php": "0.4.1"
   }
 }
