@@ -5,16 +5,6 @@
 
 ###Setup
 
-####Git
-```bash
-git clone git@github.com:justin-robinson/phpr.git
-cd phpr
-# edit configs/db.php
-./scripts/generate_db_model.php
-# Classes will be generated in ../phpr-classes.
-# Just include phpr/base.php in your php file and you are all set
-```
-
 ####Composer
 ```json
 {
@@ -23,6 +13,33 @@ cd phpr
   }
 }
 ```
+
+```bash
+# edit ./vendor/justin-robinson/phpr/configs/db.php
+./vendor/justin-robinson/phpr/scripts/generate_db_model.php
+# Classes will be generated in ../phpr-classes
+```
+
+```php
+<?php
+
+require_once 'vendor/autoload.php';
+```
+
+####Git
+```bash
+git clone git@github.com:justin-robinson/phpr.git
+# edit phpr/configs/db.php
+.phpr/scripts/generate_db_model.php
+# Classes will be generated in ../phpr-classes
+```
+
+```php
+<?php
+
+require_once 'phpr/base.php';
+```
+
 
 
 ###Generate DB Models
