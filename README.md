@@ -4,6 +4,8 @@
 ######Note: still a work in progress and only for php7. There is a php56 branch for php 5.6 but that isn't maintained
 
 ###Setup
+
+####Git
 ```bash
 git clone git@github.com:justin-robinson/phpr.git
 cd phpr
@@ -12,6 +14,16 @@ cd phpr
 # Classes will be generated in ../phpr-classes.
 # Just include phpr/base.php in your php file and you are all set
 ```
+
+####Composer
+```json
+{
+  "require": {
+    "justin-robinson/phpr": "dev-master",
+  }
+}
+```
+
 
 ###Generate DB Models
 `./scripts/generate_db_model.php`
