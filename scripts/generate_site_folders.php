@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 
 /**
@@ -8,7 +9,9 @@
  *      create example.com files and folders
  */
 
-$args = require_once dirname ( __FILE__ ) . '/_script_header.php';
+try{
+    $args = require_once dirname ( __FILE__ ) . '/_script_base.php';
+} catch ( mysqli_sql_exception $e ) {}
 
 if ( isset( $_SERVER['R_SITE_NAME'] ) ) {
 
@@ -37,8 +40,6 @@ if ( isset( $_SERVER['R_SITE_NAME'] ) ) {
     } else {
         copy(\phpr\Config::get_phpr_class_path() . '/configs/db.php', $siteDbConfig);
     }
-
-    $one = 1;
 
 } else {
     die('run with --site=example.com');

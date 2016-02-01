@@ -10,10 +10,6 @@ if ( array_key_exists ( 'site', $args ) ) {
     $_SERVER['R_SITE_NAME'] = $args['site'];
 }
 
-if ( isset( $args['no-db'])) {
-    define('NO_DB_CONNECT', true);
-}
-
 // get the base
 require_once dirname ( __FILE__ ) . "/../base.php";
 

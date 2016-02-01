@@ -37,30 +37,22 @@ class Connection {
 
             mysqli_report ( MYSQLI_REPORT_STRICT );
 
-            try {
-                // attempt to connect to the db
-                $this->mysqli = new \mysqli(
-                    $config['host'],
-                    $config['user'],
-                    $config['password'],
-                    '',
-                    $config['port'] );
+            // attempt to connect to the db
+            $this->mysqli = new \mysqli(
+                $config['host'],
+                $config['user'],
+                $config['password'],
+                '',
+                $config['port'] );
 
-                // die on error
-                if ( $this->mysqli->connect_error ) {
-                    die( 'Connect Error (' . $this->mysqli->connect_errno . ') '
-                        . $this->mysqli->connect_error );
-                }
-
-                // we will manually commit our sql changes
-                $this->mysqli->autocommit ( false );
-            } catch ( \mysqli_sql_exception $e ) {
-                if ( Environment::constant_is_defined_and_equals ( 'NO_DB_CONNECT' ) ) {
-                    // ignore it
-                } else {
-                    throw $e;
-                }
+            // die on error
+            if ( $this->mysqli->connect_error ) {
+                die( 'Connect Error (' . $this->mysqli->connect_errno . ') '
+                    . $this->mysqli->connect_error );
             }
+
+            // we will manually commit our sql changes
+            $this->mysqli->autocommit ( false );
 
         } else {
             throw new \Exception( 'failed to load db credentials' );
@@ -72,9 +64,11 @@ class Connection {
      */
     public function __destruct () {
 
-        $threadId = $this->mysqli->thread_id;
-        $this->mysqli->kill ( $threadId );
-        $this->mysqli->close ();
+        if ( isset( $this->mysqli ) ) {
+            $threadId = $this->mysqli->thread_id;
+            $this->mysqli->kill ( $threadId );
+            $this->mysqli->close ();
+        }
     }
 
     /**
