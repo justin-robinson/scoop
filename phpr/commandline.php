@@ -63,7 +63,7 @@ class CommandLine {
      *                      #78651 function getArgs($args) by B Crawford, 22-Oct-2007
      * @usage               $args = CommandLine::parseArgs($_SERVER['argv']);
      */
-    public static function parseArgs ( $argv = null ) {
+    public static function parseArgs ( $argv = null ) : array {
 
         $argv = $argv ? $argv : $_SERVER['argv'];
 
