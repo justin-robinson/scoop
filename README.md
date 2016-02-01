@@ -14,7 +14,7 @@
 }
 ```
 
-```bash
+```shell
 composer install
 # edit ./vendor/justin-robinson/phpr/configs/db.php
 ./vendor/justin-robinson/phpr/scripts/generate_db_model.php
@@ -28,7 +28,7 @@ require_once 'vendor/autoload.php';
 ```
 
 ####Git
-```bash
+```shell
 git clone git@github.com:justin-robinson/phpr.git
 # edit phpr/configs/db.php
 .phpr/scripts/generate_db_model.php
