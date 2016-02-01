@@ -13,5 +13,9 @@
   "require": {
     "php": ">=7.0.0",
     "kevinlebrun/colors.php": "0.4.1"
+  },
+  "autoload": {
+    "psr-4": { "phpr": "phpr/" },
+    "files" : ["autoloader.php"]
   }
 }
