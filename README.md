@@ -15,6 +15,7 @@
 ```
 
 ```bash
+composer install
 # edit ./vendor/justin-robinson/phpr/configs/db.php
 ./vendor/justin-robinson/phpr/scripts/generate_db_model.php
 # Classes will be generated in ../phpr-classes
