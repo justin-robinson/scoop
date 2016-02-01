@@ -1,9 +1,8 @@
 {
   "name": "justin-robinson/phpr",
   "description": "phpr7 framework and orm",
-  "version" : "0.3.1",
   "minimum-stability": "stable",
-  "license": "Apache License 2.0",
+  "license": "Apache-2.0",
   "authors": [
     {
       "name": "Justin Robinson",
@@ -15,7 +14,7 @@
     "kevinlebrun/colors.php": "0.4.1"
   },
   "autoload": {
-    "psr-4": { "phpr": "phpr/" },
+    "psr-0": { "phpr\\": "phpr/" },
     "files" : ["autoloader.php"]
   }
 }
