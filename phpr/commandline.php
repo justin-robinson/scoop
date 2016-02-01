@@ -67,10 +67,14 @@ class CommandLine {
 
         $argv = $argv ? $argv : $_SERVER['argv'];
 
+        // first element is the script name
         array_shift ( $argv );
+
+        $numArgs = count($argv);
+
         $out = [ ];
 
-        for ( $i = 0, $j = count ( $argv ); $i < $j; $i++ ) {
+        for ( $i = 0, $j = $numArgs; $i < $j; $i++ ) {
             $arg = $argv[$i];
 
             // --foo --bar=baz
