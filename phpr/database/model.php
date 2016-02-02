@@ -54,18 +54,21 @@ abstract class Model extends Model\Generic {
     public static $dBColumnDefaultValuesArray;
 
     /**
-     * @return Model
+     * @return bool|int|Model|Rows
      */
     public static function fetch_one () {
 
-        return self::fetch ( 1 )->current ();
+        $one = self::fetch ( 1 );
+
+        return $one ? $one->current() : $one;
+
     }
 
     /**
      * @param int $limit
      * @param int $offset
      *
-     * @return Rows
+     * @return bool|int|Rows
      */
     public static function fetch ( $limit = 1000, $offset = 0 ) {
 

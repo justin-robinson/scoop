@@ -110,7 +110,7 @@ class Generic {
 
             }
 
-        } else if ( !empty( Connection::get_affected_rows () ) ) {
+        } else if ( Connection::get_affected_rows () >= 1 ) {
             $rows = Connection::get_affected_rows ();
         } else {
             $rows = false;
