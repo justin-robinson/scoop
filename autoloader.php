@@ -27,4 +27,3 @@ foreach ( \phpr\Config::get_class_paths () as $classPath ) {
  * true           | prepend this autoloader to the beginning of the autoload queue
  */
 spl_autoload_register ('spl_autoload', true, true );
-
