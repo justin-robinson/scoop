@@ -38,21 +38,6 @@ class Generic {
     protected $loadedFromDb = false;
 
     /**
-     * @var string[]
-     */
-    private static $sqlHistoryArray = [ ];
-
-    /**
-     * @var Statement
-     */
-    public static $statementCache;
-
-    /**
-     * @var \mysqli_stmt
-     */
-    public static $lastStatementUsed;
-
-    /**
      * Generic constructor.
      * @param array $dataArray
      */
@@ -102,18 +87,19 @@ class Generic {
     public static function query ( $sql, $queryParams = [ ] ) {
 
         // log the query
-        self::$sqlHistoryArray[] = $sql;
+        Connection::log_sql($sql);
 
         // start sql transaction
         Connection::begin_transaction ();
 
-        $statement = static::get_statement ( $sql );
+        // use cache to get prepared statement
+        $statement = Connection::get_statement ( $sql );
 
         // bind params
         if ( is_array ( $queryParams ) && !empty( $queryParams ) ) {
             $bindTypes = '';
             foreach ( $queryParams as $name => $value ) {
-                $bindTypes .= self::get_bind_type ( $value );
+                $bindTypes .= Connection::get_bind_type ( $value );
             }
 
             $statement->bind_param ( $bindTypes, ...$queryParams );
@@ -211,54 +197,6 @@ class Generic {
         $this->loadedFromDb = true;
 
         $this->orignalDbValuesArray = $this->dBValuesArray;
-
-    }
-
-    /**
-     * @param $value
-     * @return string
-     * @throws \Exception
-     */
-    public static function get_bind_type ( $value ) : string {
-
-        $valueType = gettype ( $value );
-
-        switch ( $valueType ) {
-            case "string":
-                $bindType = 's';
-                break;
-            case "integer":
-            case "boolean":
-                $bindType = 'i';
-                break;
-            case "double":
-                $bindType = 'd';
-                break;
-            default:
-                throw new \Exception( "Query param has type of {$valueType}" );
-        }
-
-        return $bindType;
-    }
-
-    /**
-     * @param $sql
-     * @return \mysqli_stmt|null
-     * @throws \Exception
-     */
-    public static function get_statement ( $sql ) : \mysqli_stmt {
-
-        $key = md5 ( $sql );
-
-        if ( empty( self::$statementCache->get ( $key ) ) ) {
-
-            // prepare the statement
-            $statement = Connection::prepare ( $sql );
-
-            self::$statementCache->set ( $key, $statement );
-        }
-
-        return self::$statementCache->get ( $key );
 
     }
 

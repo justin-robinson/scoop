@@ -1,6 +1,8 @@
 <?php
 
 namespace phpr\Database;
+
+use phpr\Database\Cache\Statement;
 use phpr\Environment;
 use phpr\Config;
 
@@ -9,6 +11,13 @@ use phpr\Config;
  * @package phpr\Database
  */
 class Connection {
+
+    /**
+     * @var string[]
+     */
+    private static $sqlHistoryArray = [ ];
+
+    private static $loggingEnabled = true;
 
     /**
      * @var Connection
@@ -21,9 +30,14 @@ class Connection {
     private $mysqli;
 
     /**
+     * @var Statement
+     */
+    public static $statementCache;
+
+    /**
      * @var \mysqli_stmt
      */
-    private static $lastStatementUsed;
+    public static $lastStatementUsed;
 
     /**
      * Connection constructor.
@@ -91,7 +105,12 @@ class Connection {
     public static function get_instance () : Connection {
 
         if ( empty( static::$instance ) ) {
+
+            // create a new instance of this class to connect to our db
             static::$instance = new static();
+
+            // create the prepared statement cache
+            static::$statementCache = new Statement();
         }
 
         return static::$instance;
@@ -181,6 +200,81 @@ class Connection {
         }
 
         return $return;
+    }
+
+    /**
+     * @param $sql
+     */
+    public static function log_sql ( $sql ) {
+
+        if ( static::get_logging_enabled() ) {
+            static::$sqlHistoryArray[] = $sql;
+        }
+
+    }
+
+    /**
+     * @param bool $loggingEnabled
+     */
+    public static function set_logging_enabled ( bool $loggingEnabled = true ) {
+
+        self::$loggingEnabled = $loggingEnabled;
+    }
+
+    /**
+     * @return bool
+     */
+    public static function get_logging_enabled () : bool {
+
+        return self::$loggingEnabled;
+    }
+
+    /**
+     * @param $value
+     * @return string
+     * @throws \Exception
+     */
+    public static function get_bind_type ( $value ) : string {
+
+        $valueType = gettype ( $value );
+
+        switch ( $valueType ) {
+            case "string":
+                $bindType = 's';
+                break;
+            case "integer":
+            case "boolean":
+                $bindType = 'i';
+                break;
+            case "double":
+                $bindType = 'd';
+                break;
+            default:
+                throw new \Exception( "Query param has type of {$valueType}" );
+        }
+
+        return $bindType;
+    }
+
+    /**
+     * @param $sql
+     * @return \mysqli_stmt
+     * @throws \Exception
+     */
+    public static function get_statement ( $sql ) : \mysqli_stmt {
+
+        $key = md5 ( $sql );
+
+        if ( empty( self::$statementCache->get ( $key ) ) ) {
+
+            // prepare the statement
+            $statement = static::prepare ( $sql );
+
+            self::$statementCache->set ( $key, $statement );
+        }
+
+        return self::$statementCache->get ( $key );
+
     }
 
 }

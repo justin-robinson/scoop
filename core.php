@@ -37,11 +37,7 @@ if ( \phpr\Environment::is_internal_ip () ) {
 // connect to mysql server
 phpr\Database\Connection::get_instance ();
 
-// setup mysqli statement cache
-phpr\Database\Model\Generic::$statementCache = new phpr\Database\Cache\Statement();
-
-date_default_timezone_set ( $phprConfig['R_TIMEZONE'] );
-
+// todo move serverError to a class somewhere
 /**
  * @param $message
  */
