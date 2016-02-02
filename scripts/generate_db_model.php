@@ -176,24 +176,24 @@ if ( $rows ) {
     }
 }
 
-    function classSafeName ( $name ) {
+function classSafeName ( $name ) {
 
-        // strip out anything that isn't a letter
-        $name = preg_split ( '/[^a-zA-Z]/', $name, -1, PREG_SPLIT_NO_EMPTY );
+    // strip out anything that isn't a letter
+    $name = preg_split ( '/[^a-zA-Z]/', $name, -1, PREG_SPLIT_NO_EMPTY );
 
-        // capitalize first letter in each word
-        $name = array_map (
-            function ( $word ) {
+    // capitalize first letter in each word
+    $name = array_map (
+        function ( $word ) {
 
-                return ucwords ( $word );
-            }, $name );
+            return ucwords ( $word );
+        }, $name );
 
-        // glue all words back together
-        $name = implode ( '', $name );
+    // glue all words back together
+    $name = implode ( '', $name );
 
-        return $name;
+    return $name;
 
-    }
+}
 
 function save () {
 
