@@ -201,7 +201,7 @@ class Generic {
     /**
      * @return array
      */
-    public function get_column_names () : array {
+    public function get_set_column_names () : array {
 
         return array_keys ( $this->orignalDbValuesArray );
     }
