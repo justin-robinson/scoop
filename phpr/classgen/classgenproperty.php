@@ -2,14 +2,34 @@
 
 namespace phpr\ClassGen;
 
+/**
+ * Class ClassGenProperty
+ * @package phpr\ClassGen
+ */
 class ClassGenProperty extends ClassGenAbstract {
 
+    /**
+     * @var string
+     */
     public $name;
 
+    /**
+     * @var null
+     */
     public $value;
 
+    /**
+     * @var bool
+     */
     public $isStatic;
 
+    /**
+     * ClassGenProperty constructor.
+     * @param $name
+     * @param null $value
+     * @param bool $isStatic
+     * @param int $visibility
+     */
     public function __construct ( $name, $value = null, $isStatic = false, $visibility = self::VISIBILITY_PUBLIC ) {
 
         $this->name = $name;
@@ -19,6 +39,9 @@ class ClassGenProperty extends ClassGenAbstract {
 
     }
 
+    /**
+     * @return string
+     */
     public function getHeader () : string {
 
         $propertyValue = var_export ( $this->value, true );
@@ -48,6 +71,9 @@ class ClassGenProperty extends ClassGenAbstract {
         return $line;
     }
 
+    /**
+     * @return string
+     */
     public function getFooter () : string {
 
         return '';

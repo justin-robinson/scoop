@@ -1,38 +1,75 @@
 <?php
 
-/*
- * Generates and saves a php class to a given file name
- */
 namespace phpr\ClassGen;
 
+/**
+ * Generates and saves a php class to a given file name
+ *
+ * Class ClassGenGenerator
+ * @package phpr\ClassGen
+ */
 class ClassGenGenerator {
 
-    // file indentation to be used
+    /**
+     * @var string file indentation to be used
+     */
     public static $indentation = '    ';
 
+    /**
+     * @var ClassGenClass
+     */
     public $class;
 
+    /**
+     * @var array ClassGenProperty[]
+     */
     public $constantPropertiesArray = [ ];
 
+    /**
+     * @var array ClassGenProperty[]
+     */
     public $publicPropertiesArray = [ ];
 
+    /**
+     * @var array ClassGenProperty[]
+     */
     public $staticPropertiesArray = [ ];
 
+    /**
+     * @var array ClassGenProperty[]
+     */
     public $protectedPropertiesArray = [ ];
 
+    /**
+     * @var array ClassGenProperty[]
+     */
     public $privatePropertiesArray = [ ];
 
+    /**
+     * @var array ClassGenFunction[]
+     */
     public $functionsArray = [ ];
 
+    /**
+     * @var null|string
+     */
     public $filepath;
 
-    public function __construct ( ClassGenClass $class, $filepath = null ) {
+    /**
+     * ClassGenGenerator constructor.
+     * @param ClassGenClass $class
+     * @param string|null $filepath
+     */
+    public function __construct ( ClassGenClass $class, string $filepath = '' ) {
 
         $this->class = $class;
         $this->filepath = $filepath;
 
     }
 
+    /**
+     * @param ClassGenProperty $property
+     */
     public function addProperty ( ClassGenProperty $property ) {
 
         // add property to the right array
@@ -57,13 +94,18 @@ class ClassGenGenerator {
         }
     }
 
-    public function addFunction ( $function ) {
+    /**
+     * @param $function
+     */
+//    public function addFunction ( $function ) {
+//
+//        array_push ( $this->functionsArray, $function );
+//    }
 
-        array_push ( $this->functionsArray, $function );
-    }
 
-
-    // write class to file
+    /**
+     * @throws \Exception
+     */
     public function save () {
 
         // open php tag and declare class
@@ -71,11 +113,17 @@ class ClassGenGenerator {
 
         /* START PROPERTY GENERATION */
 
+        /**
+         * @var $constantProperty ClassGenProperty
+         */
         // generate constants
         foreach ( $this->constantPropertiesArray as $constantProperty ) {
             $fileContents .= $constantProperty->get ();
         }
 
+        /**
+         * @var $staticProperty ClassGenProperty
+         */
         // generate static properties
         foreach ( $this->staticPropertiesArray as $staticProperty ) {
 
@@ -85,6 +133,9 @@ class ClassGenGenerator {
 
         $fileContents .= PHP_EOL;
 
+        /**
+         * @var $publicProperty ClassGenProperty
+         */
         // generate public properties
         foreach ( $this->publicPropertiesArray as $publicProperty ) {
 
@@ -94,6 +145,9 @@ class ClassGenGenerator {
 
         $fileContents .= PHP_EOL;
 
+        /**
+         * @var $protectedProperty ClassGenProperty
+         */
         // generate protected properties
         foreach ( $this->protectedPropertiesArray as $protectedProperty ) {
 
@@ -103,6 +157,9 @@ class ClassGenGenerator {
 
         $fileContents .= PHP_EOL;
 
+        /**
+         * @var $privateProperty ClassGenProperty
+         */
         // generate private properties
         foreach ( $this->privatePropertiesArray as $privateProperty ) {
 
@@ -113,10 +170,10 @@ class ClassGenGenerator {
         $fileContents .= PHP_EOL;
 
         // generate functions
-        foreach ( $this->functionsArray as $method ) {
-
-            $fileContents .= $method->get ();
-        }
+//        foreach ( $this->functionsArray as $method ) {
+//
+//            $fileContents .= $method->get ();
+//        }
 
         // close the class
         $fileContents .= $this->class->getFooter ();
@@ -131,21 +188,21 @@ class ClassGenGenerator {
 
     }
 
+    /**
+     * @throws \Exception
+     */
     private function createPath () {
 
         // break file path up
-        $pathParts = (object) pathinfo ( $this->filepath );
-
-        // check that final directory exists
-        $created = file_exists ( $pathParts->dirname );
+        $dirname = pathinfo ( $this->filepath, PATHINFO_DIRNAME );
 
         // create directory if it doesn't exist
-        if ( !$created ) {
-            $created = mkdir ( $pathParts->dirname, 0777, true );
+        if ( ! ($created = file_exists ( $dirname ) ) ) {
+            $created = mkdir ( $dirname, 0777, true );
         }
 
         if ( !$created ) {
-            throw new Error( 'failed to create directory at ' . $pathParts->dirname );
+            throw new \Exception( 'failed to create directory at ' . $dirname );
         }
     }
 

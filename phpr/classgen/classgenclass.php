@@ -2,16 +2,51 @@
 
 namespace phpr\ClassGen;
 
+/**
+ * Class ClassGenClass
+ * @package phpr\ClassGen
+ */
 class ClassGenClass extends ClassGenAbstract {
 
+    /**
+     * @var string
+     */
     public $name;
+
+    /**
+     * @var string
+     */
     public $extends;
+
+    /**
+     * @var array
+     */
     public $implements;
+
+    /**
+     * @var string
+     */
     public $phpDoc = '';
+
+    /**
+     * @var string
+     */
     public $namespace;
-    public $use = [];
 
-    public function __construct ( $name, $extends = null, $namespace = '', $implements = [] ) {
+    /**
+     * @var array
+     */
+    public $use = [ ];
+
+    /**
+     * ClassGenClass constructor.
+     * @param $name
+     * @param null $extends
+     * @param string $namespace
+     * @param array $implements
+     */
+    public function __construct ( $name, $extends = null, $namespace = '', $implements = [ ] ) {
+
         $this->name = $name;
         $this->extends = $extends;
         $this->namespace = $namespace;
@@ -20,68 +55,110 @@ class ClassGenClass extends ClassGenAbstract {
         return $this;
     }
 
-    public function set_name ( $name ) {
+    /**
+     * @param $name string
+     * @return $this
+     */
+    public function set_name ( string $name ) {
+
         $this->name = $name;
+
         return $this;
     }
-    public function set_extends ( $extends ) {
+
+    /**
+     * @param $extends string
+     * @return $this
+     */
+    public function set_extends ( string $extends ) {
+
         $this->extends = $extends;
+
         return $this;
     }
+
+    /**
+     * @param array $implements
+     * @return $this
+     */
     public function set_implements ( array $implements ) {
+
         $this->implements = $implements;
+
         return $this;
     }
-    public function set_namespace ( $namespace ) {
+
+    /**
+     * @param $namespace string
+     * @return $this
+     */
+    public function set_namespace ( string $namespace ) {
+
         $this->namespace = $namespace;
+
         return $this;
     }
+
+    /**
+     * @param array $use
+     * @return $this
+     */
     public function set_use ( array $use ) {
+
         $this->use = $use;
+
         return $this;
     }
 
-    public function append_use( $use ) {
+    /**
+     * @param $use
+     * @return $this
+     */
+    public function append_use ( $use ) {
+
         $this->use[] = $use;
+
         return $this;
     }
 
 
-    public function getHeader() : string {
+    /**
+     * @return string
+     * @throws \Exception
+     */
+    public function getHeader () : string {
 
-
-        if ( $this->is_final() && $this->is_abstract() ) {
-            throw new Error('Class can\'t be final and abstract');
+        if ( $this->is_final () && $this->is_abstract () ) {
+            throw new \Exception( 'Class can\'t be final and abstract' );
         }
 
-        $classModifierArray = [];
+        $classModifierArray = [ ];
 
-        if ( $this->is_final() ) {
+        if ( $this->is_final () ) {
             $classModifierArray[] = $this->modifierStrings[self::MODIFIER_FINAL];
         }
 
-        if ( $this->is_abstract() ) {
+        if ( $this->is_abstract () ) {
             $classModifierArray[] = $this->modifierStrings[self::MODIFIER_ABSTRACT];
         }
 
-        $classModifier = implode(' ', $classModifierArray);
-        if ( !empty($classModifier) ) {
+        $classModifier = implode ( ' ', $classModifierArray );
+        if ( !empty( $classModifier ) ) {
             $classModifier .= ' ';
         }
 
-
         // class name and phpdoc
         $header =
-"<?php
+            "<?php
 
 ";
-        if ( !empty($this->namespace) ) {
+        if ( !empty( $this->namespace ) ) {
             $header .= "namespace {$this->namespace};
 
 ";
         }
 
-        if ( !empty($this->use) ) {
+        if ( !empty( $this->use ) ) {
             foreach ( $this->use as $use ) {
                 $header .= "use {$use};
 
@@ -92,10 +169,10 @@ class ClassGenClass extends ClassGenAbstract {
         $header .= $classModifier . "class {$this->name} ";
 
         // class extends
-        $header .= $this->get_extends_code();
+        $header .= $this->get_extends_code ();
 
         // class implements
-        $header .= $this->get_implements_code();
+        $header .= $this->get_implements_code ();
 
         $header .= " {
 
@@ -104,7 +181,11 @@ class ClassGenClass extends ClassGenAbstract {
         return $header;
     }
 
-    public function getFooter() : string {
+    /**
+     * @return string
+     */
+    public function getFooter () : string {
+
         $footer = "
 }
 
@@ -113,9 +194,12 @@ class ClassGenClass extends ClassGenAbstract {
         return $footer;
     }
 
+    /**
+     * @return string
+     */
     private function get_extends_code () {
 
-        if ( empty($this->extends) ) {
+        if ( empty( $this->extends ) ) {
             $code = '';
         } else {
             $code = 'extends ' . $this->extends;
@@ -124,17 +208,19 @@ class ClassGenClass extends ClassGenAbstract {
         return $code;
     }
 
+    /**
+     * @return string
+     */
     private function get_implements_code () {
 
-        if ( empty($this->implements) ) {
+        if ( empty( $this->implements ) ) {
             $code = '';
         } else {
-            $code = 'implements ' . implode(',', $this->implements);
+            $code = 'implements ' . implode ( ',', $this->implements );
         }
 
         return $code;
     }
-
 
 
 }

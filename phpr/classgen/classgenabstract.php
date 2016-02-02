@@ -2,6 +2,10 @@
 
 namespace phpr\ClassGen;
 
+/**
+ * Class ClassGenAbstract
+ * @package phpr\ClassGen
+ */
 abstract class ClassGenAbstract {
 
     const VISIBILITY_PUBLIC = 0;
@@ -16,18 +20,27 @@ abstract class ClassGenAbstract {
 
     const MODIFIER_CONST = 2;
 
+    /**
+     * @var array
+     */
     public $visibilityStrings = [
         self::VISIBILITY_PUBLIC    => 'public',
         self::VISIBILITY_PRIVATE   => 'private',
         self::VISIBILITY_PROTECTED => 'protected'
     ];
 
+    /**
+     * @var array
+     */
     public $modifierStrings = [
         self::MODIFIER_FINAL    => 'final',
         self::MODIFIER_ABSTRACT => 'abstract',
         self::MODIFIER_CONST    => 'const'
     ];
 
+    /**
+     * @var string
+     */
     public $visibility;
 
     public $modifiers = [
@@ -36,9 +49,56 @@ abstract class ClassGenAbstract {
         self::MODIFIER_CONST    => false
     ];
 
-    /*
-     * Visibility setters
+    /**
+     * @return string
      */
+    public function get () : string {
+
+        return $this->getHeader () . $this->getFooter ();
+    }
+
+    /**
+     * @return string
+     */
+    public function get_visibility () : string {
+
+        return $this->visibilityStrings[$this->visibility];
+    }
+
+    /**
+     * @return bool
+     */
+    public function is_abstract () : bool {
+
+        return $this->modifiers[self::MODIFIER_ABSTRACT];
+    }
+
+    /**
+     * @return bool
+     */
+    public function is_const () : bool {
+
+        return $this->modifiers[self::MODIFIER_CONST];
+    }
+
+    /**
+     * @return bool
+     */
+    public function is_final () : bool {
+
+        return $this->modifiers[self::MODIFIER_FINAL];
+    }
+
+    /**
+     * @return string
+     */
+    abstract function getHeader () : string;
+
+    /**
+     * @return string
+     */
+    abstract function getFooter () : string;
+
     public function set_public () {
 
         $this->visibility = self::VISIBILITY_PUBLIC;
@@ -54,54 +114,28 @@ abstract class ClassGenAbstract {
         $this->visibility = self::VISIBILITY_PROTECTED;
     }
 
-    /*
-     * Modifier setters
+    /**
+     * @param bool $isFinal
      */
     public function set_final ( bool $isFinal = true ) {
 
         $this->modifiers[self::MODIFIER_FINAL] = $isFinal;
     }
 
+    /**
+     * @param bool $isAbstract
+     */
     public function set_abstract ( bool $isAbstract = true ) {
 
         $this->modifiers[self::MODIFIER_ABSTRACT] = $isAbstract;
     }
 
+    /**
+     * @param bool $isAbstract
+     */
     public function set_const ( bool $isAbstract = true ) {
 
         $this->modifiers[self::MODIFIER_CONST] = $isAbstract;
     }
-
-    /*
-     * getters
-     */
-    public function get_visibility () : string {
-
-        return $this->visibilityStrings[$this->visibility];
-    }
-
-    public function is_final () : bool {
-
-        return $this->modifiers[self::MODIFIER_FINAL];
-    }
-
-    public function is_abstract () : bool {
-
-        return $this->modifiers[self::MODIFIER_ABSTRACT];
-    }
-
-    public function is_const () : bool {
-
-        return $this->modifiers[self::MODIFIER_CONST];
-    }
-
-    public function get () : string {
-
-        return $this->getHeader () . $this->getFooter ();
-    }
-
-    abstract function getHeader () : string;
-
-    abstract function getFooter () : string;
 
 }
