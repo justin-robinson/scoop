@@ -56,18 +56,15 @@ class Generic {
      * Generic constructor.
      * @param array $dataArray
      */
-    public function __construct ( $dataArray = [ ] ) {
+    public function __construct ( array $dataArray = [ ] ) {
 
         // by default all values are null
         $this->orignalDbValuesArray = static::$dBColumnDefaultValuesArray;
 
-        // have to have a way to stop the populate since mysqli->fetch_object runs our __set before our __construct
-        if ( is_array ( $dataArray ) || is_object ( $dataArray ) ) {
-            $dataArray = array_replace ( static::$dBColumnDefaultValuesArray, (array) $dataArray );
+        // populate default values with passed ones
+        $dataArray = array_replace ( static::$dBColumnDefaultValuesArray, $dataArray );
 
-            $this->populate ( $dataArray );
-
-        }
+        $this->populate ( $dataArray );
 
     }
 
@@ -146,7 +143,10 @@ class Generic {
             $rows = new Rows();
 
             // put all rows in the container
-            while ( $dbObject = $result->fetch_object ( get_called_class (), [ -1 ] ) ) {
+            while ( $row = $result->fetch_assoc() ) {
+
+                // create a new instance of this model
+                $dbObject = new static($row);
 
                 // mark that this came from the DB
                 $dbObject->loaded_from_database ();
@@ -203,7 +203,7 @@ class Generic {
      */
     public function get_column_names () : array {
 
-        return array_keys ( $this->dBColumnPropertiesArray );
+        return array_keys ( $this->orignalDbValuesArray );
     }
 
     /**
