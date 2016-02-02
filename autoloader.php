@@ -21,9 +21,10 @@ foreach ( \phpr\Config::get_class_paths () as $classPath ) {
     }
 }
 
-spl_autoload_register (
-    function ( $className ) {
-
-        spl_autoload ( $className, '.php' );
-    }, true, true );
+/**
+ * 'spl_autoload' | use built-in psr-0 spl_autoload() 
+ * true           | error thrown if 'spl_autoload' not found
+ * true           | prepend this autoloader to the beginning of the autoload queue
+ */
+spl_autoload_register ('spl_autoload', true, true );
 
