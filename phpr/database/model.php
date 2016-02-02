@@ -60,7 +60,7 @@ abstract class Model extends Model\Generic {
 
         $one = self::fetch ( 1 );
 
-        return $one ? $one->current() : $one;
+        return $one ? $one->current () : $one;
 
     }
 
