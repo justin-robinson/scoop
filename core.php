@@ -10,6 +10,13 @@ $_SERVER['R_DOCUMENT_ROOT'] = $installDirectory;
 $phprConfig = require_once $_SERVER['R_DOCUMENT_ROOT'] . '/configs/framework.php';
 $_SERVER = array_merge ( $_SERVER, $phprConfig );
 
+// load user config file if one exists
+$userConfigFilePath = $_SERVER['R_DOCUMENT_ROOT'] . '/configs/custom.php';
+if ( file_exists ( $userConfigFilePath ) ) {
+    $userConfig = require_once $userConfigFilePath;
+    $_SERVER = array_replace_recursive ( $_SERVER, $userConfig );
+}
+
 // set the timezone if one was provided
 if ( isset( $_SERVER['R_TIMEZONE'] ) ) {
     date_default_timezone_set ( $_SERVER['R_TIMEZONE'] );
@@ -28,7 +35,7 @@ if ( \phpr\Environment::is_internal_ip () ) {
 }
 
 // connect to mysql server
-phpr\Database\Connection::get_instance();
+phpr\Database\Connection::get_instance ();
 
 // setup mysqli statement cache
 phpr\Database\Model\Generic::$statementCache = new phpr\Database\Cache\Statement();

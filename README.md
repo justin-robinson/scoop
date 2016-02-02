@@ -27,11 +27,23 @@ composer install
 require_once 'vendor/autoload.php';
 ```
 
+#####Customize your setup by creating a ./vendor/justin-robinson/phpr/configs/custom.php
+```php
+<?php
+
+// all options can be found in ./vendor/justin-robinson/phpr/configs/framework.php
+
+return [
+    'R_SITES_FOLDER' => '/var/www/sites',
+    'R_TIMEZONE' => 'America/Chicago' // http://php.net/manual/en/timezones.php
+];
+```
+
 ####Git
 ```shell
 git clone git@github.com:justin-robinson/phpr.git
-# edit phpr/configs/db.php
-.phpr/scripts/generate_db_model.php
+# edit ./phpr/configs/db.php
+./phpr/scripts/generate_db_model.php
 # Classes will be generated in ../phpr-classes
 ```
 
@@ -39,6 +51,18 @@ git clone git@github.com:justin-robinson/phpr.git
 <?php
 
 require_once 'phpr/core.php';
+```
+
+#####Customize your setup by creating a ./phpr/configs/custom.php
+```php
+<?php
+
+// all options can be found in ./phpr/configs/framework.php
+
+return [
+    'R_SITES_FOLDER' => '/var/www/sites',
+    'R_TIMEZONE' => 'America/Chicago' // http://php.net/manual/en/timezones.php
+];
 ```
 
 
