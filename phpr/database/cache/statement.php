@@ -8,6 +8,7 @@ namespace phpr\Database\Cache;
  */
 class Statement {
 
+    // todo move cache to redis
     /**
      * @var $cache \mysqli_stmt[]
      */

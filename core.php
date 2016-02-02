@@ -35,7 +35,7 @@ if ( \phpr\Environment::is_internal_ip () ) {
 }
 
 // connect to mysql server
-phpr\Database\Connection::get_instance ();
+phpr\Database\Connection::connect ();
 
 // todo move serverError to a class somewhere
 /**

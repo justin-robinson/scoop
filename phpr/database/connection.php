@@ -100,12 +100,12 @@ class Connection {
     }
 
     /**
-     * @return Connection
+     * Connects to db and initializes cache
+     * return @void
      */
-    public static function get_instance () : Connection {
+    public static function connect () {
 
-        if ( empty( static::$instance ) ) {
-
+        if ( !self::is_connected() ) {
             // create a new instance of this class to connect to our db
             static::$instance = new static();
 
@@ -113,7 +113,26 @@ class Connection {
             static::$statementCache = new Statement();
         }
 
+    }
+
+    /**
+     * @return Connection
+     */
+    public static function get_instance () : Connection {
+
+        if ( !static::is_connected() ) {
+            static::connect();
+        }
+
         return static::$instance;
+    }
+
+    /**
+     * @return bool
+     */
+    public static function is_connected () : bool {
+
+        return is_a ( static::$instance, __CLASS__ );
     }
 
     /**
@@ -207,7 +226,7 @@ class Connection {
      */
     public static function log_sql ( $sql ) {
 
-        if ( static::get_logging_enabled() ) {
+        if ( static::get_logging_enabled () ) {
             static::$sqlHistoryArray[] = $sql;
         }
 
