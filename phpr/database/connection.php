@@ -2,12 +2,11 @@
 
 namespace phpr\Database;
 
-use phpr\Database\Cache\Statement;
 use phpr\Config;
+use phpr\Database\Cache\Statement;
 
 /**
  * Singleton instance mysqli wrapper
- *
  * Class Connection
  * @package phpr\Database
  */
@@ -103,13 +102,15 @@ class Connection {
      * Private clone method to prevent cloning of the instance of the
      * *Singleton* instance.
      */
-    private function __clone () {}
+    private function __clone () {
+    }
 
     /**
      * Private unserialize method to prevent unserializing of the *Singleton*
      * instance.
      */
-    private function __wakeup () {}
+    private function __wakeup () {
+    }
 
     /**
      * Connects to db and initializes cache
@@ -131,18 +132,19 @@ class Connection {
     /**
      * @param $sql
      * @param $queryParams
+     *
      * @return bool|\mysqli_result
      * @throws \Exception
      */
     public static function execute ( $sql, $queryParams ) {
 
-        $self = self::get_instance();
+        $self = self::get_instance ();
 
         // log the query
         static::log_sql ( $sql );
 
         // start sql transaction
-        $self->mysqli->begin_transaction ( );
+        $self->mysqli->begin_transaction ();
 
         // use cache to get prepared statement
         $statement = static::get_statement_from_sql ( $sql );
@@ -196,6 +198,7 @@ class Connection {
 
     /**
      * @param $value
+     *
      * @return string
      * @throws \Exception
      */
@@ -267,6 +270,7 @@ class Connection {
 
     /**
      * @param $sql
+     *
      * @return \mysqli_stmt
      * @throws \Exception
      */

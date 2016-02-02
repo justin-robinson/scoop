@@ -33,7 +33,6 @@ class Environment {
 
     /**
      * @return string
-     *
      * gets integer representation of environment
      */
     public static function get_environment () : string {
@@ -71,7 +70,6 @@ class Environment {
 
     /**
      * @return string
-     *
      * Searches known variables for a hostname
      */
     public static function get_server_name () : string {
@@ -90,7 +88,6 @@ class Environment {
 
     /**
      * @return bool
-     *
      * Determine if client is on an internal network
      */
     public static function is_internal_ip (): bool {
@@ -127,6 +124,7 @@ class Environment {
     /**
      * @param $value
      * @param $equals
+     *
      * @return bool
      */
     public static function constant_is_defined_and_equals ( $value, $equals = true ) : bool {

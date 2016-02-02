@@ -13,7 +13,7 @@ $phprConfig = [
     'R_SHARED_CLASSPATH_PARENT_DIRECTORY' => '../',
     'R_CLASSPATH_FOLDER_NAME'             => 'phpr-classes',
     'R_CONFIGPATH_FOLDER_NAME'            => 'phpr-configs',
-    'R_SITES_FOLDER'                      => '../'
+    'R_SITES_FOLDER'                      => '../',
 ];
 
 $phprConfig['R_VERSION'] =

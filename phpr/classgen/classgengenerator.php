@@ -4,7 +4,6 @@ namespace phpr\ClassGen;
 
 /**
  * Generates and saves a php class to a given file name
- *
  * Class ClassGenGenerator
  * @package phpr\ClassGen
  */
@@ -57,8 +56,9 @@ class ClassGenGenerator {
 
     /**
      * ClassGenGenerator constructor.
+     *
      * @param ClassGenClass $class
-     * @param string|null $filepath
+     * @param string|null   $filepath
      */
     public function __construct ( ClassGenClass $class, string $filepath = '' ) {
 
@@ -101,7 +101,6 @@ class ClassGenGenerator {
 //
 //        array_push ( $this->functionsArray, $function );
 //    }
-
 
     /**
      * @throws \Exception
@@ -197,7 +196,7 @@ class ClassGenGenerator {
         $dirname = pathinfo ( $this->filepath, PATHINFO_DIRNAME );
 
         // create directory if it doesn't exist
-        if ( ! ($created = file_exists ( $dirname ) ) ) {
+        if ( !( $created = file_exists ( $dirname ) ) ) {
             $created = mkdir ( $dirname, 0777, true );
         }
 

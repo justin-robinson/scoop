@@ -40,10 +40,11 @@ class ClassGenClass extends ClassGenAbstract {
 
     /**
      * ClassGenClass constructor.
-     * @param $name
-     * @param null $extends
+     *
+     * @param        $name
+     * @param null   $extends
      * @param string $namespace
-     * @param array $implements
+     * @param array  $implements
      */
     public function __construct ( $name, $extends = null, $namespace = '', $implements = [ ] ) {
 
@@ -57,6 +58,7 @@ class ClassGenClass extends ClassGenAbstract {
 
     /**
      * @param $name string
+     *
      * @return $this
      */
     public function set_name ( string $name ) {
@@ -68,6 +70,7 @@ class ClassGenClass extends ClassGenAbstract {
 
     /**
      * @param $extends string
+     *
      * @return $this
      */
     public function set_extends ( string $extends ) {
@@ -79,6 +82,7 @@ class ClassGenClass extends ClassGenAbstract {
 
     /**
      * @param array $implements
+     *
      * @return $this
      */
     public function set_implements ( array $implements ) {
@@ -90,6 +94,7 @@ class ClassGenClass extends ClassGenAbstract {
 
     /**
      * @param $namespace string
+     *
      * @return $this
      */
     public function set_namespace ( string $namespace ) {
@@ -101,6 +106,7 @@ class ClassGenClass extends ClassGenAbstract {
 
     /**
      * @param array $use
+     *
      * @return $this
      */
     public function set_use ( array $use ) {
@@ -112,6 +118,7 @@ class ClassGenClass extends ClassGenAbstract {
 
     /**
      * @param $use
+     *
      * @return $this
      */
     public function append_use ( $use ) {
@@ -184,19 +191,6 @@ class ClassGenClass extends ClassGenAbstract {
     /**
      * @return string
      */
-    public function getFooter () : string {
-
-        $footer = "
-}
-
-?>";
-
-        return $footer;
-    }
-
-    /**
-     * @return string
-     */
     private function get_extends_code () {
 
         if ( empty( $this->extends ) ) {
@@ -220,6 +214,19 @@ class ClassGenClass extends ClassGenAbstract {
         }
 
         return $code;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFooter () : string {
+
+        $footer = "
+}
+
+?>";
+
+        return $footer;
     }
 
 

@@ -38,6 +38,14 @@ class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
     }
 
     /**
+     * Set position to beginning
+     */
+    public function rewind () {
+
+        $this->position = 0;
+    }
+
+    /**
      * @param $row Model
      */
     public function addRow ( Generic $row ) {
@@ -62,30 +70,31 @@ class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
         return $this->key () === ( $this->numRows - 1 );
     }
 
-    /**
-     * @return array
-     */
-    public function to_array ( ) : array {
-
-        $array = [ ];
-
-        foreach ( $this as $row ) {
-            $array[] = $row->to_array ( );
-        }
-
-        return $array;
-    }
-
     /**********************************
      * Iterator functions
      **********************************/
 
     /**
-     * Set position to beginning
+     * get the current position
+     * @return int
      */
-    public function rewind () {
+    public function key () {
 
-        $this->position = 0;
+        return $this->position;
+    }
+
+    /**
+     * @return array
+     */
+    public function to_array () : array {
+
+        $array = [ ];
+
+        foreach ( $this as $row ) {
+            $array[] = $row->to_array ();
+        }
+
+        return $array;
     }
 
     /**
@@ -95,15 +104,6 @@ class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
     public function current () {
 
         return $this->rowsStorageArray[$this->position];
-    }
-
-    /**
-     * get the current position
-     * @return int
-     */
-    public function key () {
-
-        return $this->position;
     }
 
     /**
@@ -133,6 +133,7 @@ class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
 
     /**
      * @param mixed $offset
+     *
      * @return bool
      */
     public function offsetExists ( $offset ) {
@@ -150,6 +151,7 @@ class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
 
     /**
      * @param mixed $offset
+     *
      * @return null|Model
      */
     public function offsetGet ( $offset ) {

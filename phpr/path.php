@@ -10,15 +10,7 @@ class Path {
 
     /**
      * @param $path
-     * @return bool
-     */
-    public static function is_absolute ( $path ) : bool {
-
-        return strpos ( $path, '/' ) === 0;
-    }
-
-    /**
-     * @param $path
+     *
      * @return string
      */
     public static function make_absolute ( $path ) : string {
@@ -29,6 +21,16 @@ class Path {
 
         return $path;
 
+    }
+
+    /**
+     * @param $path
+     *
+     * @return bool
+     */
+    public static function is_absolute ( $path ) : bool {
+
+        return strpos ( $path, '/' ) === 0;
     }
 
 }

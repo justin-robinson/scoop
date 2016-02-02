@@ -11,6 +11,7 @@ class Server {
 
     /**
      * @param $message
+     *
      * @todo find a better place for this
      */
     public static function send_error ( $message ) {

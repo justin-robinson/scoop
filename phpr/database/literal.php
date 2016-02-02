@@ -15,6 +15,7 @@ class Literal {
 
     /**
      * Literal constructor.
+     *
      * @param $value
      */
     public function __construct ( $value ) {

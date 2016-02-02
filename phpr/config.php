@@ -54,6 +54,45 @@ class Config {
 
     /**
      * @return string
+     * Gets classpath for the current site
+     */
+    public static function get_site_class_path () : string {
+
+        if ( is_null ( self::$siteClassPath ) ) {
+
+            if ( !empty( $_SERVER['DOCUMENT_ROOT'] ) ) {
+                self::$siteClassPath = $_SERVER['DOCUMENT_ROOT'];
+            } else if ( array_key_exists ( 'R_SITE_NAME', $_SERVER ) ) {
+                self::$siteClassPath = self::get_sites_folder () . '/' . $_SERVER['R_SITE_NAME'];
+            }
+
+            self::$siteClassPath .= '/' . static::get_classpath_folder_name ();
+        }
+
+        return self::$siteClassPath;
+    }
+
+    /**
+     * @return string
+     */
+    public static function get_sites_folder () : string {
+
+        return Path::make_absolute ( $_SERVER['R_SITES_FOLDER'] );
+
+    }
+
+    /**
+     * @return string
+     */
+    public static function get_classpath_folder_name () : string {
+
+        return isset( $_SERVER['R_CLASSPATH_FOLDER_NAME'] )
+            ? $_SERVER['R_CLASSPATH_FOLDER_NAME']
+            : '../';
+    }
+
+    /**
+     * @return string
      * Gets classpath shared by all sites
      */
     public static function get_shared_class_path () : string {
@@ -84,27 +123,8 @@ class Config {
     }
 
     /**
-     * @return string
-     * Gets classpath for the current site
-     */
-    public static function get_site_class_path () : string {
-
-        if ( is_null ( self::$siteClassPath ) ) {
-
-            if ( !empty( $_SERVER['DOCUMENT_ROOT'] ) ) {
-                self::$siteClassPath = $_SERVER['DOCUMENT_ROOT'];
-            } else if ( array_key_exists ( 'R_SITE_NAME', $_SERVER ) ) {
-                self::$siteClassPath = self::get_sites_folder () . '/' . $_SERVER['R_SITE_NAME'];
-            }
-
-            self::$siteClassPath .= '/' . static::get_classpath_folder_name ();
-        }
-
-        return self::$siteClassPath;
-    }
-
-    /**
      * @param $siteName
+     *
      * @return string
      */
     public static function get_site_class_path_by_name ( $siteName ) {
@@ -112,15 +132,6 @@ class Config {
         self::$siteClassPath = self::get_sites_folder () . '/' . $siteName . '/' . $_SERVER['R_CLASSPATH_FOLDER_NAME'];
 
         return self::$siteClassPath;
-    }
-
-    /**
-     * @return string
-     */
-    public static function get_sites_folder () : string {
-
-        return Path::make_absolute ( $_SERVER['R_SITES_FOLDER'] );
-
     }
 
     /**
@@ -138,16 +149,6 @@ class Config {
         }
 
         return $phprDB;
-    }
-
-    /**
-     * @return string
-     */
-    public static function get_classpath_folder_name () : string {
-
-        return isset( $_SERVER['R_CLASSPATH_FOLDER_NAME'] )
-            ? $_SERVER['R_CLASSPATH_FOLDER_NAME']
-            : '../';
     }
 
     /**

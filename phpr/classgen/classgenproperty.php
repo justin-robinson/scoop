@@ -25,10 +25,11 @@ class ClassGenProperty extends ClassGenAbstract {
 
     /**
      * ClassGenProperty constructor.
-     * @param $name
+     *
+     * @param      $name
      * @param null $value
      * @param bool $isStatic
-     * @param int $visibility
+     * @param int  $visibility
      */
     public function __construct ( $name, $value = null, $isStatic = false, $visibility = self::VISIBILITY_PUBLIC ) {
 

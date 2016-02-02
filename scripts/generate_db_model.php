@@ -3,7 +3,6 @@
 
 /**
  * Genereate phpr db models
- *
  * args
  *  --site=example.com
  *      stores configs in example.com classpath
@@ -26,7 +25,7 @@ $where = [
     "table_schema NOT IN (
                'information_schema',
                'mysql',
-               'performance_schema')"
+               'performance_schema')",
 ];
 $queryParams = [ ];
 // process table and schema longopts

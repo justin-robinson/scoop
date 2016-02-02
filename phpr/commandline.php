@@ -4,9 +4,7 @@ namespace phpr;
 
 /**
  * CommandLine class
- *
  * Command Line Interface (CLI) utility class.
- *
  * @author              Patrick Fisher <patrick@pwfisher.com>
  * @since               August 21, 2009
  * @see                 https://github.com/pwfisher/CommandLine.php
@@ -17,27 +15,22 @@ class CommandLine {
 
     /**
      * PARSE ARGUMENTS
-     *
      * This command line option parser supports any combination of three types of options
      * [single character options (`-a -b` or `-ab` or `-c -d=dog` or `-cd dog`),
      * long options (`--foo` or `--bar=baz` or `--bar baz`)
      * and arguments (`arg1 arg2`)] and returns a simple array.
-     *
      * [pfisher ~]$ php test.php --foo --bar=baz --spam eggs
      *   ["foo"]   => true
      *   ["bar"]   => "baz"
      *   ["spam"]  => "eggs"
-     *
      * [pfisher ~]$ php test.php -abc foo
      *   ["a"]     => true
      *   ["b"]     => true
      *   ["c"]     => "foo"
-     *
      * [pfisher ~]$ php test.php arg1 arg2 arg3
      *   [0]       => "arg1"
      *   [1]       => "arg2"
      *   [2]       => "arg3"
-     *
      * [pfisher ~]$ php test.php plain-arg --foo --bar=baz --funny="spam=eggs" --also-funny=spam=eggs \
      * > 'plain arg 2' -abc -k=value "plain arg 3" --s="original" --s='overwrite' --s
      *   [0]       => "plain-arg"
@@ -52,9 +45,7 @@ class CommandLine {
      *   ["k"]     => "value"
      *   [2]       => "plain arg 3"
      *   ["s"]     => "overwrite"
-     *
      * Not supported: `-cd=dog`.
-     *
      * @author              Patrick Fisher <patrick@pwfisher.com>
      * @since               August 21, 2009
      * @see                 https://github.com/pwfisher/CommandLine.php
@@ -70,7 +61,7 @@ class CommandLine {
         // first element is the script name
         array_shift ( $argv );
 
-        $numArgs = count($argv);
+        $numArgs = count ( $argv );
 
         $out = [ ];
 

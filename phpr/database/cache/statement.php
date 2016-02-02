@@ -34,20 +34,22 @@ class Statement {
 
     /**
      * @param $key
-     * @return bool
-     */
-    public function exists ( $key ) : bool {
-
-        return isset( $this->cache[$key] );
-    }
-
-    /**
-     * @param $key
+     *
      * @return \mysqli_stmt|null
      */
     public function get ( $key ) {
 
         return self::exists ( $key ) ? $this->cache[$key] : null;
+    }
+
+    /**
+     * @param $key
+     *
+     * @return bool
+     */
+    public function exists ( $key ) : bool {
+
+        return isset( $this->cache[$key] );
     }
 
     /**

@@ -53,27 +53,18 @@ abstract class Model extends Model\Generic {
      */
     public static $dBColumnDefaultValuesArray;
 
-
     /**
-     * Assigns db column values to the dbValuesArray and all other values directly to
-     * the object
-     *
-     * @param $name
-     * @param $value
+     * @return Model
      */
-    public function __set ( $name, $value ) {
+    public static function fetch_one () {
 
-        if ( array_key_exists($name, static::$dBColumnPropertiesArray) ) {
-            $this->dBValuesArray[$name] = $value;
-        } else {
-            $this->$name = $value;
-        }
+        return self::fetch ( 1 )->current ();
     }
-
 
     /**
      * @param int $limit
      * @param int $offset
+     *
      * @return Rows
      */
     public static function fetch ( $limit = 1000, $offset = 0 ) {
@@ -92,18 +83,54 @@ abstract class Model extends Model\Generic {
     }
 
     /**
-     * @return Model
+     * @return string
      */
-    public static function fetch_one () {
+    public static function get_sql_table_name () : string {
 
-        return self::fetch ( 1 )->current ();
+        return "`" . static::SCHEMA . "`.`" . static::TABLE . "`";
     }
 
     /**
-     * @param $where
-     * @param int $limit
-     * @param int $offset
+     * @param $ID
+     *
+     * @return bool|Model
+     */
+    public static function fetch_by_id ( $ID ) {
+
+        $row = false;
+
+        if ( !empty( static::AUTO_INCREMENT_COLUMN ) ) {
+            $where = '`' . static::AUTO_INCREMENT_COLUMN . '` = ?';
+
+            $row = static::fetch_one_where ( $where, [ $ID ] );
+        }
+
+        return $row;
+    }
+
+    /**
+     * @param       $where string
      * @param array $queryParams
+     *
+     * @return Model|bool
+     */
+    public static function fetch_one_where ( $where, array $queryParams = [ ] ) {
+
+        $rows = static::fetch_where ( $where, $queryParams, 1 );
+
+        if ( !empty( $rows ) ) {
+            return $rows[0];
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * @param       $where
+     * @param int   $limit
+     * @param int   $offset
+     * @param array $queryParams
+     *
      * @return Rows
      */
     public static function fetch_where ( $where, array $queryParams = [ ], $limit = 1000, $offset = 0 ) {
@@ -125,36 +152,19 @@ abstract class Model extends Model\Generic {
     }
 
     /**
-     * @param $where string
-     * @param array $queryParams
-     * @return Model|bool
+     * Assigns db column values to the dbValuesArray and all other values directly to
+     * the object
+     *
+     * @param $name
+     * @param $value
      */
-    public static function fetch_one_where ( $where, array $queryParams = [ ] ) {
+    public function __set ( $name, $value ) {
 
-        $rows = static::fetch_where ( $where, $queryParams, 1 );
-
-        if ( !empty( $rows ) ) {
-            return $rows[0];
+        if ( array_key_exists ( $name, static::$dBColumnPropertiesArray ) ) {
+            $this->dBValuesArray[$name] = $value;
         } else {
-            return false;
+            $this->$name = $value;
         }
-    }
-
-    /**
-     * @param $ID
-     * @return bool|Model
-     */
-    public static function fetch_by_id ( $ID ) {
-
-        $row = false;
-
-        if ( !empty( static::AUTO_INCREMENT_COLUMN ) ) {
-            $where = '`' . static::AUTO_INCREMENT_COLUMN . '` = ?';
-
-            $row = static::fetch_one_where ( $where, [ $ID ] );
-        }
-
-        return $row;
     }
 
     /**
@@ -178,7 +188,7 @@ abstract class Model extends Model\Generic {
                 $this->set_literal ( 'dateTimeAdded', 'NOW()' );
             }
 
-            $columns = $this->get_db_values_array();
+            $columns = $this->get_db_values_array ();
 
             // remove columns marked by the db to be NON NULL but we have them locally as null
             foreach ( static::NON_NULL_COLUMNS as $columnName ) {
@@ -190,7 +200,7 @@ abstract class Model extends Model\Generic {
             // build names of columns we are saving and add query params
             $columnNames = '';
             $values = '';
-            $queryParams = [];
+            $queryParams = [ ];
             foreach ( $columns as $columnName => $value ) {
 
                 // add column name
@@ -203,9 +213,8 @@ abstract class Model extends Model\Generic {
                 $queryParams[] = $value;
             }
             // remove last comma
-            $columnNames = rtrim($columnNames,',');
-            $values = rtrim($values, ',');
-
+            $columnNames = rtrim ( $columnNames, ',' );
+            $values = rtrim ( $values, ',' );
 
             // build sql statement
             $sql =
@@ -237,6 +246,15 @@ abstract class Model extends Model\Generic {
     }
 
     /**
+     * @param $key string
+     * @param $value
+     */
+    public function set_literal ( $key, $value ) {
+
+        $this->$key = new Literal( $value );
+    }
+
+    /**
      * Update a model loaded from the db
      */
     protected function update () {
@@ -247,7 +265,7 @@ abstract class Model extends Model\Generic {
         // did we change any?
         if ( !empty ( $dirtyColumns ) > 0 ) {
 
-            $queryParams = [];
+            $queryParams = [ ];
 
             // build the values we are updating
             $updatedValues = '';
@@ -255,11 +273,11 @@ abstract class Model extends Model\Generic {
                 $updatedValues .= "`{$columnName}` = ?,";
                 $queryParams[] = $value;
             }
-            $updatedValues = rtrim($updatedValues, ',');
+            $updatedValues = rtrim ( $updatedValues, ',' );
 
             // try to identify by primary key or original db values
-            $rowIdentifiers = empty(static::PRIMARY_KEYS)
-                ? array_keys($this->orignalDbValuesArray)
+            $rowIdentifiers = empty( static::PRIMARY_KEYS )
+                ? array_keys ( $this->orignalDbValuesArray )
                 : static::PRIMARY_KEYS;
 
             // identify the row we are updating
@@ -268,7 +286,7 @@ abstract class Model extends Model\Generic {
                 $where .= "`{$columnName}` = ?,";
                 $queryParams[] = $this->orignalDbValuesArray[$columnName];
             }
-            $where = rtrim($where, ',');
+            $where = rtrim ( $where, ',' );
 
             $sql =
                 "UPDATE
@@ -286,23 +304,6 @@ abstract class Model extends Model\Generic {
 
         }
 
-    }
-
-    /**
-     * @return array
-     */
-    public function get_column_names () : array {
-
-        return array_keys ( static::$dBColumnPropertiesArray );
-    }
-
-    /**
-     * get column names of the model
-     * @return array
-     */
-    public function get_db_values_array () : array {
-
-        return $this->dBValuesArray;
     }
 
     /**
@@ -334,11 +335,20 @@ abstract class Model extends Model\Generic {
     }
 
     /**
-     * @return string
+     * get column names of the model
+     * @return array
      */
-    public static function get_sql_table_name () : string {
+    public function get_db_values_array () : array {
 
-        return "`" . static::SCHEMA . "`.`" . static::TABLE . "`";
+        return $this->dBValuesArray;
+    }
+
+    /**
+     * @return array
+     */
+    public function get_column_names () : array {
+
+        return array_keys ( static::$dBColumnPropertiesArray );
     }
 
     /**
@@ -349,14 +359,5 @@ abstract class Model extends Model\Generic {
         $IDColumn = static::AUTO_INCREMENT_COLUMN;
 
         return is_numeric ( $this->$IDColumn );
-    }
-
-    /**
-     * @param $key string
-     * @param $value
-     */
-    public function set_literal ( $key, $value ) {
-
-        $this->$key = new Literal( $value );
     }
 }

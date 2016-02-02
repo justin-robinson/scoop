@@ -2,7 +2,6 @@
 
 namespace phpr\Database\Model;
 
-use phpr\Database\Cache\Statement;
 use phpr\Database\Connection;
 use phpr\Database\Rows;
 
@@ -39,6 +38,7 @@ class Generic {
 
     /**
      * Generic constructor.
+     *
      * @param array $dataArray
      */
     public function __construct ( array $dataArray = [ ] ) {
@@ -55,6 +55,7 @@ class Generic {
 
     /**
      * @param $name
+     *
      * @return mixed
      */
     public function __get ( $name ) {
@@ -79,14 +80,16 @@ class Generic {
 
     /**
      * run a raw sql query
-     * @param $sql
+     *
+     * @param       $sql
      * @param array $queryParams
+     *
      * @return bool|int|Rows
      * @throws \Exception
      */
     public static function query ( $sql, $queryParams = [ ] ) {
 
-        $result = Connection::execute($sql, $queryParams);
+        $result = Connection::execute ( $sql, $queryParams );
 
         // format the data if it was a select
         if ( $result && !empty( $result->num_rows ) ) {
@@ -95,10 +98,10 @@ class Generic {
             $rows = new Rows();
 
             // put all rows in the container
-            while ( $row = $result->fetch_assoc() ) {
+            while ( $row = $result->fetch_assoc () ) {
 
                 // create a new instance of this model
-                $dbObject = new static($row);
+                $dbObject = new static( $row );
 
                 // mark that this came from the DB
                 $dbObject->loaded_from_database ();
@@ -107,8 +110,8 @@ class Generic {
 
             }
 
-        } else if ( !empty( Connection::get_affected_rows() ) ) {
-            $rows = Connection::get_affected_rows();
+        } else if ( !empty( Connection::get_affected_rows () ) ) {
+            $rows = Connection::get_affected_rows ();
         } else {
             $rows = false;
         }
@@ -123,6 +126,7 @@ class Generic {
 
     /**
      * generate a new instance of this class from an associative array
+     *
      * @param $dataArray array
      */
     public function populate ( $dataArray ) {
@@ -134,7 +138,7 @@ class Generic {
     /**
      * @return array
      */
-    public function to_array ( ) : array {
+    public function to_array () : array {
 
         return $this->dBValuesArray;
     }

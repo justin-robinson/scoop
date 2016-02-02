@@ -26,7 +26,7 @@ abstract class ClassGenAbstract {
     public $visibilityStrings = [
         self::VISIBILITY_PUBLIC    => 'public',
         self::VISIBILITY_PRIVATE   => 'private',
-        self::VISIBILITY_PROTECTED => 'protected'
+        self::VISIBILITY_PROTECTED => 'protected',
     ];
 
     /**
@@ -35,7 +35,7 @@ abstract class ClassGenAbstract {
     public $modifierStrings = [
         self::MODIFIER_FINAL    => 'final',
         self::MODIFIER_ABSTRACT => 'abstract',
-        self::MODIFIER_CONST    => 'const'
+        self::MODIFIER_CONST    => 'const',
     ];
 
     /**
@@ -46,7 +46,7 @@ abstract class ClassGenAbstract {
     public $modifiers = [
         self::MODIFIER_FINAL    => false,
         self::MODIFIER_ABSTRACT => false,
-        self::MODIFIER_CONST    => false
+        self::MODIFIER_CONST    => false,
     ];
 
     /**
@@ -56,6 +56,16 @@ abstract class ClassGenAbstract {
 
         return $this->getHeader () . $this->getFooter ();
     }
+
+    /**
+     * @return string
+     */
+    abstract function getHeader () : string;
+
+    /**
+     * @return string
+     */
+    abstract function getFooter () : string;
 
     /**
      * @return string
@@ -88,16 +98,6 @@ abstract class ClassGenAbstract {
 
         return $this->modifiers[self::MODIFIER_FINAL];
     }
-
-    /**
-     * @return string
-     */
-    abstract function getHeader () : string;
-
-    /**
-     * @return string
-     */
-    abstract function getFooter () : string;
 
     public function set_public () {
 
