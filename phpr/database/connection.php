@@ -128,7 +128,6 @@ class Connection {
 
     }
 
-
     /**
      * @param $sql
      * @param $queryParams
