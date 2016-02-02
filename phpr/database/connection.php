@@ -3,20 +3,29 @@
 namespace phpr\Database;
 
 use phpr\Database\Cache\Statement;
-use phpr\Environment;
 use phpr\Config;
 
 /**
+ * Singleton instance mysqli wrapper
+ *
  * Class Connection
  * @package phpr\Database
  */
 class Connection {
 
     /**
+     * @var int
+     */
+    private static $affectedRows;
+
+    /**
      * @var string[]
      */
     private static $sqlHistoryArray = [ ];
 
+    /**
+     * @var bool
+     */
     private static $loggingEnabled = true;
 
     /**
@@ -25,19 +34,24 @@ class Connection {
     private static $instance;
 
     /**
+     * @var int
+     */
+    private static $insertId;
+
+    /**
      * @var \mysqli
      */
     private $mysqli;
 
     /**
-     * @var Statement
-     */
-    public static $statementCache;
-
-    /**
      * @var \mysqli_stmt
      */
     public static $lastStatementUsed;
+
+    /**
+     * @var Statement
+     */
+    public static $statementCache;
 
     /**
      * Connection constructor.
@@ -89,15 +103,13 @@ class Connection {
      * Private clone method to prevent cloning of the instance of the
      * *Singleton* instance.
      */
-    private function __clone () {
-    }
+    private function __clone () {}
 
     /**
      * Private unserialize method to prevent unserializing of the *Singleton*
      * instance.
      */
-    private function __wakeup () {
-    }
+    private function __wakeup () {}
 
     /**
      * Connects to db and initializes cache
@@ -105,7 +117,7 @@ class Connection {
      */
     public static function connect () {
 
-        if ( !self::is_connected() ) {
+        if ( !self::is_connected () ) {
             // create a new instance of this class to connect to our db
             static::$instance = new static();
 
@@ -115,16 +127,52 @@ class Connection {
 
     }
 
-    /**
-     * @return Connection
-     */
-    public static function get_instance () : Connection {
 
-        if ( !static::is_connected() ) {
-            static::connect();
+    /**
+     * @param $sql
+     * @param $queryParams
+     * @return bool|\mysqli_result
+     * @throws \Exception
+     */
+    public static function execute ( $sql, $queryParams ) {
+
+        $self = self::get_instance();
+
+        // log the query
+        static::log_sql ( $sql );
+
+        // start sql transaction
+        $self->mysqli->begin_transaction ( );
+
+        // use cache to get prepared statement
+        $statement = static::get_statement_from_sql ( $sql );
+
+        // bind params
+        if ( is_array ( $queryParams ) && !empty( $queryParams ) ) {
+            $bindTypes = '';
+            foreach ( $queryParams as $name => $value ) {
+                $bindTypes .= static::get_bind_type ( $value );
+            }
+
+            $statement->bind_param ( $bindTypes, ...$queryParams );
+
         }
 
-        return static::$instance;
+        // execute statement
+        if ( !$statement->execute () ) {
+            $self->mysqli->rollback ();
+            trigger_error ( 'MySQL Error Number ( ' . $statement->errno . ' )' . $statement->error . PHP_EOL . $sql );
+        }
+
+        // commit this transaction
+        $self->mysqli->commit ();
+
+        // save info for latest query
+        static::$insertId = $statement->insert_id;
+        static::$affectedRows = $statement->affected_rows;
+
+        return $statement->get_result ();
+
     }
 
     /**
@@ -136,92 +184,6 @@ class Connection {
     }
 
     /**
-     * @param $statement \mysqli_stmt
-     */
-    public static function set_last_statement_used ( &$statement ) {
-
-        static::$lastStatementUsed = &$statement;
-    }
-
-    /**
-     * @return int|null
-     */
-    public static function get_insert_id () {
-
-        if ( isset( static::$lastStatementUsed->insert_id ) ) {
-            $insertId = static::$lastStatementUsed->insert_id;
-        } else {
-            $insertId = null;
-        }
-
-        return $insertId;
-    }
-
-    /**
-     * @param int $flags
-     */
-    public static function begin_transaction ( $flags = 0 ) {
-
-        self::get_instance ()->mysqli->begin_transaction ( $flags );
-    }
-
-    /**
-     *
-     */
-    public static function rollback () {
-
-        self::get_instance ()->mysqli->rollback ();
-    }
-
-    /**
-     *
-     */
-    public static function commit () {
-
-        self::get_instance ()->mysqli->commit ();
-    }
-
-    /**
-     * @param $sql
-     * @return \mysqli_stmt
-     */
-    public static function prepare ( $sql ) {
-
-        return self::get_instance ()->mysqli->prepare ( $sql );
-    }
-
-    /**
-     * pass all missing static function calls the $mysqli resource
-     * @param $name
-     * @param $arguments
-     * @return mixed
-     */
-    public static function __callStatic ( $name, $arguments ) {
-
-        $instance = static::get_instance ();
-
-        // does the unimplemented function exist on the mysqli resource?
-        if ( method_exists ( $instance->mysqli, $name ) ) {
-
-            // well call it!
-            $return = call_user_func_array (
-                [
-                    $instance->mysqli,
-                    $name
-                ],
-                $arguments );
-        } // how about a property on the mysqli resource?
-
-        else if ( isset( $instance->mysqli->$name ) ) {
-            $return = $instance->mysqli->$name;
-        } else {
-            $return = null;
-        }
-
-        return $return;
-    }
-
-    /**
      * @param $sql
      */
     public static function log_sql ( $sql ) {
@@ -230,22 +192,6 @@ class Connection {
             static::$sqlHistoryArray[] = $sql;
         }
 
-    }
-
-    /**
-     * @param bool $loggingEnabled
-     */
-    public static function set_logging_enabled ( bool $loggingEnabled = true ) {
-
-        self::$loggingEnabled = $loggingEnabled;
-    }
-
-    /**
-     * @return bool
-     */
-    public static function get_logging_enabled () : bool {
-
-        return self::$loggingEnabled;
     }
 
     /**
@@ -276,18 +222,62 @@ class Connection {
     }
 
     /**
+     * @return int
+     */
+    public static function get_affected_rows () : int {
+
+        return static::$affectedRows;
+    }
+
+    /**
+     * @return int|null
+     */
+    public static function get_insert_id () : int {
+
+        return static::$insertId;
+    }
+
+    /**
+     * @return Connection
+     */
+    public static function get_instance () : Connection {
+
+        if ( !static::is_connected () ) {
+            static::connect ();
+        }
+
+        return static::$instance;
+    }
+
+    /**
+     * @return bool
+     */
+    public static function get_logging_enabled () : bool {
+
+        return self::$loggingEnabled;
+    }
+
+    /**
+     * @return array
+     */
+    public static function get_sql_history () : array {
+
+        return self::$sqlHistoryArray;
+    }
+
+    /**
      * @param $sql
      * @return \mysqli_stmt
      * @throws \Exception
      */
-    public static function get_statement ( $sql ) : \mysqli_stmt {
+    public static function get_statement_from_sql ( $sql ) : \mysqli_stmt {
 
         $key = md5 ( $sql );
 
         if ( empty( self::$statementCache->get ( $key ) ) ) {
 
             // prepare the statement
-            $statement = static::prepare ( $sql );
+            $statement = self::get_instance ()->mysqli->prepare ( $sql );
 
             self::$statementCache->set ( $key, $statement );
         }
@@ -296,6 +286,11 @@ class Connection {
 
     }
 
-}
+    /**
+     * @param bool $loggingEnabled
+     */
+    public static function set_logging_enabled ( bool $loggingEnabled ) {
 
-?>
+        self::$loggingEnabled = $loggingEnabled;
+    }
+}

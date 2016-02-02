@@ -208,7 +208,6 @@ abstract class Model extends Model\Generic {
 
 
             // build sql statement
-            // todo replace sql safe string function with mysqli binding setup
             $sql =
                 "INSERT INTO
               " . static::get_sql_table_name () . "

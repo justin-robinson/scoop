@@ -86,41 +86,7 @@ class Generic {
      */
     public static function query ( $sql, $queryParams = [ ] ) {
 
-        // log the query
-        Connection::log_sql($sql);
-
-        // start sql transaction
-        Connection::begin_transaction ();
-
-        // use cache to get prepared statement
-        $statement = Connection::get_statement ( $sql );
-
-        // bind params
-        if ( is_array ( $queryParams ) && !empty( $queryParams ) ) {
-            $bindTypes = '';
-            foreach ( $queryParams as $name => $value ) {
-                $bindTypes .= Connection::get_bind_type ( $value );
-            }
-
-            $statement->bind_param ( $bindTypes, ...$queryParams );
-
-        }
-
-        // execute statement
-        if ( !$statement->execute () ) {
-            Connection::rollback ();
-            trigger_error ( 'MySQL Error Number ( ' . $statement->errno . ' )' . $statement->error );
-            var_dump ( $sql );
-        }
-
-        // get the result
-        $result = $statement->get_result ();
-
-        // commit this transaction
-        Connection::commit ();
-
-        // save info for latest query
-        Connection::set_last_statement_used ( $statement );
+        $result = Connection::execute($sql, $queryParams);
 
         // format the data if it was a select
         if ( $result && !empty( $result->num_rows ) ) {
@@ -141,8 +107,8 @@ class Generic {
 
             }
 
-        } else if ( !empty( $statement->affected_rows ) ) {
-            $rows = $statement->affected_rows;
+        } else if ( !empty( Connection::get_affected_rows() ) ) {
+            $rows = Connection::get_affected_rows();
         } else {
             $rows = false;
         }
@@ -179,14 +145,6 @@ class Generic {
     public function get_column_names () : array {
 
         return array_keys ( $this->orignalDbValuesArray );
-    }
-
-    /**
-     * @return array
-     */
-    public static function get_sql_history () : array {
-
-        return self::$sqlHistoryArray;
     }
 
     /**
