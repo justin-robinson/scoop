@@ -43,6 +43,33 @@ abstract class Model extends Model\Generic {
 
     const PROP_NULL = 4;
 
+    /**
+     * @var array
+     */
+    public static $dBColumnPropertiesArray;
+
+    /**
+     * @var array
+     */
+    public static $dBColumnDefaultValuesArray;
+
+
+    /**
+     * Assigns db column values to the dbValuesArray and all other values directly to
+     * the object
+     *
+     * @param $name
+     * @param $value
+     */
+    public function __set ( $name, $value ) {
+
+        if ( array_key_exists($name, static::$dBColumnPropertiesArray) ) {
+            $this->dBValuesArray[$name] = $value;
+        } else {
+            $this->$name = $value;
+        }
+    }
+
 
     /**
      * @param int $limit
@@ -260,6 +287,14 @@ abstract class Model extends Model\Generic {
 
         }
 
+    }
+
+    /**
+     * @return array
+     */
+    public function get_column_names () : array {
+
+        return array_keys ( static::$dBColumnPropertiesArray );
     }
 
     /**
