@@ -180,28 +180,17 @@ class Generic {
     }
 
     /**
-     * @param array $columnsToInclude
-     * @return \StdClass
+     * @return array
      */
-    public function to_stdclass ( array $columnsToInclude = [ ] ) : \stdClass {
+    public function to_array ( ) : array {
 
-        if ( empty( $columnsToInclude ) ) {
-            $columnsToInclude = $this->get_column_names ();
-        }
-
-        $stdClass = new \stdClass();
-
-        foreach ( $columnsToInclude as $columnName ) {
-            $stdClass->$columnName = $this->$columnName;
-        }
-
-        return $stdClass;
+        return $this->dBValuesArray;
     }
 
     /**
      * @return array
      */
-    public function get_set_column_names () : array {
+    public function get_column_names () : array {
 
         return array_keys ( $this->orignalDbValuesArray );
     }

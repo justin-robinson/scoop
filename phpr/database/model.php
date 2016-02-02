@@ -292,7 +292,7 @@ abstract class Model extends Model\Generic {
     /**
      * @return array
      */
-    public static function get_column_names () : array {
+    public function get_column_names () : array {
 
         return array_keys ( static::$dBColumnPropertiesArray );
     }

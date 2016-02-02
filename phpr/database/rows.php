@@ -16,7 +16,7 @@ class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
     public $numRows;
 
     /**
-     * @var $rowsStorageArray Model[]
+     * @var $rowsStorageArray Generic[]
      */
     private $rowsStorageArray;
 
@@ -63,15 +63,14 @@ class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
     }
 
     /**
-     * @param array $columnsToInclude
      * @return array
      */
-    public function to_array ( array $columnsToInclude = [ ] ) {
+    public function to_array ( ) : array {
 
         $array = [ ];
 
         foreach ( $this as $row ) {
-            $array[] = $row->to_stdclass ( $columnsToInclude );
+            $array[] = $row->to_array ( );
         }
 
         return $array;
