@@ -36,14 +36,3 @@ if ( \phpr\Environment::is_internal_ip () ) {
 
 // connect to mysql server
 phpr\Database\Connection::connect ();
-
-// todo move serverError to a class somewhere
-/**
- * @param $message
- */
-function serverError ( $message ) {
-
-    header ( $_SERVER['SERVER_PROTOCOL'] . '500 Internal Server Error', true, 500 );
-    echo $message;
-    die;
-}
