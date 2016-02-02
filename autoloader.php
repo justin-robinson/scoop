@@ -24,6 +24,6 @@ foreach ( \phpr\Config::get_class_paths () as $classPath ) {
 spl_autoload_register (
     function ( $className ) {
 
-        spl_autoload ( $className );
+        spl_autoload ( $className, '.php' );
     }, true, true );
 
