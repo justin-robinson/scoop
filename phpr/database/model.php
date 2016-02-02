@@ -166,7 +166,7 @@ abstract class Model extends Model\Generic {
         if ( array_key_exists ( $name, static::$dBColumnPropertiesArray ) ) {
             $this->dBValuesArray[$name] = $value;
         } else {
-            $this->$name = $value;
+            $this->{$name} = $value;
         }
     }
 
@@ -238,7 +238,7 @@ abstract class Model extends Model\Generic {
 
                     $IDColumn = static::AUTO_INCREMENT_COLUMN;
 
-                    $this->$IDColumn = $ID;
+                    $this->{$IDColumn} = $ID;
 
                 }
 
@@ -254,7 +254,7 @@ abstract class Model extends Model\Generic {
      */
     public function set_literal ( $key, $value ) {
 
-        $this->$key = new Literal( $value );
+        $this->{$key} = new Literal( $value );
     }
 
     /**
@@ -361,6 +361,6 @@ abstract class Model extends Model\Generic {
 
         $IDColumn = static::AUTO_INCREMENT_COLUMN;
 
-        return is_numeric ( $this->$IDColumn );
+        return is_numeric ( $this->{$IDColumn} );
     }
 }
