@@ -10,7 +10,7 @@
  */
 
 try{
-    $args = require_once dirname ( __FILE__ ) . '/_script_base.php';
+    $args = require_once dirname ( __FILE__ ) . '/_script_core.php';
 } catch ( mysqli_sql_exception $e ) {}
 
 if ( isset( $_SERVER['R_SITE_NAME'] ) ) {

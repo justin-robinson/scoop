@@ -13,7 +13,7 @@
  *      only generate for this table ( only valid when --schema is specified )
  */
 
-$args = require_once dirname ( __FILE__ ) . '/_script_base.php';
+$args = require_once dirname ( __FILE__ ) . '/_script_core.php';
 
 // global or site specific class path?
 if ( array_key_exists ( 'site', $args ) ) {

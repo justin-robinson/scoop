@@ -11,6 +11,6 @@ if ( array_key_exists ( 'site', $args ) ) {
 }
 
 // get the base
-require_once dirname ( __FILE__ ) . "/../base.php";
+require_once dirname ( __FILE__ ) . "/../bootstrap.php";
 
 return $args;

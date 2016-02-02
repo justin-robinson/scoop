@@ -38,7 +38,7 @@ git clone git@github.com:justin-robinson/phpr.git
 ```php
 <?php
 
-require_once 'phpr/base.php';
+require_once 'phpr/core.php';
 ```
 
 
@@ -84,7 +84,7 @@ PS. do a `composer install` for some colorized output on db model generation
 <?php
 
 // sets up autoloader and db connections
-require_once 'phpr/base.php';
+require_once 'phpr/core.php';
 
 /**
  * returns Rows (collection) of Models
