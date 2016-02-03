@@ -13,29 +13,17 @@ class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
     /**
      * @var int
      */
-    public $numRows;
+    public $numRows = 0;
 
     /**
      * @var $rowsStorageArray Generic[]
      */
-    private $rowsStorageArray;
+    private $rowsStorageArray = [];
 
     /**
      * @var int
      */
-    private $position;
-
-    /**
-     * Rows constructor.
-     */
-    public function __construct () {
-
-        // initialize array storage
-        $this->rowsStorageArray = [ ];
-        $this->numRows = 0;
-        $this->rewind ();
-
-    }
+    private $position = 0;
 
     /**
      * Set position to beginning
@@ -46,18 +34,18 @@ class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
     }
 
     /**
-     * @param $row Model
+     * @param $row Generic
      */
-    public function addRow ( Generic $row ) {
+    public function add_row ( Generic $row ) {
 
         $this->rowsStorageArray[] = $row;
-        $this->numRows++;
+        ++$this->numRows;
     }
 
     /**
      * @return array Model[]
      */
-    public function getRows () : array {
+    public function get_rows () : array {
 
         return $this->rowsStorageArray;
     }
@@ -65,7 +53,7 @@ class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
     /**
      * @return bool
      */
-    public function isLastRow () : bool {
+    public function is_last_row () : bool {
 
         return $this->key () === ( $this->numRows - 1 );
     }

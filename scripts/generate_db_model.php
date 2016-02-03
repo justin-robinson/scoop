@@ -167,7 +167,7 @@ if ( $rows ) {
             $dBColumnsArray[$row->COLUMN_NAME][] = phpr\Database\Model::PROP_AUTO_INCREMENT;
         }
 
-        if ( $rows->isLastRow () ) {
+        if ( $rows->is_last_row () ) {
 
             save ();
 

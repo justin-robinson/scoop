@@ -9,7 +9,7 @@ use phpr\Database\Rows;
  * Class Generic
  * @package phpr\Database\Model
  */
-class Generic {
+class Generic implements \JsonSerializable {
 
     /**
      * instance specific model values
@@ -97,16 +97,11 @@ class Generic {
             // create a container for the rows
             $rows = new Rows();
 
-            // put all rows in the container
-            while ( $row = $result->fetch_assoc () ) {
+            // put all rows in the collection
+            foreach ( $result as $row ) {
 
-                // create a new instance of this model
-                $dbObject = new static( $row );
-
-                // mark that this came from the DB
-                $dbObject->loaded_from_database ();
-
-                $rows->addRow ( $dbObject );
+                // add a new instance of this row to the collection
+                $rows->add_row ( (new static( $row ))->loaded_from_database() );
 
             }
 
@@ -160,9 +155,16 @@ class Generic {
 
         $this->orignalDbValuesArray = $this->dBValuesArray;
 
+        return $this;
+
+    }
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize () {
+
+        return $this->dBValuesArray;
     }
 
 }
-
-
-?>
