@@ -1,4 +1,4 @@
-#phpr
+#Scoop
 ##Multi site php 7 framework and orm for apache 2.4+
 
 ######Note: still a work in progress and only for php7. There is a php56 branch for php 5.6 but that isn't maintained
@@ -9,16 +9,16 @@
 ```json
 {
   "require": {
-    "justin-robinson/phpr": "dev-master",
+    "justin-robinson/scoop": "dev-master",
   }
 }
 ```
 
 ```shell
 composer install
-# edit ./vendor/justin-robinson/phpr/configs/db.php
-./vendor/justin-robinson/phpr/scripts/generate_db_model.php
-# Classes will be generated in ../phpr-classes
+# edit ./vendor/justin-robinson/scoop/configs/db.php
+./vendor/justin-robinson/scoop/scripts/generate_db_model.php
+# Classes will be generated in ../scoop-classes
 ```
 
 ```php
@@ -27,41 +27,41 @@ composer install
 require_once 'vendor/autoload.php';
 ```
 
-#####Customize your setup by creating a ./vendor/justin-robinson/phpr/configs/custom.php
+#####Customize your setup by creating a ./vendor/justin-robinson/scoop/configs/custom.php
 ```php
 <?php
 
-// all options can be found in ./vendor/justin-robinson/phpr/configs/framework.php
+// all options can be found in ./vendor/justin-robinson/scoop/configs/framework.php
 
 return [
-    'R_SITES_FOLDER' => '/var/www/sites',
-    'R_TIMEZONE' => 'America/Chicago' // http://php.net/manual/en/timezones.php
+    'SCOOP_SITES_FOLDER' => '/var/www/sites',
+    'SCOOP_TIMEZONE' => 'America/Chicago' // http://php.net/manual/en/timezones.php
 ];
 ```
 
 ####Git
 ```shell
-git clone git@github.com:justin-robinson/phpr.git
-# edit ./phpr/configs/db.php
-./phpr/scripts/generate_db_model.php
-# Classes will be generated in ../phpr-classes
+git clone git@github.com:justin-robinson/scoop.git
+# edit ./scoop/configs/db.php
+./scoop/scripts/generate_db_model.php
+# Classes will be generated in ../scoop-classes
 ```
 
 ```php
 <?php
 
-require_once 'phpr/core.php';
+require_once 'scoop/core.php';
 ```
 
-#####Customize your setup by creating a ./phpr/configs/custom.php
+#####Customize your setup by creating a ./scoop/configs/custom.php
 ```php
 <?php
 
-// all options can be found in ./phpr/configs/framework.php
+// all options can be found in ./scoop/configs/framework.php
 
 return [
-    'R_SITES_FOLDER' => '/var/www/sites',
-    'R_TIMEZONE' => 'America/Chicago' // http://php.net/manual/en/timezones.php
+    'SCOOP_SITES_FOLDER' => '/var/www/sites',
+    'SCOOP_TIMEZONE' => 'America/Chicago' // http://php.net/manual/en/timezones.php
 ];
 ```
 
@@ -79,14 +79,14 @@ return [
 
 
 ###Setting up a site
-1. In configs/framework.php, `'R_SITES_FOLDER'` is set to `'../'` by default.  You can change this to a path relative to the phpr installation or hardcode an absolute path
+1. In configs/framework.php, `'SCOOP_SITES_FOLDER'` is set to `'../'` by default.  You can change this to a path relative to the Scoop installation or hardcode an absolute path
 2. run `scripts/generate_site_folders.php --site=yoursite.com`
 
 ####(Optional) Generate site isolated db models
 `./scripts/generate_db_model.php --site=example.com`
 
 
-######Note: $_SERVER\['R_SITE_NAME'\] needs to be set to the name of your site.  This needs to correlate to name of the folder the site's configs live in
+######Note: $_SERVER\['SCOOP_SITE_NAME'\] needs to be set to the name of your site.  This needs to correlate to name of the folder the site's configs live in
 
 
 ###Features
@@ -108,7 +108,7 @@ PS. do a `composer install` for some colorized output on db model generation
 <?php
 
 // sets up autoloader and db connections
-require_once 'phpr/core.php';
+require_once 'scoop/core.php';
 
 /**
  * returns Rows (collection) of Models
@@ -141,7 +141,7 @@ $row = $rows[0];
 $row = new \DB\Schema\Table();
 
 // set values to string literals
-$row->someDateColumn = new \phpr\Database\Literal('NOW()');
+$row->someDateColumn = new \Scoop\Database\Literal('NOW()');
 
 $row->save();
 

@@ -1,11 +1,11 @@
 <?php
 
-namespace phpr\ClassGen;
+namespace Scoop\ClassGen;
 
 /**
  * Generates and saves a php class to a given file name
  * Class ClassGenGenerator
- * @package phpr\ClassGen
+ * @package Scoop\ClassGen
  */
 class ClassGenGenerator {
 

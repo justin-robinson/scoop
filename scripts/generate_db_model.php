@@ -2,7 +2,7 @@
 <?php
 
 /**
- * Genereate phpr db models
+ * Genereate Scoop db models
  * args
  *  --site=example.com
  *      stores configs in example.com classpath
@@ -16,9 +16,9 @@ $args = require_once dirname ( __FILE__ ) . '/_script_core.php';
 
 // global or site specific class path?
 if ( array_key_exists ( 'site', $args ) ) {
-    $outPath = phpr\Config::get_site_class_path_by_name ( $args['site'] );
+    $outPath = Scoop\Config::get_site_class_path_by_name ( $args['site'] );
 } else {
-    $outPath = phpr\Config::get_shared_class_path ();
+    $outPath = Scoop\Config::get_shared_class_path ();
 }
 
 $where = [
@@ -58,7 +58,7 @@ $getAllSchemas = "
              table_name,
              ordinal_position";
 
-$rows = phpr\Database\Model\Generic::query ( $getAllSchemas, $queryParams );
+$rows = Scoop\Database\Model\Generic::query ( $getAllSchemas, $queryParams );
 $schema = null;
 $table = null;
 
@@ -118,20 +118,20 @@ if ( $rows ) {
             $filepath = strtolower ( $outPath . '/db/' . $safeSchema . '/' . $name . '.php' );
             $coreFilepath = strtolower ( $outPath . '/dbcore/' . $safeSchema . '/' . $coreName . '.php' );
 
-            $dbClass = new phpr\ClassGen\ClassGenClass( $name );
+            $dbClass = new Scoop\ClassGen\ClassGenClass( $name );
             $dbClass->set_extends ( '\\' . $coreNamespace . '\\' . $coreName )
                     ->set_namespace ( $namespace );
-            $generator = new phpr\ClassGen\ClassGenGenerator( $dbClass, $filepath );
+            $generator = new Scoop\ClassGen\ClassGenGenerator( $dbClass, $filepath );
 
-            $dbCoreClass = new phpr\ClassGen\ClassGenClass( $coreName );
+            $dbCoreClass = new Scoop\ClassGen\ClassGenClass( $coreName );
             $dbCoreClass->set_extends ( 'Model' )
                         ->set_namespace ( $coreNamespace )
-                        ->append_use ( 'phpr\Database\Model' );
-            $coreGenerator = new phpr\ClassGen\ClassGenGenerator( $dbCoreClass, $coreFilepath );
+                        ->append_use ( 'Scoop\Database\Model' );
+            $coreGenerator = new Scoop\ClassGen\ClassGenGenerator( $dbCoreClass, $coreFilepath );
 
             // add table and schema name
-            $schemaProperty = new phpr\ClassGen\ClassGenProperty( 'schema', $row->TABLE_SCHEMA );
-            $tableProperty = new phpr\ClassGen\ClassGenProperty( 'table', $row->TABLE_NAME );
+            $schemaProperty = new Scoop\ClassGen\ClassGenProperty( 'schema', $row->TABLE_SCHEMA );
+            $tableProperty = new Scoop\ClassGen\ClassGenProperty( 'table', $row->TABLE_NAME );
 
             $schemaProperty->set_const ();
             $tableProperty->set_const ();
@@ -153,7 +153,7 @@ if ( $rows ) {
         // add special properties
         if ( $row->COLUMN_KEY === 'PRI' ) {
             $primaryKeys[] = $row->COLUMN_NAME;
-            $dBColumnsArray[$row->COLUMN_NAME][] = phpr\Database\Model::PROP_PRIMARY_KEY;
+            $dBColumnsArray[$row->COLUMN_NAME][] = Scoop\Database\Model::PROP_PRIMARY_KEY;
         }
 
         if ( $row->IS_NULLABLE === 'NO' ) {
@@ -164,7 +164,7 @@ if ( $rows ) {
         $extras = explode ( ',', $row->EXTRA );
         if ( in_array ( 'auto_increment', $extras ) ) {
             $autoIncrementColumn = $row->COLUMN_NAME;
-            $dBColumnsArray[$row->COLUMN_NAME][] = phpr\Database\Model::PROP_AUTO_INCREMENT;
+            $dBColumnsArray[$row->COLUMN_NAME][] = Scoop\Database\Model::PROP_AUTO_INCREMENT;
         }
 
         if ( $rows->is_last_row () ) {
@@ -235,19 +235,19 @@ function save () {
     $coreGenerator->class->phpDoc = $phpDoc;
 
     // add the primary keys and autoincrement columns
-    $AIProperty = new phpr\ClassGen\ClassGenProperty( 'autoIncrementColumn', $autoIncrementColumn );
+    $AIProperty = new Scoop\ClassGen\ClassGenProperty( 'autoIncrementColumn', $autoIncrementColumn );
     $AIProperty->set_const ();
 
-    $primaryKeys = new phpr\ClassGen\ClassGenProperty( 'primaryKeys', $primaryKeys );
+    $primaryKeys = new Scoop\ClassGen\ClassGenProperty( 'primaryKeys', $primaryKeys );
     $primaryKeys->set_const ();
 
-    $nonNullColumns = new phpr\ClassGen\ClassGenProperty( 'nonNullColumns', $nonNullColumns );
+    $nonNullColumns = new Scoop\ClassGen\ClassGenProperty( 'nonNullColumns', $nonNullColumns );
     $nonNullColumns->set_const ();
 
-    $columnProperties = new phpr\ClassGen\ClassGenProperty( 'dBColumnPropertiesArray', $dBColumnsArray );
+    $columnProperties = new Scoop\ClassGen\ClassGenProperty( 'dBColumnPropertiesArray', $dBColumnsArray );
     $columnProperties->isStatic = true;
 
-    $columnDefaultValues = new phpr\ClassGen\ClassGenProperty( 'dBColumnDefaultValuesArray', array_fill_keys ( array_keys ( $dBColumnsArray ), null ) );
+    $columnDefaultValues = new Scoop\ClassGen\ClassGenProperty( 'dBColumnDefaultValuesArray', array_fill_keys ( array_keys ( $dBColumnsArray ), null ) );
     $columnDefaultValues->isStatic = true;
 
     $coreGenerator->addProperty ( $AIProperty );

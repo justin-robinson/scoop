@@ -1,10 +1,10 @@
 <?php
 
-namespace phpr\ClassGen;
+namespace Scoop\ClassGen;
 
 /**
  * Class ClassGenProperty
- * @package phpr\ClassGen
+ * @package Scoop\ClassGen
  */
 class ClassGenProperty extends ClassGenAbstract {
 

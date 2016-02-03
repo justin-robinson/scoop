@@ -5,9 +5,9 @@ $args = require_once dirname ( __FILE__ ) . '/_script_core.php';
 
 // global or site specific class path?
 if ( array_key_exists ( 'site', $args ) ) {
-    $outPath = phpr\Config::get_site_class_path_by_name ( $args['site'] );
+    $outPath = Scoop\Config::get_site_class_path_by_name ( $args['site'] );
 } else {
-    $outPath = phpr\Config::get_shared_class_path ();
+    $outPath = Scoop\Config::get_shared_class_path ();
 }
 
 $starttime = microtime( true);

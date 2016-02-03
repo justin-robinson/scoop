@@ -1,10 +1,10 @@
 <?php
 
-namespace phpr\Database\Cache;
+namespace Scoop\Database\Cache;
 
 /**
  * Class Statement
- * @package phpr\Database\Cache
+ * @package Scoop\Database\Cache
  */
 class Statement {
 

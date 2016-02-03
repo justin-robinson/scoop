@@ -1,10 +1,10 @@
 <?php
 
-namespace phpr;
+namespace Scoop;
 
 /**
  * Class Environment
- * @package phpr
+ * @package Scoop
  */
 class Environment {
 

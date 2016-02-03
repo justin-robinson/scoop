@@ -1,10 +1,10 @@
 <?php
 
-namespace phpr;
+namespace Scoop;
 
 /**
  * Class Path
- * @package phpr
+ * @package Scoop
  */
 class Path {
 
@@ -16,7 +16,7 @@ class Path {
     public static function make_absolute ( $path ) : string {
 
         if ( !Path::is_absolute ( $path ) ) {
-            $path = $_SERVER['R_DOCUMENT_ROOT'] . $path;
+            $path = $_SERVER['SCOOP_DOCUMENT_ROOT'] . $path;
         }
 
         return $path;

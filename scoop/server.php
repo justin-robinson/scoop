@@ -1,10 +1,10 @@
 <?php
 
-namespace phpr;
+namespace Scoop;
 
 /**
  * Class Server
- * @package phpr
+ * @package Scoop
  */
 class Server {
 

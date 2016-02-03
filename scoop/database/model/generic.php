@@ -1,13 +1,13 @@
 <?php
 
-namespace phpr\Database\Model;
+namespace Scoop\Database\Model;
 
-use phpr\Database\Connection;
-use phpr\Database\Rows;
+use Scoop\Database\Connection;
+use Scoop\Database\Rows;
 
 /**
  * Class Generic
- * @package phpr\Database\Model
+ * @package Scoop\Database\Model
  */
 class Generic implements \JsonSerializable {
 

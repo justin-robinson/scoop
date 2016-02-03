@@ -1,12 +1,12 @@
 <?php
 
-namespace phpr\Database;
+namespace Scoop\Database;
 
-use phpr\Database\Model\Generic;
+use Scoop\Database\Model\Generic;
 
 /**
  * Class Rows
- * @package phpr\Database
+ * @package Scoop\Database
  */
 class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
 

@@ -3,19 +3,19 @@
 /**************
  * composer
  * ************/
-$composerAutoloaderPath = $_SERVER['R_DOCUMENT_ROOT'] . '/vendor/autoload.php';
+$composerAutoloaderPath = $_SERVER['SCOOP_DOCUMENT_ROOT'] . '/vendor/autoload.php';
 if ( file_exists ( $composerAutoloaderPath ) ) {
     require_once $composerAutoloaderPath;
 }
 
 /**************
- * phpr
+ * Scoop
  **************/
-require_once $_SERVER['R_DOCUMENT_ROOT'] . '/phpr/config.php';
-require_once $_SERVER['R_DOCUMENT_ROOT'] . '/phpr/path.php';
+require_once $_SERVER['SCOOP_DOCUMENT_ROOT'] . '/scoop/config.php';
+require_once $_SERVER['SCOOP_DOCUMENT_ROOT'] . '/scoop/path.php';
 
 // load all classpaths that exist
-foreach ( \phpr\Config::get_class_paths () as $classPath ) {
+foreach ( \Scoop\Config::get_class_paths () as $classPath ) {
     if ( $classPath = realpath ( $classPath ) ) {
         set_include_path ( get_include_path () . PATH_SEPARATOR . $classPath . '/' );
     }

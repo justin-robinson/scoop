@@ -1,10 +1,10 @@
 <?php
 
-namespace phpr\Database;
+namespace Scoop\Database;
 
 /**
  * Class Literal
- * @package phpr\Database
+ * @package Scoop\Database
  */
 class Literal {
 

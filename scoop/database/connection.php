@@ -1,14 +1,14 @@
 <?php
 
-namespace phpr\Database;
+namespace Scoop\Database;
 
-use phpr\Config;
-use phpr\Database\Cache\Statement;
+use Scoop\Config;
+use Scoop\Database\Cache\Statement;
 
 /**
  * Singleton instance mysqli wrapper
  * Class Connection
- * @package phpr\Database
+ * @package Scoop\Database
  */
 class Connection {
 

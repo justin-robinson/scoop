@@ -13,10 +13,10 @@ try {
 } catch ( mysqli_sql_exception $e ) {
 }
 
-if ( isset( $_SERVER['R_SITE_NAME'] ) ) {
+if ( isset( $_SERVER['SCOOP_SITE_NAME'] ) ) {
 
     // get the classpath for this site
-    $siteClassPath = \phpr\Config::get_site_class_path ();
+    $siteClassPath = \Scoop\Config::get_site_class_path ();
     $sitePath = pathinfo ( $siteClassPath, PATHINFO_DIRNAME );
 
     // ensure path exists
@@ -26,7 +26,7 @@ if ( isset( $_SERVER['R_SITE_NAME'] ) ) {
     }
 
     // get config path for this site
-    $siteConfigPath = $sitePath . '/' . \phpr\Config::get_configpath_folder_name ();
+    $siteConfigPath = $sitePath . '/' . \Scoop\Config::get_configpath_folder_name ();
     @mkdir ( $siteConfigPath );
 
     if ( !file_exists ( $siteConfigPath ) ) {
@@ -36,9 +36,9 @@ if ( isset( $_SERVER['R_SITE_NAME'] ) ) {
     // copy default db config if one is not present
     $siteDbConfig = $siteConfigPath . '/db.php';
     if ( file_exists ( $siteDbConfig ) ) {
-        echo 'db config already exists for `' . $_SERVER['R_SITE_NAME'] . '` at :' . realpath ( $siteDbConfig );
+        echo 'db config already exists for `' . $_SERVER['SCOOP_SITE_NAME'] . '` at :' . realpath ( $siteDbConfig );
     } else {
-        copy ( \phpr\Config::get_phpr_class_path () . '/configs/db.php', $siteDbConfig );
+        copy ( \Scoop\Config::get_Scoop_class_path () . '/configs/db.php', $siteDbConfig );
     }
 
 } else {

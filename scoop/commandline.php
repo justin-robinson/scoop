@@ -1,6 +1,6 @@
 <?php
 
-namespace phpr;
+namespace Scoop;
 
 /**
  * CommandLine class

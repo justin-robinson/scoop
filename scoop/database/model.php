@@ -1,10 +1,10 @@
 <?php
 
-namespace phpr\Database;
+namespace Scoop\Database;
 
 /**
  * Class Model
- * @package phpr\Database
+ * @package Scoop\Database
  */
 abstract class Model extends Model\Generic {
 

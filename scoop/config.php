@@ -1,10 +1,10 @@
 <?php
 
-namespace phpr;
+namespace Scoop;
 
 /**
  * Class Config
- * @package phpr
+ * @package Scoop
  */
 class Config {
 
@@ -22,9 +22,9 @@ class Config {
 
     /**
      * @var string
-     * cache for get_phpr_class_path()
+     * cache for get_Scoop_class_path()
      */
-    private static $phprClassPath;
+    private static $ScoopClassPath;
 
     /**
      * @var string
@@ -44,7 +44,7 @@ class Config {
 
             $classPaths[] = self::get_site_class_path ();
             $classPaths[] = self::get_shared_class_path ();
-            $classPaths[] = self::get_phpr_class_path ();
+            $classPaths[] = self::get_Scoop_class_path ();
 
             self::$classPaths = $classPaths;
         }
@@ -62,8 +62,8 @@ class Config {
 
             if ( !empty( $_SERVER['DOCUMENT_ROOT'] ) ) {
                 self::$siteClassPath = $_SERVER['DOCUMENT_ROOT'];
-            } else if ( array_key_exists ( 'R_SITE_NAME', $_SERVER ) ) {
-                self::$siteClassPath = self::get_sites_folder () . '/' . $_SERVER['R_SITE_NAME'];
+            } else if ( array_key_exists ( 'SCOOP_SITE_NAME', $_SERVER ) ) {
+                self::$siteClassPath = self::get_sites_folder () . '/' . $_SERVER['SCOOP_SITE_NAME'];
             }
 
             self::$siteClassPath .= '/' . static::get_classpath_folder_name ();
@@ -77,7 +77,7 @@ class Config {
      */
     public static function get_sites_folder () : string {
 
-        return Path::make_absolute ( $_SERVER['R_SITES_FOLDER'] );
+        return Path::make_absolute ( $_SERVER['SCOOP_SITES_FOLDER'] );
 
     }
 
@@ -86,8 +86,8 @@ class Config {
      */
     public static function get_classpath_folder_name () : string {
 
-        return isset( $_SERVER['R_CLASSPATH_FOLDER_NAME'] )
-            ? $_SERVER['R_CLASSPATH_FOLDER_NAME']
+        return isset( $_SERVER['SCOOP_CLASSPATH_FOLDER_NAME'] )
+            ? $_SERVER['SCOOP_CLASSPATH_FOLDER_NAME']
             : '../';
     }
 
@@ -100,7 +100,7 @@ class Config {
         if ( is_null ( self::$sharedClassPath ) ) {
 
             $sharedClassPath = Path::make_absolute (
-                $_SERVER['R_SHARED_CLASSPATH_PARENT_DIRECTORY'] . static::get_classpath_folder_name () );
+                $_SERVER['SCOOP_SHARED_CLASSPATH_PARENT_DIRECTORY'] . static::get_classpath_folder_name () );
 
             self::$sharedClassPath = $sharedClassPath;
         }
@@ -111,15 +111,15 @@ class Config {
 
     /**
      * @return string
-     * Gets classpath for native phpr classes
+     * Gets classpath for native Scoop classes
      */
-    public static function get_phpr_class_path () : string {
+    public static function get_Scoop_class_path () : string {
 
-        if ( is_null ( self::$phprClassPath ) ) {
-            self::$phprClassPath = $_SERVER['R_DOCUMENT_ROOT'];
+        if ( is_null ( self::$ScoopClassPath ) ) {
+            self::$ScoopClassPath = $_SERVER['SCOOP_DOCUMENT_ROOT'];
         }
 
-        return self::$phprClassPath;
+        return self::$ScoopClassPath;
     }
 
     /**
@@ -129,7 +129,7 @@ class Config {
      */
     public static function get_site_class_path_by_name ( $siteName ) {
 
-        self::$siteClassPath = self::get_sites_folder () . '/' . $siteName . '/' . $_SERVER['R_CLASSPATH_FOLDER_NAME'];
+        self::$siteClassPath = self::get_sites_folder () . '/' . $siteName . '/' . $_SERVER['SCOOP_CLASSPATH_FOLDER_NAME'];
 
         return self::$siteClassPath;
     }
@@ -139,16 +139,16 @@ class Config {
      */
     public static function get_db_config () : array {
 
-        $phprDB = require_once self::get_phpr_class_path () . '/configs/db.php';
+        $ScoopDB = require_once self::get_Scoop_class_path () . '/configs/db.php';
 
         $siteDBConfigPath = self::get_site_class_path () . '/../' . static::get_configpath_folder_name () . '/db.php';
 
         if ( file_exists ( $siteDBConfigPath ) ) {
             $siteDB = include_once $siteDBConfigPath;
-            $phprDB = array_replace_recursive ( $phprDB, $siteDB );
+            $ScoopDB = array_replace_recursive ( $ScoopDB, $siteDB );
         }
 
-        return $phprDB;
+        return $ScoopDB;
     }
 
     /**
@@ -156,8 +156,8 @@ class Config {
      */
     public static function get_configpath_folder_name () : string {
 
-        return isset( $_SERVER['R_CONFIGPATH_FOLDER_NAME'] )
-            ? $_SERVER['R_CONFIGPATH_FOLDER_NAME']
+        return isset( $_SERVER['SCOOP_CONFIGPATH_FOLDER_NAME'] )
+            ? $_SERVER['SCOOP_CONFIGPATH_FOLDER_NAME']
             : '../';
     }
 }

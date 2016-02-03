@@ -1,32 +1,32 @@
 <?php
 
-// where phpr is installed
+// where Scoop is installed
 $installDirectory = pathinfo ( __FILE__, PATHINFO_DIRNAME ) . '/';
 
 // set the R variable
-$_SERVER['R_DOCUMENT_ROOT'] = $installDirectory;
+$_SERVER['SCOOP_DOCUMENT_ROOT'] = $installDirectory;
 
 // load config into server variable
-$phprConfig = require_once $_SERVER['R_DOCUMENT_ROOT'] . '/configs/framework.php';
-$_SERVER = array_merge ( $_SERVER, $phprConfig );
+$ScoopConfig = require_once $_SERVER['SCOOP_DOCUMENT_ROOT'] . '/configs/framework.php';
+$_SERVER = array_merge ( $_SERVER, $ScoopConfig );
 
 // load user config file if one exists
-$userConfigFilePath = $_SERVER['R_DOCUMENT_ROOT'] . '/configs/custom.php';
+$userConfigFilePath = $_SERVER['SCOOP_DOCUMENT_ROOT'] . '/configs/custom.php';
 if ( file_exists ( $userConfigFilePath ) ) {
     $userConfig = require_once $userConfigFilePath;
     $_SERVER = array_replace_recursive ( $_SERVER, $userConfig );
 }
 
 // set the timezone if one was provided
-if ( isset( $_SERVER['R_TIMEZONE'] ) ) {
-    date_default_timezone_set ( $_SERVER['R_TIMEZONE'] );
+if ( isset( $_SERVER['SCOOP_TIMEZONE'] ) ) {
+    date_default_timezone_set ( $_SERVER['SCOOP_TIMEZONE'] );
 }
 
 // the autoloader
-require_once ( $_SERVER['R_DOCUMENT_ROOT'] . '/autoloader.php' );
+require_once ( $_SERVER['SCOOP_DOCUMENT_ROOT'] . '/autoloader.php' );
 
 // show errors for internal ips
-if ( \phpr\Environment::is_internal_ip () ) {
+if ( \Scoop\Environment::is_internal_ip () ) {
     ini_set ( 'display_errors', 'On' );
     ini_set ( 'display_startup_errors', 'On' );
 } else {
@@ -35,4 +35,4 @@ if ( \phpr\Environment::is_internal_ip () ) {
 }
 
 // connect to mysql server
-phpr\Database\Connection::connect ();
+Scoop\Database\Connection::connect ();

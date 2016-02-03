@@ -1,10 +1,10 @@
 <?php
 
-namespace phpr\ClassGen;
+namespace Scoop\ClassGen;
 
 /**
  * Class ClassGenAbstract
- * @package phpr\ClassGen
+ * @package Scoop\ClassGen
  */
 abstract class ClassGenAbstract {
 
