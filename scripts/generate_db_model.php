@@ -97,7 +97,7 @@ if ( $rows ) {
                 echo '.';
                 echo $c( "`{$table}`" )->white->bold->highlight ( 'green' );
             } else {
-                echo "`{$schema}`.`{$table}";
+                echo "`{$schema}`.`{$table}`";
             }
 
             echo PHP_EOL;
