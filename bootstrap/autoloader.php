@@ -1,9 +1,11 @@
 <?php
 
+require_once \Scoop\Config::get_option('install_dir') . '/scoop/path.php';
+
 /**************
  * composer
  * ************/
-$composerAutoloaderPath = $_SERVER['SCOOP_DOCUMENT_ROOT'] . '/vendor/autoload.php';
+$composerAutoloaderPath = \Scoop\Config::get_option('install_dir') . '/vendor/autoload.php';
 if ( file_exists ( $composerAutoloaderPath ) ) {
     require_once $composerAutoloaderPath;
 }
@@ -11,8 +13,6 @@ if ( file_exists ( $composerAutoloaderPath ) ) {
 /**************
  * Scoop
  **************/
-require_once $_SERVER['SCOOP_DOCUMENT_ROOT'] . '/scoop/config.php';
-require_once $_SERVER['SCOOP_DOCUMENT_ROOT'] . '/scoop/path.php';
 
 // load all classpaths that exist
 foreach ( \Scoop\Config::get_class_paths () as $classPath ) {

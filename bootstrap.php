@@ -1,3 +1,3 @@
 <?php
 
-require_once 'core.php';
+require_once 'bootstrap/core.php';

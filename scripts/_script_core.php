@@ -7,7 +7,7 @@ $args = Scoop\CommandLine::parseArgs ( $_SERVER['argv'] );
 
 // set site name if one was provided
 if ( array_key_exists ( 'site', $args ) ) {
-    $_SERVER['SCOOP_SITE_NAME'] = $args['site'];
+    $_SERVER['SITE_NAME'] = $args['site'];
 }
 
 // get the base

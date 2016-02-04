@@ -16,7 +16,7 @@ class Path {
     public static function make_absolute ( $path ) : string {
 
         if ( !Path::is_absolute ( $path ) ) {
-            $path = $_SERVER['SCOOP_DOCUMENT_ROOT'] . $path;
+            $path = Config::get_option('install_dir') . $path;
         }
 
         return $path;

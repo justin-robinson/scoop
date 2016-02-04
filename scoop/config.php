@@ -8,29 +8,7 @@ namespace Scoop;
  */
 class Config {
 
-    /**
-     * @var string[]
-     * cache for get_class_paths()
-     */
-    private static $classPaths;
-
-    /**
-     * @var string
-     * cache for get_shared_class_path()
-     */
-    private static $sharedClassPath;
-
-    /**
-     * @var string
-     * cache for get_Scoop_class_path()
-     */
-    private static $ScoopClassPath;
-
-    /**
-     * @var string
-     * cache for get_site_class_path()
-     */
-    private static $siteClassPath;
+    private static $options = [ ];
 
     /**
      * @return array
@@ -38,100 +16,11 @@ class Config {
      */
     public static function get_class_paths () : array {
 
-        if ( is_null ( self::$classPaths ) ) {
-
-            $classPaths = [ ];
-
-            $classPaths[] = self::get_site_class_path ();
-            $classPaths[] = self::get_shared_class_path ();
-            $classPaths[] = self::get_Scoop_class_path ();
-
-            self::$classPaths = $classPaths;
-        }
-
-        return self::$classPaths;
-    }
-
-    /**
-     * @return string
-     * Gets classpath for the current site
-     */
-    public static function get_site_class_path () : string {
-
-        if ( is_null ( self::$siteClassPath ) ) {
-
-            if ( !empty( $_SERVER['DOCUMENT_ROOT'] ) ) {
-                self::$siteClassPath = $_SERVER['DOCUMENT_ROOT'];
-            } else if ( array_key_exists ( 'SCOOP_SITE_NAME', $_SERVER ) ) {
-                self::$siteClassPath = self::get_sites_folder () . '/' . $_SERVER['SCOOP_SITE_NAME'];
-            }
-
-            self::$siteClassPath .= '/' . static::get_classpath_folder_name ();
-        }
-
-        return self::$siteClassPath;
-    }
-
-    /**
-     * @return string
-     */
-    public static function get_sites_folder () : string {
-
-        return Path::make_absolute ( $_SERVER['SCOOP_SITES_FOLDER'] );
-
-    }
-
-    /**
-     * @return string
-     */
-    public static function get_classpath_folder_name () : string {
-
-        return isset( $_SERVER['SCOOP_CLASSPATH_FOLDER_NAME'] )
-            ? $_SERVER['SCOOP_CLASSPATH_FOLDER_NAME']
-            : '../';
-    }
-
-    /**
-     * @return string
-     * Gets classpath shared by all sites
-     */
-    public static function get_shared_class_path () : string {
-
-        if ( is_null ( self::$sharedClassPath ) ) {
-
-            $sharedClassPath = Path::make_absolute (
-                $_SERVER['SCOOP_SHARED_CLASSPATH_PARENT_DIRECTORY'] . static::get_classpath_folder_name () );
-
-            self::$sharedClassPath = $sharedClassPath;
-        }
-
-        return self::$sharedClassPath;
-
-    }
-
-    /**
-     * @return string
-     * Gets classpath for native Scoop classes
-     */
-    public static function get_Scoop_class_path () : string {
-
-        if ( is_null ( self::$ScoopClassPath ) ) {
-            self::$ScoopClassPath = $_SERVER['SCOOP_DOCUMENT_ROOT'];
-        }
-
-        return self::$ScoopClassPath;
-    }
-
-    /**
-     * @param $siteName
-     *
-     * @return string
-     */
-    public static function get_site_class_path_by_name ( $siteName ) {
-
-        self::$siteClassPath = self::get_sites_folder () . '/' . $siteName . '/' . $_SERVER['SCOOP_CLASSPATH_FOLDER_NAME'];
-
-        return self::$siteClassPath;
+        return [
+            self::get_site_class_path (),
+            self::get_shared_class_path (),
+            self::get_option ( 'install_dir' ),
+        ];
     }
 
     /**
@@ -139,9 +28,10 @@ class Config {
      */
     public static function get_db_config () : array {
 
-        $ScoopDB = require_once self::get_Scoop_class_path () . '/configs/db.php';
+        $ScoopDB = require_once self::get_option ( 'install_dir' ) . '/configs/db.php';
 
-        $siteDBConfigPath = self::get_site_class_path () . '/../' . static::get_configpath_folder_name () . '/db.php';
+        $siteDBConfigPath = self::get_site_class_path ()
+            . '/../' . self::get_option ( 'configpath_folder_name' ) . '/db.php';
 
         if ( file_exists ( $siteDBConfigPath ) ) {
             $siteDB = include_once $siteDBConfigPath;
@@ -151,13 +41,76 @@ class Config {
         return $ScoopDB;
     }
 
+    public static function get_option ( $name ) {
+
+        return array_key_exists ( $name, self::$options ) ? self::$options[$name] : null;
+    }
+
+    /**
+     * @return string
+     * Gets classpath shared by all sites
+     */
+    public static function get_shared_class_path () : string {
+
+        if ( self::option_exists ( 'shared_classpath_parent_directory' ) ) {
+
+            return Path::make_absolute (
+                self::get_option ( 'shared_classpath_parent_directory' ) . self::get_option ( 'classpath_folder_name' ) );
+        }
+
+        return null;
+
+    }
+
+    /**
+     * @return string
+     * Gets classpath for the current site
+     */
+    public static function get_site_class_path () : string {
+
+        if ( self::option_exists ( 'server_document_root' ) ) {
+            $siteClassPath = self::get_option ( 'server_document_root' );
+        } else if ( self::option_exists ( 'site_name' ) ) {
+            $siteClassPath = self::get_sites_folder () . '/' . self::get_option ( 'site_name' );
+        } else {
+            $siteClassPath = '';
+        }
+
+        return $siteClassPath . '/' . self::get_option ( 'classpath_folder_name' );
+
+    }
+
+    /**
+     * @param $siteName
+     *
+     * @return string
+     */
+    public static function get_site_class_path_by_name ( $siteName ) {
+
+        return self::get_sites_folder () . '/' . $siteName . '/' . self::get_option ( 'classpath_folder_name' );
+    }
+
     /**
      * @return string
      */
-    public static function get_configpath_folder_name () : string {
+    public static function get_sites_folder () : string {
 
-        return isset( $_SERVER['SCOOP_CONFIGPATH_FOLDER_NAME'] )
-            ? $_SERVER['SCOOP_CONFIGPATH_FOLDER_NAME']
-            : '../';
+        return Path::make_absolute ( self::get_option ( 'sites_folder' ) );
+
+    }
+
+    public static function option_exists ( $name ) {
+
+        return array_key_exists ( $name, self::$options );
+    }
+
+    public static function set_options ( array $options ) {
+
+        self::$options = array_merge_recursive ( self::$options, $options );
+    }
+
+    public static function set_option ( $name, $option ) {
+
+        self::$options[$name] = $option;
     }
 }

@@ -34,8 +34,8 @@ require_once 'vendor/autoload.php';
 // all options can be found in ./vendor/justin-robinson/scoop/configs/framework.php
 
 return [
-    'SCOOP_SITES_FOLDER' => '/var/www/sites',
-    'SCOOP_TIMEZONE' => 'America/Chicago' // http://php.net/manual/en/timezones.php
+    'sites_folder' => '/var/www/sites',
+    'timezone' => 'America/Chicago' // http://php.net/manual/en/timezones.php
 ];
 ```
 
@@ -50,7 +50,7 @@ git clone git@github.com:justin-robinson/scoop.git
 ```php
 <?php
 
-require_once 'scoop/core.php';
+require_once 'scoop/bootstrap.php';
 ```
 
 #####Customize your setup by creating a ./scoop/configs/custom.php
@@ -60,8 +60,8 @@ require_once 'scoop/core.php';
 // all options can be found in ./scoop/configs/framework.php
 
 return [
-    'SCOOP_SITES_FOLDER' => '/var/www/sites',
-    'SCOOP_TIMEZONE' => 'America/Chicago' // http://php.net/manual/en/timezones.php
+    'sites_folder' => '/var/www/sites',
+    'timezone' => 'America/Chicago' // http://php.net/manual/en/timezones.php
 ];
 ```
 
@@ -79,14 +79,14 @@ return [
 
 
 ###Setting up a site
-1. In configs/framework.php, `'SCOOP_SITES_FOLDER'` is set to `'../'` by default.  You can change this to a path relative to the Scoop installation or hardcode an absolute path
+1. In configs/framework.php, `'sites_folder'` is set to `'../'` by default.  You can change this to a path relative to the Scoop installation or hardcode an absolute path
 2. run `scripts/generate_site_folders.php --site=yoursite.com`
 
 ####(Optional) Generate site isolated db models
 `./scripts/generate_db_model.php --site=example.com`
 
 
-######Note: $_SERVER\['SCOOP_SITE_NAME'\] needs to be set to the name of your site.  This needs to correlate to name of the folder the site's configs live in
+######Note: $_SERVER\['site_name'\] needs to be set to the name of your site.  This needs to correlate to name of the folder the site's configs live in
 
 
 ###Features
@@ -108,7 +108,7 @@ PS. do a `composer install` for some colorized output on db model generation
 <?php
 
 // sets up autoloader and db connections
-require_once 'scoop/core.php';
+require_once 'scoop/bootstrap.php';
 
 /**
  * returns Rows (collection) of Models

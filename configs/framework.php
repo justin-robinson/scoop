@@ -1,26 +1,26 @@
 <?php
 
 $ScoopConfig = [
-    'SCOOP_VERSION_MAJOR'                     => 0,
-    'SCOOP_VERSION_MINOR'                     => 3,
-    'SCOOP_VERSION_PATCH'                     => 1,
+    'version_major'                     => 0,
+    'version_minor'                     => 3,
+    'version_patch'                     => 1,
 
     /*
      * Path to global classes shared by all sites
      * Can be relative to Scoop install directory
-     * ($_SERVER['SCOOP_DOCUMENT_ROOT']) or an absolute path
+     * \Scoop\Config::get_option('install_dir') or an absolute path
      */
-    'SCOOP_SHARED_CLASSPATH_PARENT_DIRECTORY' => '../',
-    'SCOOP_CLASSPATH_FOLDER_NAME'             => 'scoop-classes',
-    'SCOOP_CONFIGPATH_FOLDER_NAME'            => 'scoop-configs',
-    'SCOOP_SITES_FOLDER'                      => '../',
+    'shared_classpath_parent_directory' => '../',
+    'classpath_folder_name'             => 'scoop-classes',
+    'configpath_folder_name'            => 'scoop-configs',
+    'sites_folder'                      => '../',
 ];
 
-$ScoopConfig['SCOOP_VERSION'] =
-    $ScoopConfig['SCOOP_VERSION_MAJOR'] . '.' .
-    $ScoopConfig['SCOOP_VERSION_MINOR'] . '.' .
-    $ScoopConfig['SCOOP_VERSION_PATCH'];
+$ScoopConfig['version'] =
+    $ScoopConfig['version_major'] . '.' .
+    $ScoopConfig['version_minor'] . '.' .
+    $ScoopConfig['version_patch'];
 
-$ScoopConfig['SCOOP_TIMEZONE'] = 'America/New_York';
+$ScoopConfig['timezone'] = 'America/New_York';
 
 return $ScoopConfig;
