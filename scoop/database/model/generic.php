@@ -53,6 +53,14 @@ class Generic implements \JsonSerializable {
 
     }
 
+
+    /**
+     * @return string
+     */
+    public function __toString () {
+        return var_export($this->dBValuesArray, true);
+    }
+
     /**
      * generate a new instance of this class from an associative array
      *

@@ -25,6 +25,10 @@ class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
      */
     private $position = 0;
 
+    public function __toString () {
+        return var_export($this->rowsStorageArray, true);
+    }
+
     /**
      * Set position to beginning
      */
