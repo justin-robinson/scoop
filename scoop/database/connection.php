@@ -13,6 +13,16 @@ use Scoop\Database\Cache\Statement;
 class Connection {
 
     /**
+     * @var \mysqli_stmt
+     */
+    public static $lastStatementUsed;
+
+    /**
+     * @var Statement
+     */
+    public static $statementCache;
+
+    /**
      * @var int
      */
     private static $affectedRows;
@@ -41,16 +51,6 @@ class Connection {
      * @var \mysqli
      */
     private $mysqli;
-
-    /**
-     * @var \mysqli_stmt
-     */
-    public static $lastStatementUsed;
-
-    /**
-     * @var Statement
-     */
-    public static $statementCache;
 
     /**
      * Connection constructor.
@@ -84,48 +84,6 @@ class Connection {
         } else {
             throw new \Exception( 'failed to load db credentials' );
         }
-    }
-
-    /**
-     * Connection destructor
-     */
-    public function __destruct () {
-
-        if ( isset( $this->mysqli ) ) {
-            $threadId = $this->mysqli->thread_id;
-            $this->mysqli->kill ( $threadId );
-            $this->mysqli->close ();
-        }
-    }
-
-    /**
-     * Private clone method to prevent cloning of the instance of the
-     * *Singleton* instance.
-     */
-    private function __clone () {
-    }
-
-    /**
-     * Private unserialize method to prevent unserializing of the *Singleton*
-     * instance.
-     */
-    private function __wakeup () {
-    }
-
-    /**
-     * Connects to db and initializes cache
-     * return @void
-     */
-    public static function connect () {
-
-        if ( !self::is_connected () ) {
-            // create a new instance of this class to connect to our db
-            static::$instance = new static();
-
-            // create the prepared statement cache
-            static::$statementCache = new Statement();
-        }
-
     }
 
     /**
@@ -177,6 +135,34 @@ class Connection {
     }
 
     /**
+     * @return Connection
+     */
+    public static function get_instance () : Connection {
+
+        if ( !static::is_connected () ) {
+            static::connect ();
+        }
+
+        return static::$instance;
+    }
+
+    /**
+     * Connects to db and initializes cache
+     * return @void
+     */
+    public static function connect () {
+
+        if ( !self::is_connected () ) {
+            // create a new instance of this class to connect to our db
+            static::$instance = new static();
+
+            // create the prepared statement cache
+            static::$statementCache = new Statement();
+        }
+
+    }
+
+    /**
      * @return bool
      */
     public static function is_connected () : bool {
@@ -192,6 +178,44 @@ class Connection {
         if ( static::get_logging_enabled () ) {
             static::$sqlHistoryArray[] = $sql;
         }
+
+    }
+
+    /**
+     * @return bool
+     */
+    public static function get_logging_enabled () : bool {
+
+        return self::$loggingEnabled;
+    }
+
+    /**
+     * @param bool $loggingEnabled
+     */
+    public static function set_logging_enabled ( bool $loggingEnabled ) {
+
+        self::$loggingEnabled = $loggingEnabled;
+    }
+
+    /**
+     * @param $sql
+     *
+     * @return \mysqli_stmt
+     * @throws \Exception
+     */
+    public static function get_statement_from_sql ( $sql ) : \mysqli_stmt {
+
+        $key = md5 ( $sql );
+
+        if ( empty( self::$statementCache->get ( $key ) ) ) {
+
+            // prepare the statement
+            $statement = self::get_instance ()->mysqli->prepare ( $sql );
+
+            self::$statementCache->set ( $key, $statement );
+        }
+
+        return self::$statementCache->get ( $key );
 
     }
 
@@ -240,26 +264,6 @@ class Connection {
     }
 
     /**
-     * @return Connection
-     */
-    public static function get_instance () : Connection {
-
-        if ( !static::is_connected () ) {
-            static::connect ();
-        }
-
-        return static::$instance;
-    }
-
-    /**
-     * @return bool
-     */
-    public static function get_logging_enabled () : bool {
-
-        return self::$loggingEnabled;
-    }
-
-    /**
      * @return array
      */
     public static function get_sql_history () : array {
@@ -268,32 +272,28 @@ class Connection {
     }
 
     /**
-     * @param $sql
-     *
-     * @return \mysqli_stmt
-     * @throws \Exception
+     * Connection destructor
      */
-    public static function get_statement_from_sql ( $sql ) : \mysqli_stmt {
+    public function __destruct () {
 
-        $key = md5 ( $sql );
-
-        if ( empty( self::$statementCache->get ( $key ) ) ) {
-
-            // prepare the statement
-            $statement = self::get_instance ()->mysqli->prepare ( $sql );
-
-            self::$statementCache->set ( $key, $statement );
+        if ( isset( $this->mysqli ) ) {
+            $threadId = $this->mysqli->thread_id;
+            $this->mysqli->kill ( $threadId );
+            $this->mysqli->close ();
         }
-
-        return self::$statementCache->get ( $key );
-
     }
 
     /**
-     * @param bool $loggingEnabled
+     * Private clone method to prevent cloning of the instance of the
+     * *Singleton* instance.
      */
-    public static function set_logging_enabled ( bool $loggingEnabled ) {
+    private function __clone () {
+    }
 
-        self::$loggingEnabled = $loggingEnabled;
+    /**
+     * Private unserialize method to prevent unserializing of the *Singleton*
+     * instance.
+     */
+    private function __wakeup () {
     }
 }

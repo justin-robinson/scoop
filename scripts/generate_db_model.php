@@ -66,7 +66,6 @@ if ( class_exists ( '\Colors\Color' ) ) {
     $c = new \Colors\Color();
 }
 
-
 if ( $rows ) {
 
     // each row is a new column in a specific table

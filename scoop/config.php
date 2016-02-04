@@ -24,26 +24,40 @@ class Config {
     }
 
     /**
-     * @return array
+     * @return string
+     * Gets classpath for the current site
      */
-    public static function get_db_config () : array {
+    public static function get_site_class_path () : string {
 
-        $ScoopDB = require_once self::get_option ( 'install_dir' ) . '/configs/db.php';
-
-        $siteDBConfigPath = self::get_site_class_path ()
-            . '/../' . self::get_option ( 'configpath_folder_name' ) . '/db.php';
-
-        if ( file_exists ( $siteDBConfigPath ) ) {
-            $siteDB = include_once $siteDBConfigPath;
-            $ScoopDB = array_replace_recursive ( $ScoopDB, $siteDB );
+        if ( self::option_exists ( 'server_document_root' ) ) {
+            $siteClassPath = self::get_option ( 'server_document_root' );
+        } else if ( self::option_exists ( 'site_name' ) ) {
+            $siteClassPath = self::get_sites_folder () . '/' . self::get_option ( 'site_name' );
+        } else {
+            $siteClassPath = '';
         }
 
-        return $ScoopDB;
+        return $siteClassPath . '/' . self::get_option ( 'classpath_folder_name' );
+
+    }
+
+    public static function option_exists ( $name ) {
+
+        return array_key_exists ( $name, self::$options );
     }
 
     public static function get_option ( $name ) {
 
         return array_key_exists ( $name, self::$options ) ? self::$options[$name] : null;
+    }
+
+    /**
+     * @return string
+     */
+    public static function get_sites_folder () : string {
+
+        return Path::make_absolute ( self::get_option ( 'sites_folder' ) );
+
     }
 
     /**
@@ -63,21 +77,21 @@ class Config {
     }
 
     /**
-     * @return string
-     * Gets classpath for the current site
+     * @return array
      */
-    public static function get_site_class_path () : string {
+    public static function get_db_config () : array {
 
-        if ( self::option_exists ( 'server_document_root' ) ) {
-            $siteClassPath = self::get_option ( 'server_document_root' );
-        } else if ( self::option_exists ( 'site_name' ) ) {
-            $siteClassPath = self::get_sites_folder () . '/' . self::get_option ( 'site_name' );
-        } else {
-            $siteClassPath = '';
+        $ScoopDB = require_once self::get_option ( 'install_dir' ) . '/configs/db.php';
+
+        $siteDBConfigPath = self::get_site_class_path ()
+            . '/../' . self::get_option ( 'configpath_folder_name' ) . '/db.php';
+
+        if ( file_exists ( $siteDBConfigPath ) ) {
+            $siteDB = include_once $siteDBConfigPath;
+            $ScoopDB = array_replace_recursive ( $ScoopDB, $siteDB );
         }
 
-        return $siteClassPath . '/' . self::get_option ( 'classpath_folder_name' );
-
+        return $ScoopDB;
     }
 
     /**
@@ -88,20 +102,6 @@ class Config {
     public static function get_site_class_path_by_name ( $siteName ) {
 
         return self::get_sites_folder () . '/' . $siteName . '/' . self::get_option ( 'classpath_folder_name' );
-    }
-
-    /**
-     * @return string
-     */
-    public static function get_sites_folder () : string {
-
-        return Path::make_absolute ( self::get_option ( 'sites_folder' ) );
-
-    }
-
-    public static function option_exists ( $name ) {
-
-        return array_key_exists ( $name, self::$options );
     }
 
     public static function set_options ( array $options ) {

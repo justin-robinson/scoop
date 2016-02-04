@@ -18,7 +18,7 @@ class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
     /**
      * @var $rowsStorageArray Generic[]
      */
-    private $rowsStorageArray = [];
+    private $rowsStorageArray = [ ];
 
     /**
      * @var int

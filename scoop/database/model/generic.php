@@ -12,16 +12,6 @@ use Scoop\Database\Rows;
 class Generic implements \JsonSerializable {
 
     /**
-     * instance specific model values
-     */
-    protected $dBValuesArray = [ ];
-
-    /**
-     * @var array
-     */
-    protected $orignalDbValuesArray;
-
-    /**
      * @var array
      */
     protected static $dBColumnPropertiesArray = [ ];
@@ -30,6 +20,16 @@ class Generic implements \JsonSerializable {
      * @var array
      */
     protected static $dBColumnDefaultValuesArray = [ ];
+
+    /**
+     * instance specific model values
+     */
+    protected $dBValuesArray = [ ];
+
+    /**
+     * @var array
+     */
+    protected $orignalDbValuesArray;
 
     /**
      * @var bool
@@ -50,6 +50,71 @@ class Generic implements \JsonSerializable {
         $dataArray = array_replace ( static::$dBColumnDefaultValuesArray, $dataArray );
 
         $this->populate ( $dataArray );
+
+    }
+
+    /**
+     * generate a new instance of this class from an associative array
+     *
+     * @param $dataArray array
+     */
+    public function populate ( $dataArray ) {
+
+        $this->dBValuesArray = (array) $dataArray;
+
+    }
+
+    /**
+     * run a raw sql query
+     *
+     * @param       $sql
+     * @param array $queryParams
+     *
+     * @return bool|int|Rows
+     * @throws \Exception
+     */
+    public static function query ( $sql, $queryParams = [ ] ) {
+
+        $result = Connection::execute ( $sql, $queryParams );
+
+        // format the data if it was a select
+        if ( $result && !empty( $result->num_rows ) ) {
+
+            // create a container for the rows
+            $rows = new Rows();
+
+            // put all rows in the collection
+            foreach ( $result as $row ) {
+
+                // add a new instance of this row to the collection
+                $rows->add_row ( ( new static( $row ) )->loaded_from_database () );
+
+            }
+
+        } else if ( Connection::get_affected_rows () >= 1 ) {
+            $rows = Connection::get_affected_rows ();
+        } else {
+            $rows = false;
+        }
+
+        if ( method_exists ( $result, 'free' ) ) {
+            $result->free ();
+        }
+
+        return $rows;
+
+    }
+
+    /**
+     * Mark this object as loaded from the database
+     */
+    public function loaded_from_database () {
+
+        $this->loadedFromDb = true;
+
+        $this->orignalDbValuesArray = $this->dBValuesArray;
+
+        return $this;
 
     }
 
@@ -79,58 +144,6 @@ class Generic implements \JsonSerializable {
     }
 
     /**
-     * run a raw sql query
-     *
-     * @param       $sql
-     * @param array $queryParams
-     *
-     * @return bool|int|Rows
-     * @throws \Exception
-     */
-    public static function query ( $sql, $queryParams = [ ] ) {
-
-        $result = Connection::execute ( $sql, $queryParams );
-
-        // format the data if it was a select
-        if ( $result && !empty( $result->num_rows ) ) {
-
-            // create a container for the rows
-            $rows = new Rows();
-
-            // put all rows in the collection
-            foreach ( $result as $row ) {
-
-                // add a new instance of this row to the collection
-                $rows->add_row ( (new static( $row ))->loaded_from_database() );
-
-            }
-
-        } else if ( Connection::get_affected_rows () >= 1 ) {
-            $rows = Connection::get_affected_rows ();
-        } else {
-            $rows = false;
-        }
-
-        if ( method_exists ( $result, 'free' ) ) {
-            $result->free ();
-        }
-
-        return $rows;
-
-    }
-
-    /**
-     * generate a new instance of this class from an associative array
-     *
-     * @param $dataArray array
-     */
-    public function populate ( $dataArray ) {
-
-        $this->dBValuesArray = (array) $dataArray;
-
-    }
-
-    /**
      * @return array
      */
     public function to_array () : array {
@@ -144,19 +157,6 @@ class Generic implements \JsonSerializable {
     public function get_column_names () : array {
 
         return array_keys ( $this->orignalDbValuesArray );
-    }
-
-    /**
-     * Mark this object as loaded from the database
-     */
-    public function loaded_from_database () {
-
-        $this->loadedFromDb = true;
-
-        $this->orignalDbValuesArray = $this->dBValuesArray;
-
-        return $this;
-
     }
 
     /**

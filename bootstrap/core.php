@@ -16,13 +16,13 @@ if ( !empty( $_SERVER['DOCUMENT_ROOT'] ) ) {
 }
 
 // search for the site name
-if ( !empty($_SERVER['SITE_NAME']) ) {
+if ( !empty( $_SERVER['SITE_NAME'] ) ) {
     $siteName = $_SERVER['SITE_NAME'];
-} else if ( !empty($_SERVER['SERVER_NAME'])) {
+} else if ( !empty( $_SERVER['SERVER_NAME'] ) ) {
     $siteName = $_SERVER['SERVER_NAME'];
 }
 if ( isset ( $siteName ) ) {
-    \Scoop\Config::set_option('site_name', $siteName);
+    \Scoop\Config::set_option ( 'site_name', $siteName );
 }
 
 // load config
@@ -41,7 +41,6 @@ if ( file_exists ( $userConfigFilePath ) ) {
 if ( \Scoop\Config::option_exists ( 'timezone' ) ) {
     date_default_timezone_set ( \Scoop\Config::get_option ( 'timezone' ) );
 }
-
 
 // the autoloader
 require_once ( \Scoop\Config::get_option ( 'bootstrap_dir' ) . '/autoloader.php' );
