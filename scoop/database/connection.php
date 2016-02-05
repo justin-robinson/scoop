@@ -211,6 +211,10 @@ class Connection {
             // prepare the statement
             $statement = $this->mysqli->prepare ( $sql );
 
+            if ( $statement === false ) {
+                throw new \Exception('statment preperation failed');
+            }
+
             $this->statementCache->set ( $key, $statement );
         }
 
