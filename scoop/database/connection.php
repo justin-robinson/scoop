@@ -20,7 +20,7 @@ class Connection {
     /**
      * @var Statement
      */
-    public static $statementCache;
+    public $statementCache;
 
     /**
      * @var int
@@ -81,6 +81,8 @@ class Connection {
             // we will manually commit our sql changes
             $this->mysqli->autocommit ( false );
 
+            $this->statementCache = new Statement();
+
         } else {
             throw new \Exception( 'failed to load db credentials' );
         }
@@ -104,7 +106,7 @@ class Connection {
         $self->mysqli->begin_transaction ();
 
         // use cache to get prepared statement
-        $statement = static::get_statement_from_sql ( $sql );
+        $statement = $self->get_statement_from_sql ( $sql );
 
         // bind params
         if ( is_array ( $queryParams ) && !empty( $queryParams ) ) {
@@ -155,9 +157,6 @@ class Connection {
         if ( !self::is_connected () ) {
             // create a new instance of this class to connect to our db
             static::$instance = new static();
-
-            // create the prepared statement cache
-            static::$statementCache = new Statement();
         }
 
     }
@@ -203,19 +202,19 @@ class Connection {
      * @return \mysqli_stmt
      * @throws \Exception
      */
-    public static function get_statement_from_sql ( $sql ) : \mysqli_stmt {
+    public function get_statement_from_sql ( $sql ) : \mysqli_stmt {
 
         $key = md5 ( $sql );
 
-        if ( empty( self::$statementCache->get ( $key ) ) ) {
+        if ( empty( $this->statementCache->get ( $key ) ) ) {
 
             // prepare the statement
-            $statement = self::get_instance ()->mysqli->prepare ( $sql );
+            $statement = $this->mysqli->prepare ( $sql );
 
-            self::$statementCache->set ( $key, $statement );
+            $this->statementCache->set ( $key, $statement );
         }
 
-        return self::$statementCache->get ( $key );
+        return $this->statementCache->get ( $key );
 
     }
 
