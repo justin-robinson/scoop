@@ -43,12 +43,6 @@ class Generic implements \JsonSerializable {
      */
     public function __construct ( array $dataArray = [ ] ) {
 
-        // by default all values are null
-        $this->orignalDbValuesArray = static::$dBColumnDefaultValuesArray;
-
-        // populate default values with passed ones
-        $dataArray = array_replace ( static::$dBColumnDefaultValuesArray, $dataArray );
-
         $this->populate ( $dataArray );
 
     }
@@ -62,14 +56,13 @@ class Generic implements \JsonSerializable {
     }
 
     /**
-     * generate a new instance of this class from an associative array
+     * replace object values with passed ones
      *
      * @param $dataArray array
      */
-    public function populate ( $dataArray ) {
+    public function populate ( array $dataArray ) {
 
-        $this->dBValuesArray = (array) $dataArray;
-
+        $this->dBValuesArray = array_replace ( $this->dBValuesArray, $dataArray );
     }
 
     /**
