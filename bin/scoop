@@ -1,0 +1,393 @@
+#!/usr/bin/env php
+<?php
+
+namespace Scoop;
+
+// parse cli args
+require_once dirname ( __FILE__ ) . '/../scoop/commandline.php';
+$args = CommandLine::parseArgs ( $_SERVER['argv'] );
+
+$scoop = new Scoop( $args );
+
+// check for an action
+if ( empty( $args['action'] ) ) {
+    die( 'run with --action=actionName' );
+} else {
+    $action = $args['action'];
+}
+
+// does that action exist?
+if ( empty( $scoop->availableActions[$action] ) ) {
+    die( 'action ' . $action . ' does not exist' );
+}
+
+// run the action
+call_user_func_array ( [ $scoop, $action ], [ ] );
+
+
+/**
+ * Class Scoop
+ * @package Scoop
+ */
+class Scoop {
+
+    /**
+     * @var array
+     */
+    public $args = [ ];
+
+    /**
+     * @var array
+     */
+    public $availableActions = [ ];
+
+    /**
+     * Scoop constructor.
+     *
+     * @param $args
+     */
+    public function __construct ( $args ) {
+
+        $this->args = $args;
+
+        // get available actions and remove constructor
+        $this->availableActions = ( new \ReflectionClass( __CLASS__ ) )->getMethods ( \ReflectionMethod::IS_PUBLIC );
+        array_walk (
+            $this->availableActions,
+            function ( &$action ) {
+
+                $action = $action->getName ();
+            }
+        );
+        $this->availableActions = array_fill_keys ( $this->availableActions, true );
+        unset( $this->availableActions['__construct'] );
+
+        // set site name if one was provided
+        if ( array_key_exists ( 'site', $args ) ) {
+            $_SERVER['SITE_NAME'] = $args['site'];
+        }
+
+        // get the base
+        try {
+            require_once dirname ( __FILE__ ) . "/../bootstrap.php";
+        } catch ( \Exception $e ) {
+            echo 'ERROR:[' . get_class ( $e ) . '] ' . $e->getMessage () . PHP_EOL;
+        }
+    }
+
+    /**
+     *
+     */
+    public function generate_db_models () {
+
+        // global or site specific class path?
+        if ( array_key_exists ( 'site', $this->args ) ) {
+            $outPath = Config::get_site_class_path_by_name ( $this->args['site'] );
+        } else {
+            $outPath = Config::get_shared_class_path ();
+        }
+
+        $where = [
+            "table_schema NOT IN (
+               'information_schema',
+               'mysql',
+               'performance_schema')",
+        ];
+        $queryParams = [ ];
+
+        // process table and schema longopts
+        if ( isset( $this->args['schema'] ) ) {
+            $where[] = 'table_schema = ?';
+            $queryParams[] = $this->args['schema'];
+
+            // table is only recognized when a schema a specified
+            if ( isset( $this->args['table'] ) ) {
+                $where[] = 'table_name = ?';
+                $queryParams[] = $this->args['table'];
+            }
+        }
+
+        $where = implode ( ' AND ', $where );
+
+        /*
+         * Generates db models from all user created schemas
+         */
+        $getAllSchemas = "
+           SELECT
+             *
+           FROM
+             INFORMATION_SCHEMA.COLUMNS
+           WHERE
+             {$where}
+           ORDER BY
+             table_schema,
+             table_name,
+             ordinal_position";
+
+        $rows = Database\Model\Generic::query ( $getAllSchemas, $queryParams );
+        $schema = null;
+        $table = null;
+
+        if ( class_exists ( '\Colors\Color' ) ) {
+            $c = new \Colors\Color();
+        }
+
+        if ( $rows ) {
+
+            // each row is a new column in a specific table
+            foreach ( $rows as $index => $row ) {
+
+                $isNewSchema = $schema !== $row->TABLE_SCHEMA;
+                $isNewTable = $table !== $row->TABLE_NAME;
+
+                // new schema?
+                if ( $isNewSchema ) {
+                    $schema = $row->TABLE_SCHEMA;
+                    $safeSchema = $this->classSafeName ( $schema );
+                }
+
+                // new table?
+                if ( $isNewTable ) {
+                    $table = $row->TABLE_NAME;
+                    $safeTable = $this->classSafeName ( $table );
+                }
+
+                // does this row belong to a different table the last one?
+                if ( $isNewSchema || $isNewTable ) {
+
+                    echo 'processing ';
+
+                    if ( isset( $c ) ) {
+                        echo $c( "`{$schema}`" )->black->highlight ( 'cyan' );
+                        echo '.';
+                        echo $c( "`{$table}`" )->white->bold->highlight ( 'green' );
+                    } else {
+                        echo "`{$schema}`.`{$table}`";
+                    }
+
+                    echo PHP_EOL;
+
+                    // save file if we have one
+                    if ( isset( $this->coreGenerator ) ) {
+
+                        $this->save ();
+                    }
+
+                    // create class name
+                    $namespace = 'DB\\' . $safeSchema;
+                    $name = $safeTable;
+                    $coreNamespace = 'DBCore\\' . $safeSchema;
+                    $coreName = $safeTable;
+
+                    // create file path
+                    $filepath = strtolower ( $outPath . '/db/' . $safeSchema . '/' . $name . '.php' );
+                    $coreFilepath = strtolower ( $outPath . '/dbcore/' . $safeSchema . '/' . $coreName . '.php' );
+
+                    $dbClass = new ClassGen\ClassGenClass( $name );
+                    $dbClass->set_extends ( '\\' . $coreNamespace . '\\' . $coreName )
+                            ->set_namespace ( $namespace );
+                    $this->generator = new ClassGen\ClassGenGenerator( $dbClass, $filepath );
+
+                    $dbCoreClass = new ClassGen\ClassGenClass( $coreName );
+                    $dbCoreClass->set_extends ( 'Model' )
+                                ->set_namespace ( $coreNamespace )
+                                ->append_use ( 'Scoop\Database\Model' );
+                    $this->coreGenerator = new ClassGen\ClassGenGenerator( $dbCoreClass, $coreFilepath );
+
+                    // add table and schema name
+                    $schemaProperty = new ClassGen\ClassGenProperty( 'schema', $row->TABLE_SCHEMA );
+                    $tableProperty = new ClassGen\ClassGenProperty( 'table', $row->TABLE_NAME );
+
+                    $schemaProperty->set_const ();
+                    $tableProperty->set_const ();
+
+                    $this->coreGenerator->addProperty ( $schemaProperty );
+                    $this->coreGenerator->addProperty ( $tableProperty );
+
+                    // reset these
+                    $this->autoIncrementColumn = '';
+                    $this->primaryKeys = [ ];
+                    $this->nonNullColumns = [ ];
+                    $this->dBColumnsArray = [ ];
+
+                }
+
+                // add all columns to helper array
+                $this->dBColumnsArray[$row->COLUMN_NAME] = [ ];
+
+                // add special properties
+                if ( $row->COLUMN_KEY === 'PRI' ) {
+                    $this->primaryKeys[] = $row->COLUMN_NAME;
+                    $this->dBColumnsArray[$row->COLUMN_NAME][] = Database\Model::PROP_PRIMARY_KEY;
+                }
+
+                if ( $row->IS_NULLABLE === 'NO' ) {
+                    $this->nonNullColumns[] = $row->COLUMN_NAME;
+                }
+
+                // parse extra column properties into array
+                $extras = explode ( ',', $row->EXTRA );
+                if ( in_array ( 'auto_increment', $extras ) ) {
+                    $this->autoIncrementColumn = $row->COLUMN_NAME;
+                    $this->dBColumnsArray[$row->COLUMN_NAME][] = Database\Model::PROP_AUTO_INCREMENT;
+                }
+
+                if ( $rows->is_last_row () ) {
+
+                    $this->save ();
+
+                }
+
+            }
+        }
+    }
+
+    /**
+     *
+     */
+    public function generate_site_folders () {
+
+        if ( !Config::option_exists ( 'site_name' ) ) {
+            die( 'run with --site=example.com' );
+        }
+
+        // get the classpath for this site
+        $siteClassPath = Config::get_site_class_path ();
+        $sitePath = pathinfo ( $siteClassPath, PATHINFO_DIRNAME );
+
+        // ensure path exists
+        @mkdir ( $siteClassPath, 0777, true );
+        if ( !file_exists ( $siteClassPath ) ) {
+            die( 'error creating class path folder. check permissions' );
+        }
+
+        // get config path for this site
+        $siteConfigPath = $sitePath . '/' . Config::get_option ( 'configpath_folder_name' );
+        @mkdir ( $siteConfigPath );
+
+        if ( !file_exists ( $siteConfigPath ) ) {
+            die( 'error creating class path folder. check permissions' );
+        }
+
+        // copy default db config if one is not present
+        $siteDbConfig = $siteConfigPath . '/db.php';
+        if ( file_exists ( $siteDbConfig ) ) {
+            echo "db config already exists for `"
+                . Config::get_option ( 'site_name' )
+                . "` at :" . realpath ( $siteDbConfig );
+        } else {
+            copy ( Config::get_option ( 'install_dir' ) . '/configs/db.php', $siteDbConfig );
+        }
+    }
+
+    public function h () {
+
+        $this->help ();
+    }
+
+    public function help () {
+
+        echo '--action :' . PHP_EOL;
+        foreach ( $this->availableActions as $action => $enabled ) {
+            echo "\t{$action}" . PHP_EOL;
+        }
+    }
+
+
+    /**
+     * @param $name
+     *
+     * @return array|string
+     */
+    private function classSafeName ( $name ) {
+
+        // strip out anything that isn't a letter
+        $name = preg_split ( '/[^a-zA-Z]/', $name, -1, PREG_SPLIT_NO_EMPTY );
+
+        // capitalize first letter in each word
+        $name = array_map (
+            function ( $word ) {
+
+                return ucwords ( $word );
+            }, $name );
+
+        // glue all words back together
+        $name = implode ( '', $name );
+
+        return $name;
+
+    }
+
+    /**
+     * helper for saving classes from generate_db_models
+     */
+    private function save () {
+
+        // add comments to the class
+        $date = date ( 'Y/m/d' );
+        $this->generator->class->phpDoc =
+            "/**
+ * Class {$this->generator->class->name}
+ * @package {$this->generator->class->namespace}
+ * @author jrobinson (robotically)
+ * @date {$date}
+ * @inheritdoc
+ * This file is only generated once
+ * Put your class specific code in here
+ */";
+
+        $phpDoc =
+            "/**
+ * Class {$this->coreGenerator->class->name}
+ * @package {$this->coreGenerator->class->namespace}
+ * @author jrobinson (robotically)
+ * @date {$date}
+";
+
+        // add magic properties to core class
+        foreach ( $this->dBColumnsArray as $columnName => $properties ) {
+            $phpDoc .= " * @property mixed \${$columnName}
+";
+        }
+
+        $phpDoc .=
+            " * AUTO-GENERATED FILE
+ * DO NOT EDIT THIS FILE BECAUSE IT WILL BE LOST
+ * Put your code in {$this->generator->class->namespace}\\{$this->generator->class->name}
+ */";
+
+        $this->coreGenerator->class->phpDoc = $phpDoc;
+
+        // add the primary keys and autoincrement columns
+        $AIProperty = new ClassGen\ClassGenProperty( 'autoIncrementColumn', $this->autoIncrementColumn );
+        $AIProperty->set_const ();
+
+        $this->primaryKeys = new ClassGen\ClassGenProperty( 'primaryKeys', $this->primaryKeys );
+        $this->primaryKeys->set_const ();
+
+        $this->nonNullColumns = new ClassGen\ClassGenProperty( 'nonNullColumns', $this->nonNullColumns );
+        $this->nonNullColumns->set_const ();
+
+        $columnProperties = new ClassGen\ClassGenProperty( 'dBColumnPropertiesArray', $this->dBColumnsArray );
+        $columnProperties->isStatic = true;
+
+        $columnValues = new ClassGen\ClassGenProperty( 'dBValuesArray', array_fill_keys ( array_keys ( $this->dBColumnsArray ), null ) );
+        $columnValues->set_protected ();
+
+        $this->coreGenerator->addProperty ( $AIProperty );
+        $this->coreGenerator->addProperty ( $this->primaryKeys );
+        $this->coreGenerator->addProperty ( $this->nonNullColumns );
+        $this->coreGenerator->addProperty ( $columnProperties );
+        $this->coreGenerator->addProperty ( $columnValues );
+
+        // save file if we have one
+        if ( isset( $this->coreGenerator ) ) {
+            $this->coreGenerator->save ();
+        }
+
+        if ( !file_exists ( $this->generator->filepath ) ) {
+            $this->generator->save ();
+        }
+
+    }
+}

@@ -17,7 +17,7 @@
 ```shell
 composer install
 # edit ./vendor/justin-robinson/scoop/configs/db.php
-./vendor/justin-robinson/scoop/scripts/generate_db_model.php
+./vendor/bin/scoop --action generate_db_models
 # Classes will be generated in ../scoop-classes
 ```
 
@@ -43,7 +43,7 @@ return [
 ```shell
 git clone git@github.com:justin-robinson/scoop.git
 # edit ./scoop/configs/db.php
-./scoop/scripts/generate_db_model.php
+./scoop/bin/scoop --action generate_db_models
 # Classes will be generated in ../scoop-classes
 ```
 
@@ -68,7 +68,7 @@ return [
 
 
 ###Generate DB Models
-`./scripts/generate_db_model.php`
+`./bin/scoop --action generate_db_model`
 
 ####Args
 | Arg | Description |
@@ -80,10 +80,10 @@ return [
 
 ###Setting up a site
 1. In configs/framework.php, `'sites_folder'` is set to `'../'` by default.  You can change this to a path relative to the Scoop installation or hardcode an absolute path
-2. run `scripts/generate_site_folders.php --site=yoursite.com`
+2. run `bin --action generate_site_folders --site=yoursite.com`
 
 ####(Optional) Generate site isolated db models
-`./scripts/generate_db_model.php --site=example.com`
+`./bin/scoop --action generate_db_model --site=example.com`
 
 
 ######Note: $_SERVER\['site_name'\] needs to be set to the name of your site.  This needs to correlate to name of the folder the site's configs live in
@@ -97,7 +97,7 @@ return [
 * Properly documented for all that modern ide helper magic
 * One installation can manage and segregate multiple code bases and db connections
 * All configs are in php ( configs/db.php is the only one you'll need to touch ) 
-* DB file generation just works ( scripts/generate_db_model.php )
+* DB file generation just works ( bin/scoop --action generate_db_model )
 * You can override any class or config option on a global or per site basis
 
 PS. do a `composer install` for some colorized output on db model generation
