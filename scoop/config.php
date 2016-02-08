@@ -81,13 +81,13 @@ class Config {
      */
     public static function get_db_config () : array {
 
-        $ScoopDB = require_once self::get_option ( 'install_dir' ) . '/configs/db.php';
+        $ScoopDB = require self::get_option ( 'install_dir' ) . '/configs/db.php';
 
         $siteDBConfigPath = self::get_site_class_path ()
             . '/../' . self::get_option ( 'configpath_folder_name' ) . '/db.php';
 
         if ( file_exists ( $siteDBConfigPath ) ) {
-            $siteDB = include_once $siteDBConfigPath;
+            $siteDB = require $siteDBConfigPath;
             $ScoopDB = array_replace_recursive ( $ScoopDB, $siteDB );
         }
 

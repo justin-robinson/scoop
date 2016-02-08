@@ -3,7 +3,6 @@
 namespace Scoop\Database;
 
 use Scoop\Config;
-use Scoop\Database\Cache\Statement;
 
 /**
  * Singleton instance mysqli wrapper
@@ -55,37 +54,28 @@ class Connection {
     /**
      * Connection constructor.
      */
-    protected function __construct () {
+    protected function __construct ( $config ) {
 
-        $config = Config::get_db_config ();
+        mysqli_report ( MYSQLI_REPORT_STRICT );
 
-        // did we get the file?
-        if ( $config ) {
+        // attempt to connect to the db
+        $this->mysqli = new \mysqli(
+            $config['host'],
+            $config['user'],
+            $config['password'],
+            '',
+            $config['port'] );
 
-            mysqli_report ( MYSQLI_REPORT_STRICT );
-
-            // attempt to connect to the db
-            $this->mysqli = new \mysqli(
-                $config['host'],
-                $config['user'],
-                $config['password'],
-                '',
-                $config['port'] );
-
-            // die on error
-            if ( $this->mysqli->connect_error ) {
-                die( 'Connect Error (' . $this->mysqli->connect_errno . ') '
-                    . $this->mysqli->connect_error );
-            }
-
-            // we will manually commit our sql changes
-            $this->mysqli->autocommit ( false );
-
-            $this->statementCache = new Statement();
-
-        } else {
-            throw new \Exception( 'failed to load db credentials' );
+        // die on error
+        if ( $this->mysqli->connect_error ) {
+            die( 'Connect Error (' . $this->mysqli->connect_errno . ') '
+                . $this->mysqli->connect_error );
         }
+
+        // we will manually commit our sql changes
+        $this->mysqli->autocommit ( false );
+
+        $this->statementCache = new Statement();
     }
 
     /**
@@ -155,8 +145,16 @@ class Connection {
     public static function connect () {
 
         if ( !self::is_connected () ) {
+
+            $config = Config::get_db_config ();
+
+            // did we get the file?
+            if ( !$config ) {
+                throw new \Exception( 'failed to load db credentials' );
+            }
+
             // create a new instance of this class to connect to our db
-            static::$instance = new static();
+            static::$instance = new static( $config );
         }
 
     }
@@ -212,7 +210,7 @@ class Connection {
             $statement = $this->mysqli->prepare ( $sql );
 
             if ( $statement === false ) {
-                throw new \Exception('statment preparation failed');
+                throw new \Exception( 'statment preparation failed' );
             }
 
             $this->statementCache->set ( $key, $statement );
