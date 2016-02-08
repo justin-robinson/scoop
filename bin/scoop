@@ -7,14 +7,14 @@ namespace Scoop;
 require_once dirname ( __FILE__ ) . '/../scoop/commandline.php';
 $args = CommandLine::parseArgs ( $_SERVER['argv'] );
 
-$scoop = new Scoop( $args );
-
 // check for an action
 if ( empty( $args['action'] ) ) {
     die( 'run with --action=actionName' );
 } else {
     $action = $args['action'];
 }
+
+$scoop = new Scoop( $args, $action );
 
 // does that action exist?
 if ( empty( $scoop->availableActions[$action] ) ) {
@@ -39,7 +39,12 @@ class Scoop {
     /**
      * @var array
      */
-    public $availableActions = [ ];
+    public $availableActions = [
+        'generate_db_models' => true,
+        'generate_site_folders' => false,
+        'h' => false,
+        'help' => false
+    ];
 
     /**
      * Scoop constructor.
@@ -50,28 +55,9 @@ class Scoop {
 
         $this->args = $args;
 
-        // get available actions and remove constructor
-        $this->availableActions = ( new \ReflectionClass( __CLASS__ ) )->getMethods ( \ReflectionMethod::IS_PUBLIC );
-        array_walk (
-            $this->availableActions,
-            function ( &$action ) {
-
-                $action = $action->getName ();
-            }
-        );
-        $this->availableActions = array_fill_keys ( $this->availableActions, true );
-        unset( $this->availableActions['__construct'] );
-
         // set site name if one was provided
         if ( array_key_exists ( 'site', $args ) ) {
             $_SERVER['SITE_NAME'] = $args['site'];
-        }
-
-        // get the base
-        try {
-            require_once dirname ( __FILE__ ) . "/../bootstrap.php";
-        } catch ( \Exception $e ) {
-            echo 'ERROR:[' . get_class ( $e ) . '] ' . $e->getMessage () . PHP_EOL;
         }
     }
 
@@ -79,6 +65,9 @@ class Scoop {
      *
      */
     public function generate_db_models () {
+
+        // db connections needed
+        require_once dirname ( __FILE__ ) . "/../bootstrap.php";
 
         // global or site specific class path?
         if ( array_key_exists ( 'site', $this->args ) ) {
