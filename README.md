@@ -42,8 +42,10 @@ return [
 ####Git
 ```shell
 git clone git@github.com:justin-robinson/scoop.git
-# edit ./scoop/configs/db.php
-./scoop/bin/scoop --action generate_db_models
+cd scoop
+composer install
+# edit .configs/db.php
+./bin/scoop --action generate_db_models
 # Classes will be generated in ../scoop-classes
 ```
 
