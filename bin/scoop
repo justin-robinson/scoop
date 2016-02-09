@@ -7,6 +7,11 @@ namespace Scoop;
 require_once dirname ( __FILE__ ) . '/../scoop/commandline.php';
 $args = CommandLine::parseArgs ( $_SERVER['argv'] );
 
+// special help args
+if ( isset($args['help']) || isset($args['h']) ) {
+    $args['action'] = 'help';
+}
+
 // check for an action
 if ( empty( $args['action'] ) ) {
     die( 'run with --action=actionName' );
@@ -17,7 +22,7 @@ if ( empty( $args['action'] ) ) {
 $scoop = new Scoop( $args, $action );
 
 // does that action exist?
-if ( array_key_exists ( $action, $scoop->availableActions ) ) {
+if ( !array_key_exists ( $action, $scoop->availableActions ) ) {
     die( 'action ' . $action . ' does not exist' );
 }
 
