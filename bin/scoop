@@ -17,7 +17,7 @@ if ( empty( $args['action'] ) ) {
 $scoop = new Scoop( $args, $action );
 
 // does that action exist?
-if ( empty( $scoop->availableActions[$action] ) ) {
+if ( array_key_exists ( $action, $scoop->availableActions ) ) {
     die( 'action ' . $action . ' does not exist' );
 }
 
@@ -40,10 +40,10 @@ class Scoop {
      * @var array
      */
     public $availableActions = [
-        'generate_db_models' => true,
-        'generate_site_folders' => false,
-        'h' => false,
-        'help' => false
+        'generate_db_models'    => true,
+        'generate_site_folders' => true,
+        'h'                     => true,
+        'help'                  => true,
     ];
 
     /**
