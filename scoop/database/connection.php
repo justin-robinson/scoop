@@ -3,6 +3,7 @@
 namespace Scoop\Database;
 
 use Scoop\Config;
+use Scoop\Database\Cache\Statement;
 
 /**
  * Singleton instance mysqli wrapper
