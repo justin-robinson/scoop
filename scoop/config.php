@@ -34,7 +34,7 @@ class Config {
         } else if ( self::option_exists ( 'site_name' ) ) {
             $siteClassPath = self::get_sites_folder () . '/' . self::get_option ( 'site_name' );
         } else {
-            $siteClassPath = '';
+            $siteClassPath = self::get_shared_class_path() . '/../';
         }
 
         return $siteClassPath . '/' . self::get_option ( 'classpath_folder_name' );
