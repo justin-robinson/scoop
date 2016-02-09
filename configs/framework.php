@@ -2,8 +2,8 @@
 
 $ScoopConfig = [
     'version_major'                     => 0,
-    'version_minor'                     => 3,
-    'version_patch'                     => 1,
+    'version_minor'                     => 4,
+    'version_patch'                     => 0,
 
     /*
      * Path to global classes shared by all sites
