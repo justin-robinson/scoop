@@ -80,6 +80,18 @@ class Connection {
     }
 
     /**
+     * Connection destructor
+     */
+    public function __destruct () {
+
+        if ( isset( $this->mysqli ) ) {
+            $threadId = $this->mysqli->thread_id;
+            $this->mysqli->kill ( $threadId );
+            $this->mysqli->close ();
+        }
+    }
+
+    /**
      * @param $sql
      * @param $queryParams
      *
@@ -271,18 +283,6 @@ class Connection {
     public static function get_sql_history () : array {
 
         return self::$sqlHistoryArray;
-    }
-
-    /**
-     * Connection destructor
-     */
-    public function __destruct () {
-
-        if ( isset( $this->mysqli ) ) {
-            $threadId = $this->mysqli->thread_id;
-            $this->mysqli->kill ( $threadId );
-            $this->mysqli->close ();
-        }
     }
 
     /**
