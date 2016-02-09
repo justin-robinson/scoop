@@ -1,11 +1,9 @@
 #!/usr/bin/env php
 <?php
 
-namespace Scoop;
-
 // parse cli args
 require_once dirname ( __FILE__ ) . '/../scoop/commandline.php';
-$args = CommandLine::parseArgs ( $_SERVER['argv'] );
+$args = \Scoop\CommandLine::parseArgs ( $_SERVER['argv'] );
 
 // special help args
 if ( isset($args['help']) || isset($args['h']) ) {
@@ -19,7 +17,7 @@ if ( empty( $args['action'] ) ) {
     $action = $args['action'];
 }
 
-$scoop = new Scoop( $args, $action );
+$scoop = new ScoopRun( $args, $action );
 
 // does that action exist?
 if ( !array_key_exists ( $action, $scoop->availableActions ) ) {
@@ -31,10 +29,10 @@ call_user_func_array ( [ $scoop, $action ], [ ] );
 
 
 /**
- * Class Scoop
+ * Class ScoopRun
  * @package Scoop
  */
-class Scoop {
+class ScoopRun {
 
     /**
      * @var array
@@ -76,9 +74,9 @@ class Scoop {
 
         // global or site specific class path?
         if ( array_key_exists ( 'site', $this->args ) ) {
-            $outPath = Config::get_site_class_path_by_name ( $this->args['site'] );
+            $outPath = \Scoop\Config::get_site_class_path_by_name ( $this->args['site'] );
         } else {
-            $outPath = Config::get_shared_class_path ();
+            $outPath = \Scoop\Config::get_shared_class_path ();
         }
 
         $where = [
@@ -118,7 +116,7 @@ class Scoop {
              table_name,
              ordinal_position";
 
-        $rows = Database\Model\Generic::query ( $getAllSchemas, $queryParams );
+        $rows = \Scoop\Database\Model\Generic::query ( $getAllSchemas, $queryParams );
         $schema = null;
         $table = null;
 
@@ -177,20 +175,20 @@ class Scoop {
                     $filepath = strtolower ( $outPath . '/db/' . $safeSchema . '/' . $name . '.php' );
                     $coreFilepath = strtolower ( $outPath . '/dbcore/' . $safeSchema . '/' . $coreName . '.php' );
 
-                    $dbClass = new ClassGen\ClassGenClass( $name );
+                    $dbClass = new \Scoop\ClassGen\ClassGenClass( $name );
                     $dbClass->set_extends ( '\\' . $coreNamespace . '\\' . $coreName )
                             ->set_namespace ( $namespace );
-                    $this->generator = new ClassGen\ClassGenGenerator( $dbClass, $filepath );
+                    $this->generator = new \Scoop\ClassGen\ClassGenGenerator( $dbClass, $filepath );
 
-                    $dbCoreClass = new ClassGen\ClassGenClass( $coreName );
+                    $dbCoreClass = new \Scoop\ClassGen\ClassGenClass( $coreName );
                     $dbCoreClass->set_extends ( 'Model' )
                                 ->set_namespace ( $coreNamespace )
                                 ->append_use ( 'Scoop\Database\Model' );
-                    $this->coreGenerator = new ClassGen\ClassGenGenerator( $dbCoreClass, $coreFilepath );
+                    $this->coreGenerator = new \Scoop\ClassGen\ClassGenGenerator( $dbCoreClass, $coreFilepath );
 
                     // add table and schema name
-                    $schemaProperty = new ClassGen\ClassGenProperty( 'schema', $row->TABLE_SCHEMA );
-                    $tableProperty = new ClassGen\ClassGenProperty( 'table', $row->TABLE_NAME );
+                    $schemaProperty = new \Scoop\ClassGen\ClassGenProperty( 'schema', $row->TABLE_SCHEMA );
+                    $tableProperty = new \Scoop\ClassGen\ClassGenProperty( 'table', $row->TABLE_NAME );
 
                     $schemaProperty->set_const ();
                     $tableProperty->set_const ();
@@ -212,7 +210,7 @@ class Scoop {
                 // add special properties
                 if ( $row->COLUMN_KEY === 'PRI' ) {
                     $this->primaryKeys[] = $row->COLUMN_NAME;
-                    $this->dBColumnsArray[$row->COLUMN_NAME][] = Database\Model::PROP_PRIMARY_KEY;
+                    $this->dBColumnsArray[$row->COLUMN_NAME][] = \Scoop\Database\Model::PROP_PRIMARY_KEY;
                 }
 
                 if ( $row->IS_NULLABLE === 'NO' ) {
@@ -223,7 +221,7 @@ class Scoop {
                 $extras = explode ( ',', $row->EXTRA );
                 if ( in_array ( 'auto_increment', $extras ) ) {
                     $this->autoIncrementColumn = $row->COLUMN_NAME;
-                    $this->dBColumnsArray[$row->COLUMN_NAME][] = Database\Model::PROP_AUTO_INCREMENT;
+                    $this->dBColumnsArray[$row->COLUMN_NAME][] = \Scoop\Database\Model::PROP_AUTO_INCREMENT;
                 }
 
                 if ( $rows->is_last_row () ) {
@@ -249,7 +247,7 @@ class Scoop {
         }
 
         // get the classpath for this site
-        $siteClassPath = Config::get_site_class_path ();
+        $siteClassPath = \Scoop\Config::get_site_class_path ();
         $sitePath = pathinfo ( $siteClassPath, PATHINFO_DIRNAME );
 
         // ensure path exists
@@ -259,7 +257,7 @@ class Scoop {
         }
 
         // get config path for this site
-        $siteConfigPath = $sitePath . '/' . Config::get_option ( 'configpath_folder_name' );
+        $siteConfigPath = $sitePath . '/' . \Scoop\Config::get_option ( 'configpath_folder_name' );
         @mkdir ( $siteConfigPath );
 
         if ( !file_exists ( $siteConfigPath ) ) {
@@ -270,10 +268,10 @@ class Scoop {
         $siteDbConfig = $siteConfigPath . '/db.php';
         if ( file_exists ( $siteDbConfig ) ) {
             echo "db config already exists for `"
-                . Config::get_option ( 'site_name' )
+                . \Scoop\Config::get_option ( 'site_name' )
                 . "` at :" . realpath ( $siteDbConfig );
         } else {
-            copy ( Config::get_option ( 'install_dir' ) . '/configs/db.php', $siteDbConfig );
+            copy ( \Scoop\Config::get_option ( 'install_dir' ) . '/configs/db.php', $siteDbConfig );
         }
     }
 
@@ -356,19 +354,19 @@ class Scoop {
         $this->coreGenerator->class->phpDoc = $phpDoc;
 
         // add the primary keys and autoincrement columns
-        $AIProperty = new ClassGen\ClassGenProperty( 'autoIncrementColumn', $this->autoIncrementColumn );
+        $AIProperty = new \Scoop\ClassGen\ClassGenProperty( 'autoIncrementColumn', $this->autoIncrementColumn );
         $AIProperty->set_const ();
 
-        $this->primaryKeys = new ClassGen\ClassGenProperty( 'primaryKeys', $this->primaryKeys );
+        $this->primaryKeys = new \Scoop\ClassGen\ClassGenProperty( 'primaryKeys', $this->primaryKeys );
         $this->primaryKeys->set_const ();
 
-        $this->nonNullColumns = new ClassGen\ClassGenProperty( 'nonNullColumns', $this->nonNullColumns );
+        $this->nonNullColumns = new \Scoop\ClassGen\ClassGenProperty( 'nonNullColumns', $this->nonNullColumns );
         $this->nonNullColumns->set_const ();
 
-        $columnProperties = new ClassGen\ClassGenProperty( 'dBColumnPropertiesArray', $this->dBColumnsArray );
+        $columnProperties = new \Scoop\ClassGen\ClassGenProperty( 'dBColumnPropertiesArray', $this->dBColumnsArray );
         $columnProperties->isStatic = true;
 
-        $columnValues = new ClassGen\ClassGenProperty( 'dBValuesArray', array_fill_keys ( array_keys ( $this->dBColumnsArray ), null ) );
+        $columnValues = new \Scoop\ClassGen\ClassGenProperty( 'dBValuesArray', array_fill_keys ( array_keys ( $this->dBColumnsArray ), null ) );
         $columnValues->set_protected ();
 
         $this->coreGenerator->addProperty ( $AIProperty );
