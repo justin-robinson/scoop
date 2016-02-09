@@ -81,8 +81,6 @@ class Scoop {
             $outPath = Config::get_shared_class_path ();
         }
 
-        echo "files will be saved to {$outPath}" . PHP_EOL;
-
         $where = [
             "table_schema NOT IN (
                'information_schema',
@@ -236,6 +234,9 @@ class Scoop {
 
             }
         }
+
+        $outPath = realpath($outPath);
+        echo "files saved to {$outPath}" . PHP_EOL;
     }
 
     /**
