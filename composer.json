@@ -15,7 +15,7 @@
   "require": {
     "php": ">=7.0.0",
     "kevinlebrun/colors.php": "0.4.1",
-      "filp/whoops": "2.*"
+    "filp/whoops": "2.*"
   },
   "autoload": {
     "psr-0": {

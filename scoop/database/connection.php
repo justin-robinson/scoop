@@ -54,6 +54,8 @@ class Connection {
 
     /**
      * Connection constructor.
+     *
+     * @param $config string[]
      */
     protected function __construct ( $config ) {
 
