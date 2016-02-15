@@ -103,7 +103,7 @@ class Connection {
         $self = self::get_instance ();
 
         // log the query
-        static::log_sql ( $sql );
+        static::log_sql ( $sql, $queryParams );
 
         // start sql transaction
         $self->mysqli->begin_transaction ();
@@ -181,12 +181,13 @@ class Connection {
     }
 
     /**
-     * @param $sql
+     * @param $sql string
+     * @param $queryParams array
      */
-    public static function log_sql ( $sql ) {
+    public static function log_sql ( $sql, $queryParams ) {
 
         if ( static::get_logging_enabled () ) {
-            static::$sqlHistoryArray[] = $sql;
+            static::$sqlHistoryArray[] = [$sql, $queryParams];
         }
 
     }
