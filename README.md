@@ -1,5 +1,5 @@
 #Scoop
-##Multi site php 7 framework and orm for apache 2.4+
+##Multi site php 7 framework and orm for mysql
 
 ######Note: still a work in progress and only for php7. There is a php56 branch for php 5.6 but that isn't maintained
 
