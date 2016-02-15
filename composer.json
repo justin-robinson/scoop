@@ -9,6 +9,9 @@
       "email": "jrob09bhs@gmail.com"
     }
   ],
+  "keywords" : [
+    "php", "php 7", "orm", "database", "mysql", "apache"
+  ],
   "require": {
     "php": ">=7.0.0",
     "kevinlebrun/colors.php": "0.4.1",
