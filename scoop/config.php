@@ -41,11 +41,21 @@ class Config {
 
     }
 
+    /**
+     * @param $name
+     *
+     * @return bool
+     */
     public static function option_exists ( $name ) {
 
         return array_key_exists ( $name, self::$options );
     }
 
+    /**
+     * @param $name
+     *
+     * @return null
+     */
     public static function get_option ( $name ) {
 
         return array_key_exists ( $name, self::$options ) ? self::$options[$name] : null;
@@ -104,11 +114,18 @@ class Config {
         return self::get_sites_folder () . '/' . $siteName . '/' . self::get_option ( 'classpath_folder_name' );
     }
 
+    /**
+     * @param array $options
+     */
     public static function set_options ( array $options ) {
 
         self::$options = array_merge_recursive ( self::$options, $options );
     }
 
+    /**
+     * @param $name
+     * @param $option
+     */
     public static function set_option ( $name, $option ) {
 
         self::$options[$name] = $option;
