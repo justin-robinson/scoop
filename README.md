@@ -9,7 +9,7 @@
 ```json
 {
   "require": {
-    "justin-robinson/scoop": "dev-master",
+    "justin-robinson/scoop": "*",
   }
 }
 ```
