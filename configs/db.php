@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'host'     => 'localhost',
-    'user'     => 'root',
-    'password' => '',
+    'host'     => 'jor.pw',
+    'user'     => 'test',
+    'password' => 'test',
     'port'     => ' 3306',
 ];
