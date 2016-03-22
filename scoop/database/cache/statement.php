@@ -7,8 +7,7 @@ namespace Scoop\Database\Cache;
  * @package Scoop\Database\Cache
  */
 class Statement {
-
-    // todo move cache to redis
+    
     /**
      * @var $cache \mysqli_stmt[]
      */
@@ -47,7 +46,7 @@ class Statement {
      *
      * @return bool
      */
-    public function exists ( $key ) : bool {
+    public function exists ( $key ) {
 
         return isset( $this->cache[$key] );
     }

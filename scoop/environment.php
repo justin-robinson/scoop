@@ -35,7 +35,7 @@ class Environment {
      * @return string
      * gets integer representation of environment
      */
-    public static function get_environment () : string {
+    public static function get_environment () {
 
         if ( !isset( self::$environment ) ) {
             self::detect_environment ();
@@ -72,7 +72,7 @@ class Environment {
      * @return string
      * Searches known variables for a hostname
      */
-    public static function get_server_name () : string {
+    public static function get_server_name () {
 
         if ( array_key_exists ( 'SERVER_NAME', $_SERVER ) && !empty( $_SERVER['SERVER_NAME'] ) ) {
             $hostname = $_SERVER['SERVER_NAME'];
@@ -90,7 +90,7 @@ class Environment {
      * @return bool
      * Determine if client is on an internal network
      */
-    public static function is_internal_ip (): bool {
+    public static function is_internal_ip () {
 
         if ( is_null ( self::$isInternalIP ) ) {
 
@@ -127,7 +127,7 @@ class Environment {
      *
      * @return bool
      */
-    public static function constant_is_defined_and_equals ( $value, $equals = true ) : bool {
+    public static function constant_is_defined_and_equals ( $value, $equals = true ) {
 
         return defined ( $value ) && constant ( $value ) === $equals;
     }

@@ -60,7 +60,7 @@ class ClassGenGenerator {
      * @param ClassGenClass $class
      * @param string|null   $filepath
      */
-    public function __construct ( ClassGenClass $class, string $filepath = '' ) {
+    public function __construct ( ClassGenClass $class, $filepath = '' ) {
 
         $this->class = $class;
         $this->filepath = $filepath;

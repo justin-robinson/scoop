@@ -14,7 +14,7 @@ class Config {
      * @return array
      * Gets all possible class paths
      */
-    public static function get_class_paths () : array {
+    public static function get_class_paths () {
 
         return [
             self::get_site_class_path (),
@@ -27,7 +27,7 @@ class Config {
      * @return string
      * Gets classpath for the current site
      */
-    public static function get_site_class_path () : string {
+    public static function get_site_class_path () {
 
         if ( self::option_exists ( 'server_document_root' ) ) {
             $siteClassPath = self::get_option ( 'server_document_root' );
@@ -64,7 +64,7 @@ class Config {
     /**
      * @return string
      */
-    public static function get_sites_folder () : string {
+    public static function get_sites_folder () {
 
         return Path::make_absolute ( self::get_option ( 'sites_folder' ) );
 
@@ -74,7 +74,7 @@ class Config {
      * @return string
      * Gets classpath shared by all sites
      */
-    public static function get_shared_class_path () : string {
+    public static function get_shared_class_path () {
 
         if ( self::option_exists ( 'shared_classpath_parent_directory' ) ) {
 
@@ -89,7 +89,7 @@ class Config {
     /**
      * @return array
      */
-    public static function get_db_config () : array {
+    public static function get_db_config () {
 
         $ScoopDB = require self::get_option ( 'install_dir' ) . '/configs/db.php';
 

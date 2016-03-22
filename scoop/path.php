@@ -13,7 +13,7 @@ class Path {
      *
      * @return string
      */
-    public static function make_absolute ( $path ) : string {
+    public static function make_absolute ( $path ) {
 
         if ( !Path::is_absolute ( $path ) ) {
             $path = Config::get_option ( 'install_dir' ) . $path;
@@ -28,7 +28,7 @@ class Path {
      *
      * @return bool
      */
-    public static function is_absolute ( $path ) : bool {
+    public static function is_absolute ( $path ) {
 
         return strpos ( $path, '/' ) === 0;
     }

@@ -147,7 +147,7 @@ class Generic implements \JsonSerializable {
     /**
      * @return array
      */
-    public function to_array () : array {
+    public function to_array () {
 
         return $this->dBValuesArray;
     }
@@ -155,7 +155,7 @@ class Generic implements \JsonSerializable {
     /**
      * @return array
      */
-    public function get_column_names () : array {
+    public function get_column_names () {
 
         return array_keys ( $this->orignalDbValuesArray );
     }

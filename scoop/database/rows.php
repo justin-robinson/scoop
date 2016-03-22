@@ -53,7 +53,7 @@ class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
     /**
      * @return array Model[]
      */
-    public function get_rows () : array {
+    public function get_rows () {
 
         return $this->rowsStorageArray;
     }
@@ -61,7 +61,7 @@ class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
     /**
      * @return bool
      */
-    public function is_last_row () : bool {
+    public function is_last_row () {
 
         return $this->key () === ( $this->numRows - 1 );
     }
@@ -82,7 +82,7 @@ class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
     /**
      * @return array
      */
-    public function to_array () : array {
+    public function to_array () {
 
         $array = [ ];
 

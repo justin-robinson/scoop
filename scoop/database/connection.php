@@ -144,7 +144,7 @@ class Connection {
     /**
      * @return Connection
      */
-    public static function get_instance () : Connection {
+    public static function get_instance () {
 
         if ( !static::is_connected () ) {
             static::connect ();
@@ -177,7 +177,7 @@ class Connection {
     /**
      * @return bool
      */
-    public static function is_connected () : bool {
+    public static function is_connected () {
 
         return is_a ( static::$instance, __CLASS__ );
     }
@@ -197,7 +197,7 @@ class Connection {
     /**
      * @return bool
      */
-    public static function get_logging_enabled () : bool {
+    public static function get_logging_enabled () {
 
         return self::$loggingEnabled;
     }
@@ -205,7 +205,7 @@ class Connection {
     /**
      * @param bool $loggingEnabled
      */
-    public static function set_logging_enabled ( bool $loggingEnabled ) {
+    public static function set_logging_enabled ( $loggingEnabled ) {
 
         self::$loggingEnabled = $loggingEnabled;
     }
@@ -216,7 +216,7 @@ class Connection {
      * @return \mysqli_stmt
      * @throws \Exception
      */
-    public function get_statement_from_sql ( $sql ) : \mysqli_stmt {
+    public function get_statement_from_sql ( $sql ) {
 
         $key = md5 ( $sql );
 
@@ -242,7 +242,7 @@ class Connection {
      * @return string
      * @throws \Exception
      */
-    public static function get_bind_type ( $value ) : string {
+    public static function get_bind_type ( $value ) {
 
         $valueType = gettype ( $value );
 
@@ -267,7 +267,7 @@ class Connection {
     /**
      * @return int
      */
-    public static function get_affected_rows () : int {
+    public static function get_affected_rows () {
 
         return static::$affectedRows;
     }
@@ -275,7 +275,7 @@ class Connection {
     /**
      * @return int|null
      */
-    public static function get_insert_id () : int {
+    public static function get_insert_id () {
 
         return static::$insertId;
     }
@@ -283,7 +283,7 @@ class Connection {
     /**
      * @return array
      */
-    public static function get_sql_history () : array {
+    public static function get_sql_history () {
 
         return self::$sqlHistoryArray;
     }

@@ -61,7 +61,7 @@ class ClassGenClass extends ClassGenAbstract {
      *
      * @return $this
      */
-    public function set_name ( string $name ) {
+    public function set_name ( $name ) {
 
         $this->name = $name;
 
@@ -73,7 +73,7 @@ class ClassGenClass extends ClassGenAbstract {
      *
      * @return $this
      */
-    public function set_extends ( string $extends ) {
+    public function set_extends ( $extends ) {
 
         $this->extends = $extends;
 
@@ -97,7 +97,7 @@ class ClassGenClass extends ClassGenAbstract {
      *
      * @return $this
      */
-    public function set_namespace ( string $namespace ) {
+    public function set_namespace ( $namespace ) {
 
         $this->namespace = $namespace;
 
@@ -133,7 +133,7 @@ class ClassGenClass extends ClassGenAbstract {
      * @return string
      * @throws \Exception
      */
-    public function getHeader () : string {
+    public function getHeader () {
 
         if ( $this->is_final () && $this->is_abstract () ) {
             throw new \Exception( 'Class can\'t be final and abstract' );
@@ -219,7 +219,7 @@ class ClassGenClass extends ClassGenAbstract {
     /**
      * @return string
      */
-    public function getFooter () : string {
+    public function getFooter () {
 
         $footer = "
 }
