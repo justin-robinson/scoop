@@ -28,9 +28,9 @@ class Statement {
      */
     public function __destruct () {
 
-        foreach ( $this->cache as $statement ) {
-            $statement->close ();
-        }
+        $this->cache->walkCache(function(&$statement){
+           $statement->close();
+        });
     }
 
     /**
