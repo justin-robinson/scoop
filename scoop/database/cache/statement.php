@@ -2,15 +2,16 @@
 
 namespace Scoop\Database\Cache;
 
+use LRUCache\LRUCache;
+
 /**
  * Class Statement
  * @package Scoop\Database\Cache
  */
 class Statement {
-
-    // todo move cache to redis
+    
     /**
-     * @var $cache \mysqli_stmt[]
+     * @var $cache LRUCache
      */
     private $cache;
 
@@ -19,7 +20,7 @@ class Statement {
      */
     public function __construct () {
 
-        $this->cache = [ ];
+        $this->cache = new LRUCache(500);
     }
 
     /**
@@ -39,7 +40,7 @@ class Statement {
      */
     public function get ( $key ) {
 
-        return self::exists ( $key ) ? $this->cache[$key] : null;
+        return $this->cache->get($key);
     }
 
     /**
@@ -49,17 +50,23 @@ class Statement {
      */
     public function exists ( $key ) : bool {
 
-        return isset( $this->cache[$key] );
+        return is_null($this->cache->get($key));
     }
 
     /**
-     * @param $key
+     * @param $key string
      * @param $value \mysqli_stmt
+     *
+     * @return bool
      */
-    public function set ( $key, $value ) {
+    public function set ( $key, $value ) : bool {
 
-        if ( is_a ( $value, 'mysqli_stmt' ) ) {
-            $this->cache[$key] = $value;
+        $isMysqliStatement = is_a ( $value, 'mysqli_stmt' );
+
+        if ( $isMysqliStatement ) {
+            $this->cache->put($key, $value);
         }
+
+        return $isMysqliStatement;
     }
 }
