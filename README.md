@@ -14,8 +14,6 @@
 * DB file generation just works ( bin/scoop --action generate_db_model )
 * You can override any class or config option on a global or per site basis
 
-PS. do a `composer install` for some colorized output on db model generation
-
 
 ###Example
 ```php
