@@ -115,22 +115,10 @@ return [
 ];
 ```
 
-#####Customize your setup by creating a ./scoop/configs/custom.php
-```php
-<?php
-
-// all options can be found in ./scoop/configs/framework.php
-
-return [
-    'sites_folder' => '/var/www/sites',
-    'timezone' => 'America/Chicago' // http://php.net/manual/en/timezones.php
-];
-```
-
 
 
 ###Generate DB Models
-`./bin/scoop --action generate_db_model`
+`./vendor/bin/scoop --action generate_db_model`
 
 ####Args
 | Arg | Description |
