@@ -16,7 +16,7 @@
     "php": ">=5.6.0",
     "kevinlebrun/colors.php": "0.4.1",
     "filp/whoops": "2.*",
-    "justin-robinson/lrucache": "dev-master"
+    "justin-robinson/lrucache": "*"
   },
   "autoload": {
     "psr-0": {
