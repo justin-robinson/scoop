@@ -115,22 +115,6 @@ return [
 ];
 ```
 
-####Git
-```shell
-git clone git@github.com:justin-robinson/scoop.git
-cd scoop
-composer install
-# edit .configs/db.php
-./bin/scoop --action generate_db_models
-# Classes will be generated in ../scoop-classes
-```
-
-```php
-<?php
-
-require_once 'scoop/bootstrap.php';
-```
-
 #####Customize your setup by creating a ./scoop/configs/custom.php
 ```php
 <?php
