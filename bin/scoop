@@ -24,6 +24,14 @@ if ( !array_key_exists ( $action, $scoop->availableActions ) ) {
     die( 'action ' . $action . ' does not exist' );
 }
 
+// load composer autoloader
+foreach ([__DIR__ . '/../vendor/autoload.php',
+          __DIR__ . '/../../../autoload.php'] as $autoloadFile) {
+    if (file_exists($autoloadFile)) {
+        require_once $autoloadFile;
+    }
+}
+
 // run the action
 call_user_func_array ( [ $scoop, $action ], [ ] );
 
