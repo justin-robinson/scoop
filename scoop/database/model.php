@@ -363,4 +363,14 @@ abstract class Model extends Model\Generic {
 
         return is_numeric ( $this->{$IDColumn} );
     }
+
+    /**
+     * @param array $dataArray
+     */
+    public function populate ( array $dataArray ) {
+
+        $this->dBValuesArray = $this->dBValuesArray = array_merge(
+            $this->dBValuesArray,
+            array_intersect_key($dataArray, $this->dBValuesArray));
+    }
 }
