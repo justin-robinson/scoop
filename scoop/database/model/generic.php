@@ -62,7 +62,9 @@ class Generic implements \JsonSerializable {
      */
     public function populate ( array $dataArray ) {
 
-        $this->dBValuesArray = array_replace ( $this->dBValuesArray, $dataArray );
+        $this->dBValuesArray = $this->dBValuesArray = array_merge(
+            $this->dBValuesArray,
+            array_intersect_key($dataArray, $this->dBValuesArray));
     }
 
     /**
