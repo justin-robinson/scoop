@@ -247,6 +247,7 @@ class Connection {
         $valueType = gettype ( $value );
 
         switch ( $valueType ) {
+            case "NULL":
             case "string":
                 $bindType = 's';
                 break;
