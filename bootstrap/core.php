@@ -29,9 +29,15 @@ if ( isset ( $siteName ) ) {
 $frameworkConfig = include \Scoop\Config::get_option ( 'config_dir' ) . '/framework.php';
 
 // load user config file if one exists
-$userConfigFilePath = \Scoop\Config::get_option ( 'config_dir' ) . '/custom.php';
-if ( file_exists ( $userConfigFilePath ) ) {
-    $frameworkConfig = array_replace_recursive ( $frameworkConfig, include $userConfigFilePath );
+foreach ([__DIR__ . '/../../scoop/custom.php',
+          __DIR__ . '/../../../../scoop/custom.php'] as $customConfigFilePath) {
+    if (file_exists($customConfigFilePath)) {
+        $customConfig = include_once $customConfigFilePath;
+
+        if ( is_array($customConfig) ) {
+            $frameworkConfig = array_replace_recursive ( $frameworkConfig, $customConfig );
+        }
+    }
 }
 
 // set main options
