@@ -99,6 +99,20 @@ Create scoop folder in project root ( beside vendor folder )
 mkdir -p scoop/classes
 mkdir -p scoop/configs
 ```
+Setup db connection paramters
+```shell
+touch scoop/configs/db.php
+```
+```php
+<?php
+
+return [
+    'host'     => 'jor.pw',
+    'user'     => 'test',
+    'password' => 'test',
+    'port'     => '3306',
+];
+```
 Generate DB models
 ```shell
 ./vendor/bin/scoop --action generate_db_models
