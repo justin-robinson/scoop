@@ -81,29 +81,35 @@ $sql=
 
 ###Setup
 
-####Composer
+Require via composer
 ```json
 {
   "require": {
-    "justin-robinson/scoop": "*",
+    "justin-robinson/scoop": "dev-php56",
   }
 }
 ```
-
 ```shell
-composer install
-# edit ./vendor/justin-robinson/scoop/configs/db.php
-./vendor/bin/scoop --action generate_db_models
-# Classes will be generated in ../scoop-classes
+composer update
 ```
-
+Create scoop folder in project root ( beside vendor folder )
+```shell
+mkdir -p scoop/classes
+mkdir -p scoop/configs
+```
+Generate DB models
+```shell
+./vendor/bin/scoop --action generate_db_models
+# Classes will be generated in ./scoop/classes/
+```
+Require the composer autloader
 ```php
 <?php
 
 require_once 'vendor/autoload.php';
 ```
 
-#####Customize your setup by creating a ./vendor/justin-robinson/scoop/configs/custom.php
+##### Customize your setup by creating a ./scoop/custom.php
 ```php
 <?php
 
@@ -116,9 +122,8 @@ return [
 ```
 
 
-
 ###Generate DB Models
-`./vendor/bin/scoop --action generate_db_model`
+`./bin/scoop --action generate_db_model`
 
 ####Args
 | Arg | Description |
@@ -136,6 +141,4 @@ return [
 `./bin/scoop --action generate_db_model --site=example.com`
 
 
-######Note: $_SERVER\['site_name'\] needs to be set to the name of your site.  This needs to correlate to name of the folder the site's configs live in
-
-
+###### Note: $_SERVER\['site_name'\] needs to be set to the name of your site.  This needs to correlate to name of the folder the site's configs live in
