@@ -83,7 +83,7 @@ $sql=
 
 ###Setup
 
-####Composer
+Require via composer
 ```json
 {
   "require": {
@@ -91,21 +91,27 @@ $sql=
   }
 }
 ```
-
 ```shell
-composer install
-# edit ./vendor/justin-robinson/scoop/configs/db.php
-./vendor/bin/scoop --action generate_db_models
-# Classes will be generated in ../scoop-classes
+composer update
 ```
-
+Create scoop folder in project root ( beside vendor folder )
+```shell
+mkdir -p scoop/classes
+mkdir -p scoop/configs
+```
+Generate DB models
+```shell
+./vendor/bin/scoop --action generate_db_models
+# Classes will be generated in ./scoop/classes/
+```
+Require the composer autloader
 ```php
 <?php
 
 require_once 'vendor/autoload.php';
 ```
 
-#####Customize your setup by creating a ./vendor/justin-robinson/scoop/configs/custom.php
+##### Customize your setup by creating a ./scoop/custom.php
 ```php
 <?php
 
