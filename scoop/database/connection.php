@@ -127,7 +127,8 @@ class Connection {
         // execute statement
         if ( !$statement->execute () ) {
             $self->mysqli->rollback ();
-            trigger_error ( 'MySQL Error Number ( ' . $statement->errno . ' )' . $statement->error . PHP_EOL . $sql );
+            throw new \Exception(
+                'MySQL Error Number ( ' . $statement->errno . ' )' . $statement->error . PHP_EOL . $sql . PHP_EOL);
         }
 
         // commit this transaction
