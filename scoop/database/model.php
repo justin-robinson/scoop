@@ -179,17 +179,9 @@ abstract class Model extends Model\Generic {
             $this->validate ();
         }
 
-        if ( property_exists ( $this, 'dateTimeUpdated' ) ) {
-            $this->set_literal ( 'dateTimeUpdated', 'NOW()' );
-        }
-
         if ( $this->loadedFromDb ) {
             $this->update ();
         } else {
-
-            if ( property_exists ( $this, 'dateTimeAdded' ) ) {
-                $this->set_literal ( 'dateTimeAdded', 'NOW()' );
-            }
 
             $columns = $this->get_db_values_array ();
 
@@ -322,14 +314,6 @@ abstract class Model extends Model\Generic {
 
         if ( $this->loadedFromDb ) {
             $dirtyColumns = array_diff_assoc ( $dbValuesArray, $this->orignalDbValuesArray );
-
-            // we don't care about timestamps
-            if ( isset( $dirtyColumns['dateTimeAdded'] ) ) {
-                unset( $dirtyColumns['dateTimeAdded'] );
-            }
-            if ( isset( $dirtyColumns['dateTimeUpdated'] ) ) {
-                unset( $dirtyColumns['dateTimeUpdated'] );
-            }
         } else {
             $dirtyColumns = $dbValuesArray;
         }
