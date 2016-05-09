@@ -35,7 +35,7 @@ class Connection {
     /**
      * @var bool
      */
-    private static $loggingEnabled = true;
+    private static $loggingEnabled = false;
 
     /**
      * @var Connection
