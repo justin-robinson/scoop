@@ -259,6 +259,11 @@ class Connection {
             case "double":
                 $bindType = 'd';
                 break;
+            case "object":
+                if ( method_exists($value, '__toString') ) {
+                    $bindType = 's';
+                    break;
+                }
             default:
                 throw new \Exception( "Query param has type of {$valueType}" );
         }

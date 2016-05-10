@@ -209,11 +209,15 @@ abstract class Model extends Model\Generic {
                 // add column name
                 $columnNames .= "`{$columnName}`,";
 
-                // value placeholder
-                $values .= '?,';
+                if ( is_object($value) && is_a($value, '\Scoop\Database\Literal') ) {
+                    $values .= "{$value},";
+                } else {
+                    // value placeholder
+                    $values .= '?,';
 
-                // value param
-                $queryParams[] = $value;
+                    // value param
+                    $queryParams[] = $value;
+                }
             }
             // remove last comma
             $columnNames = rtrim ( $columnNames, ',' );
@@ -273,8 +277,16 @@ abstract class Model extends Model\Generic {
             // build the values we are updating
             $updatedValues = '';
             foreach ( $dirtyColumns as $columnName => $value ) {
-                $updatedValues .= "`{$columnName}` = ?,";
-                $queryParams[] = $value;
+
+                if ( is_object($value) && is_a($value, '\Scoop\Database\Literal') ) {
+                    $updatedValues .= "`{$columnName}` = {$value},";
+                } else {
+                    // value placeholder
+                    $updatedValues .= "`{$columnName}` = ?,";
+
+                    // value param
+                    $queryParams[] = $value;
+                }
             }
             $updatedValues = rtrim ( $updatedValues, ',' );
 
