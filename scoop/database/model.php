@@ -171,6 +171,41 @@ abstract class Model extends Model\Generic {
     }
 
     /**
+     * @return bool
+     */
+    public function delete () {
+
+        // don't delete things we didn't get from the db or that doesn't have a primary key
+        if ( !$this->loadedFromDb || empty(static::PRIMARY_KEYS)) {
+            return false;
+        }
+
+        $primaryKeys = '';
+        $queryParams = [];
+        foreach ( static::PRIMARY_KEYS as &$primaryKey ) {
+            $primaryKeys .= "{$primaryKey}=? AND ";
+            $queryParams[] = $this->__get($primaryKey);
+        }
+        $primaryKeys = rtrim($primaryKeys, "AND ");
+
+        $sql = "
+            DELETE FROM
+              " . $this->get_sql_table_name() . "
+            WHERE
+                {$primaryKeys}
+        ";
+
+        $result = self::query($sql, $queryParams);
+
+        if ( $result ) {
+            $this->loadedFromDb = false;
+        }
+
+        return $result;
+
+    }
+
+    /**
      * Save this instance to the database
      */
     public function save () {
