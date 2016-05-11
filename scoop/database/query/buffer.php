@@ -11,6 +11,11 @@ use Scoop\Database\Connection;
 class Buffer {
 
     /**
+     * @var
+     */
+    private $columnNames;
+
+    /**
      * @var string
      */
     private $insertValuesSql;
@@ -61,7 +66,17 @@ class Buffer {
             throw new \Exception( "model class must implement 'Scoop\\Database\\Model'" );
         }
 
-        list($this->columnNames, $_, $_, $_) = $model->get_sql_insert_values();
+        $this->columnNames = '';
+        foreach ( $model->get_column_names() as &$columnName ) {
+
+            // don't save id columns
+            if ( $model::AUTO_INCREMENT_COLUMN === $columnName ) {
+                continue;
+            }
+
+            $this->columnNames .= "`{$columnName}`,";
+        }
+        $this->columnNames = rtrim($this->columnNames, ',');
 
         $this->maxSize = $maxSize;
         $this->modelClass = get_class( $model );
