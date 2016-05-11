@@ -61,8 +61,7 @@ class Buffer {
             throw new \Exception( "model class must implement 'Scoop\\Database\\Model'" );
         }
 
-        list($this->columnNames, $values, $queryParams, $_) =
-            $model->get_sql_insert_values();
+        list($this->columnNames, $_, $_, $_) = $model->get_sql_insert_values();
 
         $this->maxSize = $maxSize;
         $this->modelClass = get_class( $model );
@@ -82,8 +81,7 @@ class Buffer {
             return;
         }
 
-        list($_, $values, $queryParams, $_) =
-            $model->get_sql_insert_values();
+        list($_, $values, $queryParams, $_) = $model->get_sql_insert_values();
 
         // add query params
         $this->queryParams = array_merge( $this->queryParams, $queryParams );
