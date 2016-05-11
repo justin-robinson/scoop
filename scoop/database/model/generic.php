@@ -145,14 +145,6 @@ class Generic implements \JsonSerializable {
     }
 
     /**
-     * @return array
-     */
-    public function to_array () : array {
-
-        return $this->dBValuesArray;
-    }
-
-    /**
      * @param $name
      *
      * @return bool
@@ -160,6 +152,14 @@ class Generic implements \JsonSerializable {
     public function __isset ( $name ) {
 
         return isset($this->dBValuesArray[$name]);
+    }
+
+    /**
+     * @return array
+     */
+    public function to_array () : array {
+
+        return $this->dBValuesArray;
     }
 
     /**
