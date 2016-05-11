@@ -264,7 +264,7 @@ abstract class Model extends Model\Generic {
 
         $IDColumn = static::AUTO_INCREMENT_COLUMN;
 
-        return is_numeric ( $this->{$IDColumn} );
+        return is_numeric ( $this->__get($IDColumn) );
     }
 
     /**
