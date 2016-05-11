@@ -175,71 +175,47 @@ abstract class Model extends Model\Generic {
      */
     public function save () {
 
+        // don't attempt to save if nothing has changed
+        if ( $this->loadedFromDb && empty($this->get_dirty_columns()) ) {
+            return;
+        }
+
+        // validate if we want
         if ( method_exists ( $this, 'validate' ) ) {
             $this->validate ();
         }
 
+        list($columnNames, $values, $queryParams, $updateColumnValues) =
+            $this->get_sql_insert_values();
+
+        // build sql statement
+        $sql =
+            "INSERT INTO
+          " . static::get_sql_table_name () . "
+          ({$columnNames})
+          VALUES
+          ({$values})";
+
+        // update values if we are resaving to the db
         if ( $this->loadedFromDb ) {
-            $this->update ();
-        } else {
+            $sql .= "
+            ON DUPLICATE KEY UPDATE {$updateColumnValues}";
+        }
 
-            $columns = $this->get_db_values_array ();
+        // execute sql statement
+        $result = self::query ( $sql, $queryParams );
 
-            // remove columns marked by the db to be NON NULL but we have them locally as null
-            foreach ( static::NON_NULL_COLUMNS as $columnName ) {
-                if ( array_key_exists ( $columnName, $columns ) && is_null ( $columns[$columnName] ) ) {
-                    unset( $columns[$columnName] );
-                }
+        // log change on success
+        if ( $result ) {
+
+            // get auto incremented id if one was generated
+            if ( $ID = Connection::get_insert_id () ) {
+
+                $this->__set(static::AUTO_INCREMENT_COLUMN, $ID);
+
             }
 
-            // build names of columns we are saving and add query params
-            $columnNames = '';
-            $values = '';
-            $queryParams = [ ];
-            foreach ( $columns as $columnName => $value ) {
-
-                // add column name
-                $columnNames .= "`{$columnName}`,";
-
-                if ( is_object($value) && is_a($value, '\Scoop\Database\Literal') ) {
-                    $values .= "{$value},";
-                } else {
-                    // value placeholder
-                    $values .= '?,';
-
-                    // value param
-                    $queryParams[] = $value;
-                }
-            }
-            // remove last comma
-            $columnNames = rtrim ( $columnNames, ',' );
-            $values = rtrim ( $values, ',' );
-
-            // build sql statement
-            $sql =
-                "INSERT INTO
-              " . static::get_sql_table_name () . "
-              ({$columnNames})
-              VALUES
-              ({$values})";
-
-            // execute sql statement
-            $result = self::query ( $sql, $queryParams );
-
-            // log change on success
-            if ( $result ) {
-
-                // get auto incremented id if one was generated
-                if ( $ID = Connection::get_insert_id () ) {
-
-                    $IDColumn = static::AUTO_INCREMENT_COLUMN;
-
-                    $this->{$IDColumn} = $ID;
-
-                }
-
-                $this->loaded_from_database ();
-            }
+            $this->loaded_from_database ();
         }
 
     }
@@ -250,67 +226,7 @@ abstract class Model extends Model\Generic {
      */
     public function set_literal ( $key, $value ) {
 
-        $this->{$key} = new Literal( $value );
-    }
-
-    /**
-     * Update a model loaded from the db
-     */
-    protected function update () {
-
-        // what column values did we change?
-        $dirtyColumns = $this->get_dirty_columns ();
-
-        // did we change any?
-        if ( !empty ( $dirtyColumns ) > 0 ) {
-
-            $queryParams = [ ];
-
-            // build the values we are updating
-            $updatedValues = '';
-            foreach ( $dirtyColumns as $columnName => $value ) {
-
-                if ( is_object($value) && is_a($value, '\Scoop\Database\Literal') ) {
-                    $updatedValues .= "`{$columnName}` = {$value},";
-                } else {
-                    // value placeholder
-                    $updatedValues .= "`{$columnName}` = ?,";
-
-                    // value param
-                    $queryParams[] = $value;
-                }
-            }
-            $updatedValues = rtrim ( $updatedValues, ',' );
-
-            // try to identify by primary key or original db values
-            $rowIdentifiers = empty( static::PRIMARY_KEYS )
-                ? array_keys ( $this->orignalDbValuesArray )
-                : static::PRIMARY_KEYS;
-
-            // identify the row we are updating
-            $where = '';
-            foreach ( $rowIdentifiers as $columnName ) {
-                $where .= "`{$columnName}` = ?,";
-                $queryParams[] = $this->orignalDbValuesArray[$columnName];
-            }
-            $where = rtrim ( $where, ',' );
-
-            $sql =
-                "UPDATE
-                " . $this->get_sql_table_name () . "
-               SET
-                {$updatedValues}
-               WHERE
-                {$where}";
-
-            $result = self::query ( $sql, $queryParams );
-
-            if ( $result ) {
-                $this->loaded_from_database ();
-            }
-
-        }
-
+        $this->__set($key, new Literal( $value ));
     }
 
     /**
@@ -331,15 +247,6 @@ abstract class Model extends Model\Generic {
         }
 
         return $dirtyColumns;
-    }
-
-    /**
-     * get column names of the model
-     * @return array
-     */
-    public function get_db_values_array () {
-
-        return $this->dBValuesArray;
     }
 
     /**
@@ -368,5 +275,53 @@ abstract class Model extends Model\Generic {
         $this->dBValuesArray = array_merge(
             $this->dBValuesArray,
             array_intersect_key($dataArray, $this->dBValuesArray));
+    }
+
+    /**
+     * @return array
+     */
+    public function get_sql_insert_values () {
+
+        $columns = $this->get_db_values_array ();
+
+        // remove columns marked by the db to be NON NULL but we have them locally as null
+        foreach ( static::NON_NULL_COLUMNS as $columnName ) {
+            if ( array_key_exists ( $columnName, $columns ) && is_null ( $columns[$columnName] ) ) {
+                unset( $columns[$columnName] );
+            }
+        }
+
+        $columnNames = '';
+        $values = '';
+        $queryParams = [];
+        $updateColumnValues = '';
+        foreach ( $columns as $columnName => $value ) {
+
+            // add column name
+            $columnNames .= "`{$columnName}`,";
+            $updateColumnValues .= "{$columnName}=VALUES({$columnName}),";
+
+            if ( is_object($value) && is_a($value, '\Scoop\Database\Literal') ) {
+                $values .= "{$value},";
+            } else {
+                // value placeholder
+                $values .= '?,';
+
+                // value param
+                $queryParams[] = $value;
+            }
+        }
+
+        // remove last comma
+        $columnNames = rtrim ( $columnNames, ',' );
+        $values = rtrim ( $values, ',' );
+        $updateColumnValues = rtrim( $updateColumnValues, ',' );
+
+        return [
+            $columnNames,
+            $values,
+            $queryParams,
+            $updateColumnValues,
+        ];
     }
 }
