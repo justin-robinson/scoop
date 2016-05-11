@@ -211,9 +211,7 @@ abstract class Model extends Model\Generic {
             // get auto incremented id if one was generated
             if ( $ID = Connection::get_insert_id () ) {
 
-                $IDColumn = static::AUTO_INCREMENT_COLUMN;
-
-                $this->{$IDColumn} = $ID;
+                $this->__set(static::AUTO_INCREMENT_COLUMN, $ID);
 
             }
 
@@ -228,7 +226,7 @@ abstract class Model extends Model\Generic {
      */
     public function set_literal ( $key, $value ) {
 
-        $this->{$key} = new Literal( $value );
+        $this->__set($key, new Literal( $value ));
     }
 
     /**
@@ -266,7 +264,7 @@ abstract class Model extends Model\Generic {
 
         $IDColumn = static::AUTO_INCREMENT_COLUMN;
 
-        return is_numeric ( $this->{$IDColumn} );
+        return is_numeric ( $this->__get($IDColumn) );
     }
 
     /**
