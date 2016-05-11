@@ -50,6 +50,8 @@ class Buffer {
      *
      * @param int    $maxSize
      * @param string $modelClass
+     *
+     * @throws \Exception
      */
     public function __construct ( int $maxSize, string $modelClass ) {
 
