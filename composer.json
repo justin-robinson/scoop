@@ -18,6 +18,11 @@
     "filp/whoops": "2.*",
     "justin-robinson/lrucache": "*"
   },
+  "require-dev": {
+    "phpunit/php-code-coverage": "*",
+    "phpunit/phpunit-mock-objects": "*",
+    "phpunit/phpunit": "*"
+  },
   "autoload": {
     "psr-0": {
       "scoop\\": "scoop/"
