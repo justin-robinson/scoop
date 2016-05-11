@@ -16,7 +16,7 @@ class Buffer {
     private $insertValuesSql;
 
     /**
-     * @var \Sccop\Database\Model[]
+     * @var \Scoop\Database\Model[]
      */
     private $models;
 
