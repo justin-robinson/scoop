@@ -51,8 +51,9 @@ if ( \Scoop\Config::option_exists ( 'timezone' ) ) {
 // the autoloader
 require_once ( \Scoop\Config::get_option ( 'bootstrap_dir' ) . '/autoloader.php' );
 
-// show errors for internal ips
-if ( \Scoop\Environment::is_internal_ip () ) {
+$clientIP = array_key_exists ( 'REMOTE_ADDR', $_SERVER ) ? $_SERVER['REMOTE_ADDR'] : '0.0.0.0';
+$serverIP = array_key_exists ( 'SERVER_ADDR', $_SERVER ) ? $_SERVER['SERVER_ADDR'] : '0.0.0.0';
+if ( \Scoop\Environment::is_internal_ip ($clientIP, $serverIP) ) {
     ini_set ( 'display_errors', 'On' );
     ini_set ( 'display_startup_errors', 'On' );
 } else {
