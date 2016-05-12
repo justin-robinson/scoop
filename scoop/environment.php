@@ -20,45 +20,23 @@ class Environment {
     const ENV_LOCAL = 4;
 
     /**
-     * @var string
-     * Cache for get_environment()
-     */
-    private static $environment;
-
-    /**
-     * @return string
      * gets integer representation of environment
+     *
+     * @return int
      */
     public static function get_environment () {
-
-        if ( !isset( self::$environment ) ) {
-            self::detect_environment ();
-        }
-
-        return self::$environment;
-
-    }
-
-    /**
-     * detects environment based on server subdomain
-     */
-    private static function detect_environment () {
 
         $hostnameParts = explode ( '.', self::get_server_name () );
 
         switch ( $hostnameParts[0] ) {
             case 'localhost':
-                self::$environment = self::ENV_LOCAL;
-                break;
+                return self::ENV_LOCAL;
             case 'test':
-                self::$environment = self::ENV_TEST;
-                break;
+                return self::ENV_TEST;
             case 'staging':
-                self::$environment = self::ENV_STAGING;
-                break;
+                return self::ENV_STAGING;
             default:
-                self::$environment = self::ENV_PROD;
-                break;
+                return self::ENV_PROD;
         }
     }
 
