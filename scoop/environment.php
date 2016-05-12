@@ -20,12 +20,6 @@ class Environment {
     const ENV_LOCAL = 4;
 
     /**
-     * @var boolean
-     * cache for is_iternal_ip()
-     */
-    private static $isInternalIP;
-
-    /**
      * @var string
      * Cache for get_environment()
      */
@@ -87,37 +81,37 @@ class Environment {
     }
 
     /**
-     * @return bool
      * Determine if client is on an internal network
+     *
+     * @param string $clientIP
+     * @param string $serverIP
+     *
+     * @return bool
      */
-    public static function is_internal_ip () {
+    public static function is_internal_ip ( $clientIP = '0.0.0.0', $serverIP = '0.0.0.0' ) {
 
-        if ( is_null ( self::$isInternalIP ) ) {
-
-            $clientIP = array_key_exists ( 'REMOTE_ADDR', $_SERVER ) ? $_SERVER['REMOTE_ADDR'] : '0.0.0.0';
-            $serverIP = array_key_exists ( 'SERVER_ADDR', $_SERVER ) ? $_SERVER['SERVER_ADDR'] : '0.0.0.0';
-
-            $octets = explode ( '.', $clientIP );
-
-            /*
-             * The Internet Assigned Numbers Authority (IANA) has reserved the following three blocks
-             * of the IP address space for private internets:
-             *
-             * 10.0.0.0 - 10.255.255.255 (10/8 prefix)
-             * 172.16.0.0 - 172.31.255.255 (172.16/12 prefix)
-             * 192.168.0.0 - 192.168.255.255 (192.168/16 prefix)
-             */
-            $isLocalIP =
-                $octets[0] === '10'
-                || $octets[0] === '172' && ( $octets[1] >= '16' && $octets[1] <= '31' )
-                || ( $octets[0] === '192' && $octets[1] === '168' )
-                || $octets[0] === '127';
-            $isOurPublicIP = $clientIP === $serverIP;
-
-            self::$isInternalIP = ( $isLocalIP || $isOurPublicIP );
+        // does the client's ip match the server?
+        if ( $clientIP === $serverIP ) {
+            return true;
         }
 
-        return self::$isInternalIP;
+        $octets = explode ( '.', $clientIP );
+        if ( count($octets) !== 4 ) {
+            return false;
+        }
+        /*
+         * The Internet Assigned Numbers Authority (IANA) has reserved the following three blocks
+         * of the IP address space for private internets:
+         *
+         * 10.0.0.0 - 10.255.255.255 (10/8 prefix)
+         * 172.16.0.0 - 172.31.255.255 (172.16/12 prefix)
+         * 192.168.0.0 - 192.168.255.255 (192.168/16 prefix)
+         */
+        return
+            $octets[0] === '10'
+            || $octets[0] === '172' && ( $octets[1] >= '16' && $octets[1] <= '31' )
+            || ( $octets[0] === '192' && $octets[1] === '168' )
+            || $octets[0] === '127';
 
     }
 

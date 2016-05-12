@@ -37,6 +37,7 @@ class ScoopTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testDBUpdate() {
+        
         $test = \DB\JorPw\Test::fetch_by_id(1);
         $newValue = (string)((int)$test->name + 1);
         $test->name = $newValue;
