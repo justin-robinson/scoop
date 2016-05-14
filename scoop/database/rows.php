@@ -43,6 +43,14 @@ class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
     }
 
     /**
+     * @return Generic
+     */
+    public function first () {
+
+        return $this->get(0);
+    }
+
+    /**
      * @param int $index
      *
      * @return Generic
@@ -62,14 +70,6 @@ class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
     public function get_rows () {
 
         return $this->rowsStorageArray;
-    }
-
-    /**
-     * @return Generic
-     */
-    public function first () {
-
-        return $this->get(0);
     }
 
     /**
