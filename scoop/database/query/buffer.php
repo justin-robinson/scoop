@@ -21,6 +21,11 @@ class Buffer {
     private $insertValuesSql;
 
     /**
+     * @var int
+     */
+    private $maxSize;
+
+    /**
      * @var \Scoop\Database\Model[]
      */
     private $models;
@@ -39,11 +44,6 @@ class Buffer {
      * @var int
      */
     private $size;
-
-    /**
-     * @var int
-     */
-    private $sizeLimit;
 
     /**
      * @var string
@@ -96,8 +96,7 @@ class Buffer {
             return;
         }
 
-        list($_, $values, $queryParams, $_) =
-            $model->get_sql_insert_values();
+        list($_, $values, $queryParams, $_) = $model->get_sql_insert_values();
 
         // add query params
         $this->queryParams = array_merge( $this->queryParams, $queryParams );
