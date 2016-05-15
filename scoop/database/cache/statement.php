@@ -28,7 +28,7 @@ class Statement {
      */
     public function __destruct () {
 
-        $this->cache->foreach(function($statement){
+        $this->cache->each(function($statement){
             $statement->close();
         });
     }
