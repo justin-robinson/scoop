@@ -14,12 +14,12 @@ class Generic implements \JsonSerializable {
     /**
      * @var array
      */
-    protected static $dBColumnPropertiesArray = [ ];
+    protected static $dBColumnDefaultValuesArray = [ ];
 
     /**
      * @var array
      */
-    protected static $dBColumnDefaultValuesArray = [ ];
+    protected static $dBColumnPropertiesArray = [ ];
 
     /**
      * instance specific model values
@@ -27,14 +27,14 @@ class Generic implements \JsonSerializable {
     protected $dBValuesArray = [ ];
 
     /**
-     * @var array
-     */
-    protected $orignalDbValuesArray;
-
-    /**
      * @var bool
      */
     protected $loadedFromDb = false;
+
+    /**
+     * @var array
+     */
+    protected $orignalDbValuesArray;
 
     /**
      * Generic constructor.
@@ -47,23 +47,6 @@ class Generic implements \JsonSerializable {
 
     }
 
-
-    /**
-     * @return string
-     */
-    public function __toString () {
-        return var_export($this->dBValuesArray, true);
-    }
-
-    /**
-     * replace object values with passed ones
-     *
-     * @param $dataArray array
-     */
-    public function populate ( array $dataArray ) {
-
-        $this->dBValuesArray = array_replace ( $this->dBValuesArray, $dataArray );
-    }
 
     /**
      * run a raw sql query
@@ -107,26 +90,6 @@ class Generic implements \JsonSerializable {
     }
 
     /**
-     * @return bool
-     */
-    public function is_loaded_from_database () {
-        return $this->loadedFromDb;
-    }
-
-    /**
-     * Mark this object as loaded from the database
-     */
-    public function loaded_from_database () {
-
-        $this->loadedFromDb = true;
-
-        $this->orignalDbValuesArray = $this->dBValuesArray;
-
-        return $this;
-
-    }
-
-    /**
      * @param $name
      *
      * @return mixed
@@ -144,15 +107,6 @@ class Generic implements \JsonSerializable {
 
     /**
      * @param $name
-     * @param $value
-     */
-    public function __set ( $name, $value ) {
-
-        $this->dBValuesArray[$name] = $value;
-    }
-
-    /**
-     * @param $name
      *
      * @return bool
      */
@@ -162,11 +116,19 @@ class Generic implements \JsonSerializable {
     }
 
     /**
-     * @return array
+     * @param $name
+     * @param $value
      */
-    public function to_array () {
+    public function __set ( $name, $value ) {
 
-        return $this->dBValuesArray;
+        $this->dBValuesArray[$name] = $value;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString () {
+        return var_export($this->dBValuesArray, true);
     }
 
     /**
@@ -186,6 +148,48 @@ class Generic implements \JsonSerializable {
         return $this->dBValuesArray;
     }
 
+    /**
+     * @return bool
+     */
+    public function is_loaded_from_database () {
+
+        return $this->loadedFromDb;
+    }
+
+    /**
+     * Mark this object as loaded from the database
+     */
+    public function loaded_from_database () {
+
+        $this->loadedFromDb = true;
+
+        $this->orignalDbValuesArray = $this->dBValuesArray;
+
+        return $this;
+
+    }
+
+    /**
+     * replace object values with passed ones
+     *
+     * @param $dataArray array
+     */
+    public function populate ( array $dataArray ) {
+
+        $this->dBValuesArray = array_replace ( $this->dBValuesArray, $dataArray );
+    }
+
+    /**
+     * @return array
+     */
+    public function to_array () {
+
+        return $this->dBValuesArray;
+    }
+
+    /**
+     * JsonSerializable
+     */
     /**
      * @return array
      */
