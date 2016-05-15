@@ -136,7 +136,7 @@ class Generic implements \JsonSerializable {
      */
     public function get_column_names () {
 
-        return array_keys ( $this->orignalDbValuesArray );
+        return array_keys ( $this->dBValuesArray );
     }
 
     /**
