@@ -16,14 +16,14 @@ class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
     private $numRows = 0;
 
     /**
-     * @var $rowsStorageArray Generic[]
-     */
-    private $rowsStorageArray = [ ];
-
-    /**
      * @var int
      */
     private $position = 0;
+
+    /**
+     * @var $rowsStorageArray Generic[]
+     */
+    private $rowsStorageArray = [ ];
 
     /**
      * @return string
