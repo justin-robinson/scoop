@@ -227,7 +227,7 @@ class Connection {
             $statement = $this->mysqli->prepare ( $sql );
 
             if ( $statement === false ) {
-                throw new \Exception( 'statment preparation failed' );
+                throw new \Exception( "statment preparation failed: ({$this->mysqli->errno}) {$this->mysqli->error}" . PHP_EOL . $sql );
             }
 
             $this->statementCache->set ( $key, $statement );
