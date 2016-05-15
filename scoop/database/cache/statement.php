@@ -48,7 +48,7 @@ class Statement {
      *
      * @return \mysqli_stmt|null
      */
-    public function get ( $key ) : \mysqli_stmt {
+    public function get ( $key ) {
 
         return $this->cache->get($key);
     }
