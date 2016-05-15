@@ -40,7 +40,7 @@ class Statement {
      */
     public function exists ( $key ) {
 
-        return is_null($this->cache->get($key));
+        return !is_null($this->cache->get($key));
     }
 
     /**
