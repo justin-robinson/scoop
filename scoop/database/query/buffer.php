@@ -21,6 +21,11 @@ class Buffer {
     private $insertValuesSql;
 
     /**
+     * @var int
+     */
+    private $maxSize;
+
+    /**
      * @var \Scoop\Database\Model[]
      */
     private $models;
@@ -39,11 +44,6 @@ class Buffer {
      * @var int
      */
     private $size;
-
-    /**
-     * @var int
-     */
-    private $sizeLimit;
 
     /**
      * @var string
