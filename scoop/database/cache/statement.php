@@ -36,21 +36,21 @@ class Statement {
     /**
      * @param $key
      *
-     * @return \mysqli_stmt|null
-     */
-    public function get ( $key ) {
-
-        return $this->cache->get($key);
-    }
-
-    /**
-     * @param $key
-     *
      * @return bool
      */
     public function exists ( $key ) {
 
         return is_null($this->cache->get($key));
+    }
+
+    /**
+     * @param $key
+     *
+     * @return \mysqli_stmt|null
+     */
+    public function get ( $key ) {
+
+        return $this->cache->get($key);
     }
 
     /**
