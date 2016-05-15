@@ -25,14 +25,19 @@ class ClassGenGenerator {
     public $constantPropertiesArray = [ ];
 
     /**
-     * @var array ClassGenProperty[]
+     * @var null|string
      */
-    public $publicPropertiesArray = [ ];
+    public $filepath;
+
+    /**
+     * @var array ClassGenFunction[]
+     */
+    public $functionsArray = [ ];
 
     /**
      * @var array ClassGenProperty[]
      */
-    public $staticPropertiesArray = [ ];
+    public $privatePropertiesArray = [ ];
 
     /**
      * @var array ClassGenProperty[]
@@ -42,17 +47,12 @@ class ClassGenGenerator {
     /**
      * @var array ClassGenProperty[]
      */
-    public $privatePropertiesArray = [ ];
+    public $publicPropertiesArray = [ ];
 
     /**
-     * @var array ClassGenFunction[]
+     * @var array ClassGenProperty[]
      */
-    public $functionsArray = [ ];
-
-    /**
-     * @var null|string
-     */
-    public $filepath;
+    public $staticPropertiesArray = [ ];
 
     /**
      * ClassGenGenerator constructor.
@@ -70,7 +70,7 @@ class ClassGenGenerator {
     /**
      * @param ClassGenProperty $property
      */
-    public function addProperty ( ClassGenProperty $property ) {
+    public function add_property ( ClassGenProperty $property ) {
 
         // add property to the right array
         if ( $property->isStatic ) {
@@ -95,93 +95,76 @@ class ClassGenGenerator {
     }
 
     /**
-     * @param $function
+     * @return string
+     * @throws \Exception
      */
-//    public function addFunction ( $function ) {
-//
-//        array_push ( $this->functionsArray, $function );
-//    }
+    public function get_file_contents () : string {
+        $classBody = '';
+        /* START PROPERTY GENERATION */
+        /**
+         * @var $constantProperty ClassGenProperty
+         */
+        // generate constants
+        foreach ( $this->constantPropertiesArray as $constantProperty ) {
+            $classBody .= $constantProperty->get ();
+        }
+        if ( !empty($this->constantPropertiesArray) ) {
+            $classBody .= PHP_EOL;
+        }
+        /**
+         * @var $staticProperty ClassGenProperty
+         */
+        // generate static properties
+        foreach ( $this->staticPropertiesArray as $staticProperty ) {
+            $classBody .= $staticProperty->get ();
+        }
+        if ( !empty($this->staticPropertiesArray) ) {
+            $classBody .= PHP_EOL;
+        }
+        /**
+         * @var $publicProperty ClassGenProperty
+         */
+        // generate public properties
+        foreach ( $this->publicPropertiesArray as $publicProperty ) {
+            $classBody .= $publicProperty->get ();
+        }
+        if ( !empty($this->publicPropertiesArray) ) {
+            $classBody .= PHP_EOL;
+        }
+        /**
+         * @var $protectedProperty ClassGenProperty
+         */
+        // generate protected properties
+        foreach ( $this->protectedPropertiesArray as $protectedProperty ) {
+            $classBody .= $protectedProperty->get ();
+        }
+        if ( !empty($this->protectedPropertiesArray) ) {
+            $classBody .= PHP_EOL;
+        }
+        /**
+         * @var $privateProperty ClassGenProperty
+         */
+        // generate private properties
+        foreach ( $this->privatePropertiesArray as $privateProperty ) {
+            $classBody .= $privateProperty->get ();
+        }
+        if ( !empty($this->privatePropertiesArray) ) {
+            $classBody .= PHP_EOL;
+        }
+        $classBody = PHP_EOL . $classBody;
+        return $this->class->get_header() . $classBody . $this->class->get_footer ();
+    }
 
     /**
      * @throws \Exception
      */
     public function save () {
 
-        // open php tag and declare class
-        $fileContents = $this->class->getHeader ();
-
-        /* START PROPERTY GENERATION */
-
-        /**
-         * @var $constantProperty ClassGenProperty
-         */
-        // generate constants
-        foreach ( $this->constantPropertiesArray as $constantProperty ) {
-            $fileContents .= $constantProperty->get ();
-        }
-
-        /**
-         * @var $staticProperty ClassGenProperty
-         */
-        // generate static properties
-        foreach ( $this->staticPropertiesArray as $staticProperty ) {
-
-            $fileContents .= $staticProperty->get ();
-
-        }
-
-        $fileContents .= PHP_EOL;
-
-        /**
-         * @var $publicProperty ClassGenProperty
-         */
-        // generate public properties
-        foreach ( $this->publicPropertiesArray as $publicProperty ) {
-
-            $fileContents .= $publicProperty->get ();
-
-        }
-
-        $fileContents .= PHP_EOL;
-
-        /**
-         * @var $protectedProperty ClassGenProperty
-         */
-        // generate protected properties
-        foreach ( $this->protectedPropertiesArray as $protectedProperty ) {
-
-            $fileContents .= $protectedProperty->get ();
-
-        }
-
-        $fileContents .= PHP_EOL;
-
-        /**
-         * @var $privateProperty ClassGenProperty
-         */
-        // generate private properties
-        foreach ( $this->privatePropertiesArray as $privateProperty ) {
-
-            $fileContents .= $privateProperty->get ();
-
-        }
-
-        $fileContents .= PHP_EOL;
-
-        // generate functions
-//        foreach ( $this->functionsArray as $method ) {
-//
-//            $fileContents .= $method->get ();
-//        }
-
-        // close the class
-        $fileContents .= $this->class->getFooter ();
-
         // ensure path to output file exists
-        $this->createPath ();
+        $this->create_path ();
 
         // save file and set permissions
-        if ( file_put_contents ( $this->filepath, $fileContents ) ) {
+        if ( file_put_contents ( $this->filepath, $this->get_file_contents() ) ) {
             chmod ( $this->filepath, 0777 );
         }
 
@@ -190,7 +173,7 @@ class ClassGenGenerator {
     /**
      * @throws \Exception
      */
-    private function createPath () {
+    private function create_path () {
 
         // break file path up
         $dirname = pathinfo ( $this->filepath, PATHINFO_DIRNAME );

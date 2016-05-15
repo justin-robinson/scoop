@@ -57,6 +57,18 @@ class ClassGenClass extends ClassGenAbstract {
     }
 
     /**
+     * @param $use
+     *
+     * @return $this
+     */
+    public function append_use ( $use ) {
+
+        $this->use[] = $use;
+
+        return $this;
+    }
+
+    /**
      * @param $name string
      *
      * @return $this
@@ -116,74 +128,50 @@ class ClassGenClass extends ClassGenAbstract {
         return $this;
     }
 
-    /**
-     * @param $use
-     *
-     * @return $this
-     */
-    public function append_use ( $use ) {
-
-        $this->use[] = $use;
-
-        return $this;
-    }
-
 
     /**
      * @return string
      * @throws \Exception
      */
-    public function getHeader () : string {
+    public function get_header () : string {
 
-        if ( $this->is_final () && $this->is_abstract () ) {
+        if( $this->is_final() && $this->is_abstract() ) {
             throw new \Exception( 'Class can\'t be final and abstract' );
         }
 
         $classModifierArray = [ ];
 
-        if ( $this->is_final () ) {
+        if( $this->is_final() ) {
             $classModifierArray[] = $this->modifierStrings[self::MODIFIER_FINAL];
         }
 
-        if ( $this->is_abstract () ) {
+        if( $this->is_abstract() ) {
             $classModifierArray[] = $this->modifierStrings[self::MODIFIER_ABSTRACT];
         }
 
-        $classModifier = implode ( ' ', $classModifierArray );
-        if ( !empty( $classModifier ) ) {
+        $classModifier = implode( ' ', $classModifierArray );
+        if( !empty($classModifier) ) {
             $classModifier .= ' ';
         }
 
         // class name and phpdoc
-        $header =
-            "<?php
+        $header = "<?php" . PHP_EOL . PHP_EOL;
 
-";
-        if ( !empty( $this->namespace ) ) {
-            $header .= "namespace {$this->namespace};
+        $header .= $this->get_namespace();
 
-";
-        }
+        $header .= $this->get_use();
 
-        if ( !empty( $this->use ) ) {
-            foreach ( $this->use as $use ) {
-                $header .= "use {$use};
+        $header .= $this->get_phpDoc();
 
-";
-            }
-        }
-        $header .= $this->phpDoc . PHP_EOL;
         $header .= $classModifier . "class {$this->name} ";
 
         // class extends
-        $header .= $this->get_extends_code ();
+        $header .= $this->get_extends_code();
 
         // class implements
-        $header .= $this->get_implements_code ();
+        $header .= $this->get_implements_code();
 
-        $header .= " {
-
-";
+        $header .= " {" . PHP_EOL;
 
         return $header;
     }
@@ -193,10 +181,10 @@ class ClassGenClass extends ClassGenAbstract {
      */
     private function get_extends_code () {
 
-        if ( empty( $this->extends ) ) {
+        if( empty($this->extends) ) {
             $code = '';
         } else {
-            $code = 'extends ' . $this->extends;
+            $code = 'extends ' . $this->extends . ' ';
         }
 
         return $code;
@@ -207,10 +195,10 @@ class ClassGenClass extends ClassGenAbstract {
      */
     private function get_implements_code () {
 
-        if ( empty( $this->implements ) ) {
+        if( empty($this->implements) ) {
             $code = '';
         } else {
-            $code = 'implements ' . implode ( ',', $this->implements );
+            $code = 'implements ' . implode( ',', $this->implements );
         }
 
         return $code;
@@ -219,14 +207,58 @@ class ClassGenClass extends ClassGenAbstract {
     /**
      * @return string
      */
-    public function getFooter () : string {
+    public function get_footer () : string {
 
-        $footer = "
-}
-
-?>";
+        $footer = '}' . PHP_EOL . PHP_EOL . '?>';
 
         return $footer;
+    }
+
+    /**
+     * @param string $phpDoc
+     */
+    public function set_phpDoc ( string $phpDoc ) {
+
+        $this->phpDoc = $phpDoc;
+    }
+
+    /**
+     * @return string
+     */
+    private function get_namespace () : string {
+
+        if( !empty($this->namespace) ) {
+            return "namespace {$this->namespace};" . PHP_EOL . PHP_EOL;
+        }
+
+        return '';
+    }
+
+    /**
+     * @return string
+     */
+    private function get_phpDoc () : string {
+
+        if( empty($this->phpDoc) ) {
+            return '';
+        }
+
+        return $this->phpDoc . PHP_EOL;
+    }
+
+    private function get_use () : string {
+
+        if( empty($this->use) ) {
+            return '';
+        }
+        $use = '';
+        sort( $this->use );
+        foreach ( $this->use as $use ) {
+            $use .= "use {$use};" . PHP_EOL;
+        }
+        $use .= PHP_EOL;
+
+        return $use;
     }
 
 

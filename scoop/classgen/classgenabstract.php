@@ -54,18 +54,18 @@ abstract class ClassGenAbstract {
      */
     public function get () : string {
 
-        return $this->getHeader () . $this->getFooter ();
+        return $this->get_header () . $this->get_footer ();
     }
 
     /**
      * @return string
      */
-    abstract function getHeader () : string;
+    abstract function get_header () : string;
 
     /**
      * @return string
      */
-    abstract function getFooter () : string;
+    abstract function get_footer () : string;
 
     /**
      * @return string
