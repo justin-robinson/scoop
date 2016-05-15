@@ -57,6 +57,18 @@ class ClassGenClass extends ClassGenAbstract {
     }
 
     /**
+     * @param $use
+     *
+     * @return $this
+     */
+    public function append_use ( $use ) {
+
+        $this->use[] = $use;
+
+        return $this;
+    }
+
+    /**
      * @param $name string
      *
      * @return $this
@@ -117,15 +129,11 @@ class ClassGenClass extends ClassGenAbstract {
     }
 
     /**
-     * @param $use
-     *
-     * @return $this
+     * @param $phpDoc string
      */
-    public function append_use ( $use ) {
+    public function set_phpDoc ( $phpDoc ) {
 
-        $this->use[] = $use;
-
-        return $this;
+        $this->phpDoc = $phpDoc;
     }
 
 
@@ -133,7 +141,7 @@ class ClassGenClass extends ClassGenAbstract {
      * @return string
      * @throws \Exception
      */
-    public function getHeader () {
+    public function get_header () {
 
         if ( $this->is_final () && $this->is_abstract () ) {
             throw new \Exception( 'Class can\'t be final and abstract' );
@@ -155,24 +163,13 @@ class ClassGenClass extends ClassGenAbstract {
         }
 
         // class name and phpdoc
-        $header =
-            "<?php
+        $header = "<?php" . PHP_EOL . PHP_EOL;
 
-";
-        if ( !empty( $this->namespace ) ) {
-            $header .= "namespace {$this->namespace};
+        $header .= $this->get_namespace();
 
-";
-        }
+        $header .= $this->get_use();
 
-        if ( !empty( $this->use ) ) {
-            foreach ( $this->use as $use ) {
-                $header .= "use {$use};
-
-";
-            }
-        }
-        $header .= $this->phpDoc . PHP_EOL;
+        $header .= $this->get_phpDoc();
         $header .= $classModifier . "class {$this->name} ";
 
         // class extends
@@ -181,9 +178,7 @@ class ClassGenClass extends ClassGenAbstract {
         // class implements
         $header .= $this->get_implements_code ();
 
-        $header .= " {
-
-";
+        $header .= " {" . PHP_EOL;
 
         return $header;
     }
@@ -196,7 +191,7 @@ class ClassGenClass extends ClassGenAbstract {
         if ( empty( $this->extends ) ) {
             $code = '';
         } else {
-            $code = 'extends ' . $this->extends;
+            $code = 'extends ' . $this->extends . ' ';
         }
 
         return $code;
@@ -219,14 +214,51 @@ class ClassGenClass extends ClassGenAbstract {
     /**
      * @return string
      */
-    public function getFooter () {
+    public function get_footer () {
 
-        $footer = "
-}
-
-?>";
+        $footer = '}' . PHP_EOL . PHP_EOL . '?>';
 
         return $footer;
+    }
+
+    /**
+     * @return string
+     */
+    private function get_namespace () {
+
+        if ( !empty( $this->namespace ) ) {
+            return "namespace {$this->namespace};" . PHP_EOL . PHP_EOL;
+        }
+
+        return '';
+    }
+
+    /**
+     * @return string
+     */
+    private function get_phpDoc () {
+
+        if ( empty($this->phpDoc) ) {
+            return '';
+        }
+
+        return $this->phpDoc . PHP_EOL;
+    }
+
+    private function get_use () {
+
+        if ( empty($this->use) ) {
+            return '';
+        }
+
+        $use = '';
+        sort($this->use);
+        foreach ( $this->use as $use ) {
+            $use .= "use {$use};" . PHP_EOL;
+        }
+        $use .= PHP_EOL;
+
+        return $use;
     }
 
 

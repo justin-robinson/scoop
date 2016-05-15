@@ -43,7 +43,7 @@ class ClassGenProperty extends ClassGenAbstract {
     /**
      * @return string
      */
-    public function getHeader () {
+    public function get_header () {
 
         $propertyValue = var_export ( $this->value, true );
 
@@ -75,10 +75,18 @@ class ClassGenProperty extends ClassGenAbstract {
     /**
      * @return string
      */
-    public function getFooter () {
+    public function get_footer () {
 
         return '';
 
+    }
+
+    /**
+     * @param $isStatic bool
+     */
+    public function set_static ( $isStatic ) {
+
+        $this->isStatic = $isStatic;
     }
 
 

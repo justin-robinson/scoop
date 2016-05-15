@@ -25,6 +25,16 @@ class ClassGenGenerator {
     public $constantPropertiesArray = [ ];
 
     /**
+     * @var null|string
+     */
+    public $filepath;
+
+    /**
+     * @var array ClassGenFunction[]
+     */
+    public $functionsArray = [ ];
+
+    /**
      * @var array ClassGenProperty[]
      */
     public $publicPropertiesArray = [ ];
@@ -32,7 +42,7 @@ class ClassGenGenerator {
     /**
      * @var array ClassGenProperty[]
      */
-    public $staticPropertiesArray = [ ];
+    public $privatePropertiesArray = [ ];
 
     /**
      * @var array ClassGenProperty[]
@@ -42,17 +52,7 @@ class ClassGenGenerator {
     /**
      * @var array ClassGenProperty[]
      */
-    public $privatePropertiesArray = [ ];
-
-    /**
-     * @var array ClassGenFunction[]
-     */
-    public $functionsArray = [ ];
-
-    /**
-     * @var null|string
-     */
-    public $filepath;
+    public $staticPropertiesArray = [ ];
 
     /**
      * ClassGenGenerator constructor.
@@ -70,7 +70,7 @@ class ClassGenGenerator {
     /**
      * @param ClassGenProperty $property
      */
-    public function addProperty ( ClassGenProperty $property ) {
+    public function add_property ( ClassGenProperty $property ) {
 
         // add property to the right array
         if ( $property->isStatic ) {
@@ -95,20 +95,12 @@ class ClassGenGenerator {
     }
 
     /**
-     * @param $function
-     */
-//    public function addFunction ( $function ) {
-//
-//        array_push ( $this->functionsArray, $function );
-//    }
-
-    /**
+     * @return string
      * @throws \Exception
      */
-    public function save () {
+    public function get_file_contents () {
 
-        // open php tag and declare class
-        $fileContents = $this->class->getHeader ();
+        $classBody = '';
 
         /* START PROPERTY GENERATION */
 
@@ -117,7 +109,10 @@ class ClassGenGenerator {
          */
         // generate constants
         foreach ( $this->constantPropertiesArray as $constantProperty ) {
-            $fileContents .= $constantProperty->get ();
+            $classBody .= $constantProperty->get ();
+        }
+        if ( !empty($this->constantPropertiesArray) ) {
+            $classBody .= PHP_EOL;
         }
 
         /**
@@ -126,11 +121,12 @@ class ClassGenGenerator {
         // generate static properties
         foreach ( $this->staticPropertiesArray as $staticProperty ) {
 
-            $fileContents .= $staticProperty->get ();
+            $classBody .= $staticProperty->get ();
 
         }
-
-        $fileContents .= PHP_EOL;
+        if ( !empty($this->staticPropertiesArray) ) {
+            $classBody .= PHP_EOL;
+        }
 
         /**
          * @var $publicProperty ClassGenProperty
@@ -138,11 +134,12 @@ class ClassGenGenerator {
         // generate public properties
         foreach ( $this->publicPropertiesArray as $publicProperty ) {
 
-            $fileContents .= $publicProperty->get ();
+            $classBody .= $publicProperty->get ();
 
         }
-
-        $fileContents .= PHP_EOL;
+        if ( !empty($this->publicPropertiesArray) ) {
+            $classBody .= PHP_EOL;
+        }
 
         /**
          * @var $protectedProperty ClassGenProperty
@@ -150,11 +147,12 @@ class ClassGenGenerator {
         // generate protected properties
         foreach ( $this->protectedPropertiesArray as $protectedProperty ) {
 
-            $fileContents .= $protectedProperty->get ();
+            $classBody .= $protectedProperty->get ();
 
         }
-
-        $fileContents .= PHP_EOL;
+        if ( !empty($this->protectedPropertiesArray) ) {
+            $classBody .= PHP_EOL;
+        }
 
         /**
          * @var $privateProperty ClassGenProperty
@@ -162,26 +160,29 @@ class ClassGenGenerator {
         // generate private properties
         foreach ( $this->privatePropertiesArray as $privateProperty ) {
 
-            $fileContents .= $privateProperty->get ();
+            $classBody .= $privateProperty->get ();
 
         }
+        if ( !empty($this->privatePropertiesArray) ) {
+            $classBody .= PHP_EOL;
+        }
 
-        $fileContents .= PHP_EOL;
+        $classBody = PHP_EOL . $classBody;
 
-        // generate functions
-//        foreach ( $this->functionsArray as $method ) {
-//
-//            $fileContents .= $method->get ();
-//        }
+        return $this->class->get_header() . $classBody . $this->class->get_footer ();
 
-        // close the class
-        $fileContents .= $this->class->getFooter ();
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function save () {
 
         // ensure path to output file exists
-        $this->createPath ();
+        $this->create_path ();
 
         // save file and set permissions
-        if ( file_put_contents ( $this->filepath, $fileContents ) ) {
+        if ( file_put_contents ( $this->filepath, $this->get_file_contents() ) ) {
             chmod ( $this->filepath, 0777 );
         }
 
@@ -190,7 +191,7 @@ class ClassGenGenerator {
     /**
      * @throws \Exception
      */
-    private function createPath () {
+    private function create_path () {
 
         // break file path up
         $dirname = pathinfo ( $this->filepath, PATHINFO_DIRNAME );
