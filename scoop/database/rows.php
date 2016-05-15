@@ -13,7 +13,7 @@ class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
     /**
      * @var int
      */
-    public $numRows = 0;
+    private $numRows = 0;
 
     /**
      * @var $rowsStorageArray Generic[]
@@ -73,11 +73,20 @@ class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
     }
 
     /**
+     * @return int
+     */
+    public function get_num_rows () {
+
+        return $this->numRows;
+    }
+
+    /**
      * @return bool
      */
     public function is_last_row () {
 
-        return $this->key () === ( $this->numRows - 1 );
+        $keys = array_keys($this->rowsStorageArray);
+        return $this->key () === end($keys);
     }
 
     /**
@@ -104,7 +113,7 @@ class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
      **********************************/
     public function current () {
 
-        return $this->rowsStorageArray[$this->position];
+        return $this->rowsStorageArray[$this->key()];
     }
     /**
      * get the current position
@@ -112,7 +121,7 @@ class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
      */
     public function key () {
 
-        return $this->position;
+        return array_keys($this->rowsStorageArray)[$this->position];
     }
 
     /**
@@ -136,7 +145,7 @@ class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
      */
     public function valid () {
 
-        return isset( $this->rowsStorageArray[$this->position] );
+        return isset( array_keys($this->rowsStorageArray)[$this->position] );
     }
 
     /**********************************
@@ -168,9 +177,19 @@ class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
      */
     public function offsetSet ( $offset, $value ) {
 
+        // only allow our models in here
+        if ( !is_a($value, Generic::class) ) {
+            return;
+        }
+
+        // no offset? just append
         if ( is_null ( $offset ) ) {
             $this->rowsStorageArray[] = $value;
+            ++$this->numRows;
         } else {
+            if ( !array_key_exists( $offset, $this->rowsStorageArray )) {
+                ++$this->numRows;
+            }
             $this->rowsStorageArray[$offset] = $value;
         }
     }
@@ -179,6 +198,10 @@ class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
      * @param mixed $offset
      */
     public function offsetUnset ( $offset ) {
+
+        if ( array_key_exists( $offset, $this->rowsStorageArray ) ) {
+            --$this->numRows;
+        }
 
         unset( $this->rowsStorageArray[$offset] );
     }
