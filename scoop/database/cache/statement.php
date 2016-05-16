@@ -28,8 +28,8 @@ class Statement {
      */
     public function __destruct () {
 
-        $this->cache->each(function($statement){
-           $statement->close();
+        $this->cache->each(function($node){
+           $node->getData()->close();
         });
     }
 
