@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/justin-robinson/scoop.svg?branch=php56)](https://travis-ci.org/justin-robinson/scoop)
 #Scoop
 ## Multi site php framework and orm for mysql
 
