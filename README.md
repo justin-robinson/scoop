@@ -52,7 +52,7 @@ $row = $rows[0];
  */
 $row = new \DB\Schema\Table();
 
-// set values to string literals
+// this will set a raw sql value into the query string
 $row->someDateColumn = new \Scoop\Database\Literal('NOW()');
 
 $row->save();
@@ -75,7 +75,7 @@ $sql=
         bar.baz
      LIMIT 500;"
 
-\Scoop\Database\Model\Generic::fetch($sql);
+$rows = \Scoop\Database\Model\Generic::fetch($sql);
 
 ```
 
