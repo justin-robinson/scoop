@@ -13,7 +13,7 @@ class ClassGenGeneratorTest extends PHPUnit_Framework_TestCase {
 
     public function __construct () {
 
-        $this->class = new ClassGenClass( 'test');
+        $this->class = new ClassGenClass('test');
     }
 
     public function test_add_property () {
@@ -44,7 +44,7 @@ class ClassGenGeneratorTest extends PHPUnit_Framework_TestCase {
         $expectedContents =
 '<?php
 
-class test  {
+class test {
 
     const P4 = NULL;
 
