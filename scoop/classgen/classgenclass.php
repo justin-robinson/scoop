@@ -202,7 +202,7 @@ class ClassGenClass extends ClassGenAbstract {
         if( empty($this->extends) ) {
             $code = '';
         } else {
-            $code = ' extends ' . $this->extends . ' ';
+            $code = " extends {$this->extends}";
         }
 
         return $code;
