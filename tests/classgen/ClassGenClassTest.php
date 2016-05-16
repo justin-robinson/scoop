@@ -83,8 +83,45 @@ use someTestClass;
 class testClass extends testBaseClass implements Interface1, Interface2, Interface3 {
 ";
         $this->class->set_use( [ 'someTestClass', 'someOtherTestClass' ] );
-        $this->assertEquals( $expected, $this->class->get_header(), "class should use classes in alphabetical order
-        " );
+        $this->assertEquals( $expected, $this->class->get_header(), "class should use classes in alphabetical order" );
+
+        $expected =
+            "<?php
+
+namespace testNamespace;
+
+use someOtherTestClass;
+use someTestClass;
+
+/**
+ * Class testClass
+ */
+abstract class testClass extends testBaseClass implements Interface1, Interface2, Interface3 {
+";
+        $this->class->set_abstract();
+        $this->assertEquals( $expected, $this->class->get_header(), "class should be abstract" );
+
+        $expected =
+            "<?php
+
+namespace testNamespace;
+
+use someOtherTestClass;
+use someTestClass;
+
+/**
+ * Class testClass
+ */
+final class testClass extends testBaseClass implements Interface1, Interface2, Interface3 {
+";
+        $this->class->set_abstract(false);
+        $this->class->set_final();
+        $this->assertEquals( $expected, $this->class->get_header(), "class should be final" );
+
+        $this->expectException( \Exception::class, "abstract and final class should throw an error" );
+        $this->class->set_abstract();
+        $this->class->get_header();
+
     }
 
 }
