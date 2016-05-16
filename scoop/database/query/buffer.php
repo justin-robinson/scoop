@@ -16,6 +16,11 @@ class Buffer {
     private $columnNames;
 
     /**
+     * @var bool
+     */
+    private $insertIgnore;
+
+    /**
      * @var string
      */
     private $insertValuesSql;
@@ -62,7 +67,7 @@ class Buffer {
 
         $model = new $modelClass();
 
-        if( !is_a( $model, 'Scoop\Database\Model' ) ) {
+        if( !is_a( $model, \Scoop\Database\Model::class ) ) {
             throw new \Exception( "model class must implement 'Scoop\\Database\\Model'" );
         }
 
@@ -133,7 +138,7 @@ class Buffer {
 
         // build insert statement
         $sql =
-            "INSERT INTO
+            "INSERT " . ($this->insertIgnore ? 'IGNORE ' : '') . "INTO
               {$this->table}(
                 {$this->columnNames}
               )
@@ -154,6 +159,11 @@ class Buffer {
         }
 
         $this->reset();
+    }
+
+    public function set_insert_ignore ( $insertIgnore = true ) {
+
+        $this->insertIgnore = $insertIgnore;
     }
 
     /**
