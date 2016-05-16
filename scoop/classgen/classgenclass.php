@@ -11,11 +11,6 @@ class ClassGenClass extends ClassGenAbstract {
     /**
      * @var string
      */
-    public $name;
-
-    /**
-     * @var string
-     */
     public $extends;
 
     /**
@@ -26,12 +21,17 @@ class ClassGenClass extends ClassGenAbstract {
     /**
      * @var string
      */
-    public $phpDoc = '';
+    public $name;
 
     /**
      * @var string
      */
     public $namespace;
+
+    /**
+     * @var string
+     */
+    public $phpDoc = '';
 
     /**
      * @var array
@@ -68,66 +68,16 @@ class ClassGenClass extends ClassGenAbstract {
         return $this;
     }
 
-    /**
-     * @param $name string
-     *
-     * @return $this
-     */
-    public function set_name ( string $name ) {
-
-        $this->name = $name;
-
-        return $this;
-    }
 
     /**
-     * @param $extends string
-     *
-     * @return $this
+     * @return string
      */
-    public function set_extends ( string $extends ) {
+    public function get_footer () : string {
 
-        $this->extends = $extends;
+        $footer = '}' . PHP_EOL . PHP_EOL . '?>';
 
-        return $this;
+        return $footer;
     }
-
-    /**
-     * @param array $implements
-     *
-     * @return $this
-     */
-    public function set_implements ( array $implements ) {
-
-        $this->implements = $implements;
-
-        return $this;
-    }
-
-    /**
-     * @param $namespace string
-     *
-     * @return $this
-     */
-    public function set_namespace ( string $namespace ) {
-
-        $this->namespace = $namespace;
-
-        return $this;
-    }
-
-    /**
-     * @param array $use
-     *
-     * @return $this
-     */
-    public function set_use ( array $use ) {
-
-        $this->use = $use;
-
-        return $this;
-    }
-
 
     /**
      * @return string
@@ -163,7 +113,7 @@ class ClassGenClass extends ClassGenAbstract {
 
         $header .= $this->get_phpDoc();
 
-        $header .= $classModifier . "class {$this->name} ";
+        $header .= $classModifier . "class {$this->name}";
 
         // class extends
         $header .= $this->get_extends_code();
@@ -177,6 +127,74 @@ class ClassGenClass extends ClassGenAbstract {
     }
 
     /**
+     * @param $extends string
+     *
+     * @return $this
+     */
+    public function set_extends ( string $extends ) {
+
+        $this->extends = $extends;
+
+        return $this;
+    }
+
+    /**
+     * @param array $implements
+     *
+     * @return $this
+     */
+    public function set_implements ( array $implements ) {
+
+        $this->implements = $implements;
+
+        return $this;
+    }
+
+    /**
+     * @param $name string
+     *
+     * @return $this
+     */
+    public function set_name ( string $name ) {
+
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @param $namespace string
+     *
+     * @return $this
+     */
+    public function set_namespace ( string $namespace ) {
+
+        $this->namespace = $namespace;
+
+        return $this;
+    }
+
+    /**
+     * @param string $phpDoc
+     */
+    public function set_phpDoc ( string $phpDoc ) {
+
+        $this->phpDoc = $phpDoc;
+    }
+
+    /**
+     * @param array $use
+     *
+     * @return $this
+     */
+    public function set_use ( array $use ) {
+
+        $this->use = $use;
+
+        return $this;
+    }
+
+    /**
      * @return string
      */
     private function get_extends_code () {
@@ -184,7 +202,7 @@ class ClassGenClass extends ClassGenAbstract {
         if( empty($this->extends) ) {
             $code = '';
         } else {
-            $code = 'extends ' . $this->extends . ' ';
+            $code = ' extends ' . $this->extends . ' ';
         }
 
         return $code;
@@ -198,28 +216,10 @@ class ClassGenClass extends ClassGenAbstract {
         if( empty($this->implements) ) {
             $code = '';
         } else {
-            $code = 'implements ' . implode( ',', $this->implements );
+            $code = ' implements ' . implode( ',', $this->implements );
         }
 
         return $code;
-    }
-
-    /**
-     * @return string
-     */
-    public function get_footer () : string {
-
-        $footer = '}' . PHP_EOL . PHP_EOL . '?>';
-
-        return $footer;
-    }
-
-    /**
-     * @param string $phpDoc
-     */
-    public function set_phpDoc ( string $phpDoc ) {
-
-        $this->phpDoc = $phpDoc;
     }
 
     /**
@@ -246,6 +246,9 @@ class ClassGenClass extends ClassGenAbstract {
         return $this->phpDoc . PHP_EOL;
     }
 
+    /**
+     * @return string
+     */
     private function get_use () : string {
 
         if( empty($this->use) ) {
