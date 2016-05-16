@@ -1,7 +1,7 @@
 #Scoop
 ##Multi site php 7 framework and orm for mysql
 
-###### Note: still a work in progress and only for php7. There is a php56 branch for php 5.6 but that isn't maintained
+###### Note: still a work in progress and only for php7. There is a php56 branch for php 5.6.
 
 ###Features
 * Built for speed and efficiency
