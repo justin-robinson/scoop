@@ -19,8 +19,8 @@
 ```php
 <?php
 
-// sets up autoloader and db connections
-require_once 'scoop/bootstrap.php';
+// composer runs our bootstrap to setup db connections and site specific autoloader
+require_once 'vendor/autoload.php';
 
 /**
  * returns Rows (collection) of Models
