@@ -84,9 +84,17 @@ class ClassGenProperty extends ClassGenAbstract {
     /**
      * @param $isStatic bool
      */
-    public function set_static ( $isStatic ) {
+    public function set_static ( $isStatic = true ) {
 
         $this->isStatic = $isStatic;
+    }
+
+    /**
+     * @param $value
+     */
+    public function set_value ( $value ) {
+
+        $this->value = $value;
     }
 
 
