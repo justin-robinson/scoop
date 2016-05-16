@@ -131,7 +131,7 @@ require_once 'vendor/autoload.php';
 
 return [
     'sites_folder' => '/var/www/sites',
-    'timezone' => 'America/Chicago' // http://php.net/manual/en/timezones.php
+    'timezone'     => 'America/Chicago' // http://php.net/manual/en/timezones.php
 ];
 ```
 
@@ -142,9 +142,9 @@ return [
 ####Args
 | Arg | Description |
 | --- | --- |
-| `--site=example.com` | stores configs in example.com classpath |
-| `--schema=schemaName` | only generate for this schema |
-| `--table=tableName` | only generate for this table ( only valid when --schema is specified ) |
+| `--site example.com` | stores configs in example.com classpath |
+| `--schema schemaName` | only generate for this schema |
+| `--table tableName` | only generate for this table ( only valid when --schema is specified ) |
 
 
 ###Setting up a site
