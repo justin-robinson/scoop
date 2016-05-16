@@ -1,7 +1,7 @@
 #Scoop
 ##Multi site php 7 framework and orm for mysql
 
-###### Note: still a work in progress and only for php7. There is a php56 branch for php 5.6 but that isn't maintained
+###### Note: still a work in progress and only for php7. There is a php56 branch for php 5.6.
 
 ###Features
 * Built for speed and efficiency
@@ -19,8 +19,8 @@
 ```php
 <?php
 
-// sets up autoloader and db connections
-require_once 'scoop/bootstrap.php';
+// composer runs our bootstrap to setup db connections and site specific autoloader
+require_once 'vendor/autoload.php';
 
 /**
  * returns Rows (collection) of Models
@@ -52,7 +52,7 @@ $row = $rows[0];
  */
 $row = new \DB\Schema\Table();
 
-// set values to string literals
+// this will set a raw sql value into the query string
 $row->someDateColumn = new \Scoop\Database\Literal('NOW()');
 
 $row->save();
@@ -75,7 +75,7 @@ $sql=
         bar.baz
      LIMIT 500;"
 
-\DB\Model\Generic::fetch($sql);
+$rows = \Scoop\Database\Model\Generic::fetch($sql);
 
 ```
 
@@ -85,7 +85,7 @@ Require via composer
 ```json
 {
   "require": {
-    "justin-robinson/scoop": "dev-php56",
+    "justin-robinson/scoop": "*",
   }
 }
 ```
@@ -108,7 +108,7 @@ return [
     'host'     => 'jor.pw',
     'user'     => 'test',
     'password' => 'test',
-    'port'     => ' 3306',
+    'port'     => '3306',
 ];
 ```
 Generate DB models
@@ -131,7 +131,7 @@ require_once 'vendor/autoload.php';
 
 return [
     'sites_folder' => '/var/www/sites',
-    'timezone' => 'America/Chicago' // http://php.net/manual/en/timezones.php
+    'timezone'     => 'America/Chicago' // http://php.net/manual/en/timezones.php
 ];
 ```
 
@@ -142,9 +142,9 @@ return [
 ####Args
 | Arg | Description |
 | --- | --- |
-| `--site=example.com` | stores configs in example.com classpath |
-| `--schema=schemaName` | only generate for this schema |
-| `--table=tableName` | only generate for this table ( only valid when --schema is specified ) |
+| `--site example.com` | stores configs in example.com classpath |
+| `--schema schemaName` | only generate for this schema |
+| `--table tableName` | only generate for this table ( only valid when --schema is specified ) |
 
 
 ###Setting up a site
