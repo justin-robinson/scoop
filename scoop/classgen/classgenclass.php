@@ -256,8 +256,8 @@ class ClassGenClass extends ClassGenAbstract {
         }
         $use = '';
         sort( $this->use );
-        foreach ( $this->use as $use ) {
-            $use .= "use {$use};" . PHP_EOL;
+        foreach ( $this->use as $useClass ) {
+            $use .= "use {$useClass};" . PHP_EOL;
         }
         $use .= PHP_EOL;
 
