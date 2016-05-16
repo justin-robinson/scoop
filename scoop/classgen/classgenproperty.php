@@ -45,27 +45,27 @@ class ClassGenProperty extends ClassGenAbstract {
      */
     public function get_header () {
 
-        $propertyValue = var_export ( $this->value, true );
+        $propertyValue = var_export( $this->value, true );
 
-        if ( is_array ( $this->value ) ) {
-            $propertyValue = PHP_EOL . preg_replace ( '/^/m', ClassGenGenerator::$indentation . ClassGenGenerator::$indentation, $propertyValue );
+        if( is_array( $this->value ) ) {
+            $propertyValue = PHP_EOL . preg_replace( '/^/m', ClassGenGenerator::$indentation . ClassGenGenerator::$indentation, $propertyValue );
         }
 
         $line = ClassGenGenerator::$indentation;
 
-        if ( $this->is_const () ) {
+        if( $this->is_const() ) {
             $line .= 'const ';
 
             // convert camel and snake case to underscores
-            $nameParts = preg_split ( '/([A-Z]+[^A-Z]+)/', $this->name, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY );
-            $this->name = strtoupper ( implode ( '_', $nameParts ) );
+            $nameParts = preg_split( '/([A-Z]+[^A-Z]+)/', $this->name, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY );
+            $this->name = strtoupper( implode( '_', $nameParts ) );
 
         } else {
-            $line .= $this->get_visibility ();
-            $line .= ( $this->isStatic ) ? ' static ' : ' ';
+            $line .= $this->get_visibility();
+            $line .= ($this->isStatic) ? ' static ' : ' ';
         }
 
-        $line .= $this->is_const () ? '' : '$';
+        $line .= $this->is_const() ? '' : '$';
         $line .= $this->name . ' = ' . $propertyValue;
         $line .= ';' . PHP_EOL;
 
@@ -84,9 +84,17 @@ class ClassGenProperty extends ClassGenAbstract {
     /**
      * @param $isStatic bool
      */
-    public function set_static ( $isStatic ) {
+    public function set_static ( $isStatic = true ) {
 
         $this->isStatic = $isStatic;
+    }
+
+    /**
+     * @param $value
+     */
+    public function set_value ( $value ) {
+
+        $this->value = $value;
     }
 
 
