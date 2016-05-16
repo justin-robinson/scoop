@@ -75,7 +75,7 @@ $sql=
         bar.baz
      LIMIT 500;"
 
-\DB\Model\Generic::fetch($sql);
+\Scoop\Database\Model\Generic::fetch($sql);
 
 ```
 
@@ -85,7 +85,7 @@ Require via composer
 ```json
 {
   "require": {
-    "justin-robinson/scoop": "dev-php56",
+    "justin-robinson/scoop": "*",
   }
 }
 ```
