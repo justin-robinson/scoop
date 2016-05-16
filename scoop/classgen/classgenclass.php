@@ -215,7 +215,7 @@ class ClassGenClass extends ClassGenAbstract {
         if ( empty( $this->implements ) ) {
             $code = '';
         } else {
-            $code = ' implements ' . implode ( ',', $this->implements );
+            $code = ' implements ' . implode ( ', ', $this->implements );
         }
 
         return $code;
