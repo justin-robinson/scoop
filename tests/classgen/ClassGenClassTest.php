@@ -118,7 +118,7 @@ final class testClass extends testBaseClass implements Interface1, Interface2, I
         $this->class->set_final();
         $this->assertEquals( $expected, $this->class->get_header(), "class should be final" );
 
-        $this->expectException( \Exception::class, "abstract and final class should throw an error" );
+        $this->expectException( \Exception::class );
         $this->class->set_abstract();
         $this->class->get_header();
 
