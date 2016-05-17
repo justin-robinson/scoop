@@ -18,7 +18,7 @@ class StatementTest extends PHPUnit_Framework_TestCase {
 
         $dbConfig = \Scoop\Config::get_db_config();
 
-        $this->cache->set(0, new mysqli_stmt(
+        $this->cache->put(0, new mysqli_stmt(
             new mysqli(
                 $dbConfig['host'],
                 $dbConfig['user'],
@@ -29,28 +29,14 @@ class StatementTest extends PHPUnit_Framework_TestCase {
             '' ));
     }
 
-    public function test_exists () {
+    public function test_put () {
 
-        $this->assertFalse( $this->cache->exists( 1 ), "cache should be empty" );
-
-        $this->cache->set(1, $this->cache->get(0));
-
-        $this->assertTrue( $this->cache->exists( 1 ), "cache should contain something at index 0");
-    }
-
-    public function test_get () {
-
-        $this->assertInstanceOf( 'mysqli_stmt', $this->cache->get( 0 ), 'cache should only hold mysqli_stmt' );
-    }
-
-    public function test_set () {
-
-        $this->cache->set(2, null, "setting a non mysqli_stmt should fail");
+        $this->cache->put(2, null, "putting a non mysqli_stmt should fail");
 
         $this->assertFalse( $this->cache->exists( 2 ) );
 
-        $this->cache->set(2, $this->cache->get(0));
+        $this->cache->put(2, $this->cache->get(0));
 
-        $this->assertTrue( $this->cache->exists( 2 ), "setting a mysql_stmt should work" );
+        $this->assertTrue( $this->cache->exists( 2 ), "putting a mysql_stmt should work" );
     }
 }
