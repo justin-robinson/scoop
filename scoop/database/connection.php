@@ -230,7 +230,7 @@ class Connection {
                 throw new \Exception( "statment preparation failed: ({$this->mysqli->errno}) {$this->mysqli->error}" . PHP_EOL . $sql );
             }
 
-            $this->statementCache->set ( $key, $statement );
+            $this->statementCache->put ( $key, $statement );
         }
 
         return $this->statementCache->get ( $key );
