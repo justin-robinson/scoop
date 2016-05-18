@@ -58,7 +58,7 @@ abstract class Model extends Model\Generic {
      */
     public static function fetch_one () {
 
-        $one = self::fetch ( 1 );
+        $one = static::fetch ( 1 );
 
         return $one ? $one->current () : $one;
 
@@ -117,7 +117,7 @@ abstract class Model extends Model\Generic {
      */
     public static function fetch_where ( $where, array $queryParams = [ ], $limit = 1000, $offset = 0 ) {
 
-        return self::fetch($limit, $offset, $where, $queryParams);
+        return static::fetch($limit, $offset, $where, $queryParams);
     }
 
     /**
@@ -161,7 +161,7 @@ abstract class Model extends Model\Generic {
                 {$primaryKeys}
         ";
 
-        $result = self::query($sql, $queryParams);
+        $result = static::query($sql, $queryParams);
 
         if ( $result ) {
             $this->loadedFromDb = false;
@@ -204,7 +204,7 @@ abstract class Model extends Model\Generic {
         }
 
         // execute sql statement
-        $result = self::query ( $sql, $queryParams );
+        $result = static::query ( $sql, $queryParams );
 
         // log change on success
         if ( $result ) {
@@ -345,7 +345,7 @@ abstract class Model extends Model\Generic {
         $queryParams[] = $limit;
 
         // run sql
-        return self::query ( $sql, $queryParams );
+        return static::query ( $sql, $queryParams );
 
     }
 }
