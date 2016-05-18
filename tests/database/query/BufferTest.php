@@ -1,6 +1,6 @@
 <?php
 
-use DB\JorPw\Test;
+use DB\Scoop\Test;
 use Scoop\Database\Query\Buffer;
 
 /**

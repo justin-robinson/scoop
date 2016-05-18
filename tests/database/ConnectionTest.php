@@ -13,7 +13,7 @@ class ConnectionTest extends PHPUnit_Framework_TestCase {
             SELECT
                 *
             FROM
-              `jor.pw`.`test`
+              `scoop`.`test`
             WHERE
               `id` = ?";
 
@@ -28,7 +28,7 @@ class ConnectionTest extends PHPUnit_Framework_TestCase {
 
         $sql = "
             INSERT INTO
-              `jor.pw`.`test`
+              `scoop`.`test`
             (`name`)
             VALUES
             (?)";
@@ -46,7 +46,7 @@ class ConnectionTest extends PHPUnit_Framework_TestCase {
         if ( $id ) {
             $sql = "
             DELETE FROM
-              `jor.pw`.`test`
+              `scoop`.`test`
             WHERE
               `id` = ?";
 

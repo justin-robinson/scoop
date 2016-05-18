@@ -29,7 +29,7 @@ class GenericTest extends PHPUnit_Framework_TestCase {
 
         $limit = 5;
 
-        $rows = Generic::query( "SELECT * FROM `jor.pw`.`test` LIMIT ?", [ $limit ] );
+        $rows = Generic::query( "SELECT * FROM `scoop`.`test` LIMIT ?", [ $limit ] );
 
         $this->assertEquals( $limit, $rows->get_num_rows() );
     }
