@@ -334,7 +334,7 @@ abstract class Model extends Model\Generic {
      *
      * @return bool|int|Rows
      */
-    private static function fetch ( $limit = 1000, $offset = 0, $where = '', array $queryParams = [] ) {
+    protected static function fetch ( $limit = 1000, $offset = 0, $where = '', array $queryParams = [] ) {
 
         $where = empty($where) ? $where : "WHERE {$where} ";
 
