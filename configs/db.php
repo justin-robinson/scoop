@@ -2,7 +2,7 @@
 
 return [
     'host'     => 'jor.pw',
-    'user'     => 'test',
-    'password' => 'test',
+    'user'     => 'scoop',
+    'password' => '',
     'port'     => '3306',
 ];

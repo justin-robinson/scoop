@@ -1,5 +1,6 @@
 <?php
 
+use DB\Scoop\Test;
 use Scoop\Database\Model;
 
 /**
@@ -9,36 +10,36 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 
     public function test_fetch_one () {
 
-        $test = \DB\JorPw\Test::fetch_one();
+        $test = Test::fetch_one();
 
-        $this->assertEquals( \DB\JorPw\Test::class, get_class($test), "fetch one should return a row" );
+        $this->assertEquals( Test::class, get_class($test), "fetch one should return a row" );
     }
 
     public function test_get_sql_table_name () {
 
-        $this->assertEquals( '`jor.pw`.`test`', \DB\JorPw\Test::get_sql_table_name(), "wrong sql table name returned" );
+        $this->assertEquals( '`scoop`.`test`', Test::get_sql_table_name(), "wrong sql table name returned" );
     }
 
     public function test_fetch_by_id () {
 
-        $test = \DB\JorPw\Test::fetch_one();
+        $test = Test::fetch_one();
         
-        $test2 = \DB\JorPw\Test::fetch_by_id( $test->id );
+        $test2 = Test::fetch_by_id( $test->id );
 
         $this->assertEquals( $test->id, $test2->id, "fetch by id should return a row with that ID" );
     }
 
     public function test_fetch_one_where () {
 
-        $test = \DB\JorPw\Test::fetch_one_where( 'name != ?', [''] );
+        $test = Test::fetch_one_where( 'name != ?', [''] );
 
-        $this->assertEquals( \DB\JorPw\Test::class, get_class($test) );
+        $this->assertEquals( Test::class, get_class($test) );
         $this->assertNotEmpty( $test->name );
     }
 
     public function test_fetch_where () {
 
-        $tests = \DB\JorPw\Test::fetch_where( 'id > ? AND name != ?', [0, ''], 5 );
+        $tests = Test::fetch_where( 'id > ? AND name != ?', [0, ''], 5 );
 
         $this->assertEquals( Scoop\Database\Rows::class, get_class($tests), 'fetch where should return a collection of rows' );
         
@@ -47,7 +48,7 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 
     public function test___set () {
 
-        $test = new \DB\JorPw\Test();
+        $test = new Test();
 
         $name = 'blah';
 
@@ -65,7 +66,7 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 
     public function test_delete () {
 
-        $test = new \DB\JorPw\Test();
+        $test = new Test();
         $test->name = 'inserted from phpunit';
         $test->save();
 
@@ -73,14 +74,14 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 
         $test->delete();
 
-        $test = \DB\JorPw\Test::fetch_by_id( $id );
+        $test = Test::fetch_by_id( $id );
 
         $this->assertFalse ($test, "delete should delete from the db");
     }
 
     public function test_save () {
 
-        $test = new \DB\JorPw\Test();
+        $test = new Test();
         $test->name = 'inserted from phpunit';
         $test->save();
 
@@ -92,7 +93,7 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 
     public function test_get_dirty_columns () {
 
-        $test = \DB\JorPw\Test::fetch_one();
+        $test = Test::fetch_one();
 
         $dirtyValue = $test->name . 'a';
 
@@ -110,7 +111,7 @@ class ModelTest extends PHPUnit_Framework_TestCase {
             'dateTimeAdded' => '2016-02-05 16:30:09',
         ];
 
-        $test = new \DB\JorPw\Test($dataArray);
+        $test = new Test($dataArray);
 
         $this->assertEquals( $dataArray['name'], $test->name );
         $this->assertEquals( $dataArray['dateTimeAdded'], $test->dateTimeAdded );
@@ -124,5 +125,10 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 
         $this->assertEquals( $dataArray['name'], $test->name );
         $this->assertEquals( $dataArray['dateTimeAdded'], $test->dateTimeAdded );
+    }
+    
+    public function test_fetch_has_many () {
+        
+        
     }
 }

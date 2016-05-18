@@ -80,13 +80,13 @@ class ScoopRun {
     public function generate_db_models () {
 
         // db connections needed
-        require_once dirname ( __FILE__ ) . "/../bootstrap.php";
+        require_once __DIR__ . "/../bootstrap.php";
 
         // global or site specific class path?
         if ( array_key_exists ( 'site', $this->args ) ) {
             $outPath = \Scoop\Config::get_site_class_path_by_name ( $this->args['site'] );
         } else {
-            $outPath = \Scoop\Config::get_shared_class_path ();
+            $outPath = __DIR__ . "/../../scoop-classes";
         }
 
         $where = [
@@ -333,7 +333,7 @@ class ScoopRun {
     private function classSafeName ( $name ) {
 
         // strip out anything that isn't a letter
-        $name = preg_split ( '/[^a-zA-Z]/', $name, -1, PREG_SPLIT_NO_EMPTY );
+        $name = preg_split ( '/[^a-z\d]/i', $name, -1, PREG_SPLIT_NO_EMPTY );
 
         // capitalize first letter in each word
         $name = array_map (
