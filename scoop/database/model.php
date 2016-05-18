@@ -65,29 +65,6 @@ abstract class Model extends Model\Generic {
     }
 
     /**
-     * @param int    $limit
-     * @param int    $offset
-     * @param string $where
-     * @param array  $queryParams
-     *
-     * @return bool|int|Rows
-     */
-    public static function fetch ( $limit = 1000, $offset = 0, $where = '', array $queryParams = [] ) {
-
-        $where = empty($where) ? $where : "WHERE {$where} ";
-
-        // build sql
-        $sql = "SELECT * FROM " . static::get_sql_table_name () . " {$where} LIMIT ?,?";
-
-        $queryParams[] = $offset;
-        $queryParams[] = $limit;
-
-        // run sql
-        return self::query ( $sql, $queryParams );
-
-    }
-
-    /**
      * @return string
      */
     public static function get_sql_table_name () {
@@ -347,5 +324,28 @@ abstract class Model extends Model\Generic {
             $queryParams,
             $updateColumnValues,
         ];
+    }
+
+    /**
+     * @param int    $limit
+     * @param int    $offset
+     * @param string $where
+     * @param array  $queryParams
+     *
+     * @return bool|int|Rows
+     */
+    private static function fetch ( $limit = 1000, $offset = 0, $where = '', array $queryParams = [] ) {
+
+        $where = empty($where) ? $where : "WHERE {$where} ";
+
+        // build sql
+        $sql = "SELECT * FROM " . static::get_sql_table_name () . " {$where} LIMIT ?,?";
+
+        $queryParams[] = $offset;
+        $queryParams[] = $limit;
+
+        // run sql
+        return self::query ( $sql, $queryParams );
+
     }
 }
