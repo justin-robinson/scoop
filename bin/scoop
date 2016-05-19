@@ -86,7 +86,7 @@ class ScoopRun {
         if ( array_key_exists ( 'site', $this->args ) ) {
             $outPath = \Scoop\Config::get_site_class_path_by_name ( $this->args['site'] );
         } else {
-            $outPath = __DIR__ . "/../../scoop-classes";
+            $outPath = \Scoop\Config::get_shared_class_path ();
         }
 
         $where = [
