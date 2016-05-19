@@ -273,9 +273,9 @@ abstract class Model extends Model\Generic {
      */
     public function populate ( array $dataArray ) {
 
-        $this->dBValuesArray = array_merge(
-            $this->dBValuesArray,
-            array_intersect_key($dataArray, $this->dBValuesArray));
+        foreach ( $dataArray as $name => $value ) {
+            $this->__set($name, $value);
+        }
     }
 
     /**
