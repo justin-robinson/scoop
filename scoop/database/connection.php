@@ -221,7 +221,7 @@ class Connection {
 
         $key = md5 ( $sql );
 
-        if ( empty( $this->statementCache->get ( $key ) ) ) {
+        if ( !$this->statementCache->exists( $key ) ) {
 
             // prepare the statement
             $statement = $this->mysqli->prepare ( $sql );
