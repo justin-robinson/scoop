@@ -104,13 +104,11 @@ class Generic implements \JsonSerializable {
      */
     public function __get ( $name ) {
 
-        if ( isset( $this->dBValuesArray[$name] ) ) {
-            $property = $this->dBValuesArray[$name];
-        } else {
-            $property = null;
+        if ( array_key_exists($name, $this->dBValuesArray ) ) {
+            return $this->dBValuesArray[$name];
         }
 
-        return $property;
+        return null;
     }
 
     /**
