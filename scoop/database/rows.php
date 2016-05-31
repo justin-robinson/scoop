@@ -103,14 +103,14 @@ class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
         return $array;
     }
 
-    /**
-     * get Model at current index
-     * @return Model
-     */
 
     /**********************************
      * Iterator functions
      **********************************/
+    /**
+     * get Model at current index
+     * @return Model
+     */
     public function current () {
 
         return $this->rowsStorageArray[$this->key()];
