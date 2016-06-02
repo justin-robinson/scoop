@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/justin-robinson/scoop.svg?branch=master)](https://travis-ci.org/justin-robinson/scoop)
+[![Coverage Status](https://coveralls.io/repos/github/justin-robinson/scoop/badge.svg?branch=master)](https://coveralls.io/github/justin-robinson/scoop?branch=master)
 #Scoop
 ##Multi site php 7 framework and orm for mysql
 
