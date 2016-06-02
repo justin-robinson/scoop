@@ -16,7 +16,8 @@
     "php": ">=5.6.0",
     "kevinlebrun/colors.php": "0.4.1",
     "filp/whoops": "2.*",
-    "justin-robinson/lrucache": "*"
+    "justin-robinson/lrucache": "*",
+    "satooshi/php-coveralls": "^1.0"
   },
   "require-dev": {
     "phpunit/php-code-coverage": "*",
