@@ -9,12 +9,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
 
     public function test_get_db_config () {
 
-        $expected = [
-            'host'     => 'jor.pw',
-            'user'     => 'scoop',
-            'password' => '',
-            'port'     => '3306',
-        ];
+        $expected = require "../configs/db.php";
 
         $this->assertEquals($expected, Config::get_db_config());
     }
