@@ -23,9 +23,9 @@ class Statement extends LRUCache {
      */
     public function __destruct () {
 
-        $this->each(function(&$statement){
+        foreach ( $this as $statement ) {
             $statement->close();
-        });
+        }
     }
 
     /**
