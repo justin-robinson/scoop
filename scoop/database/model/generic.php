@@ -68,10 +68,10 @@ class Generic implements \JsonSerializable {
             $rows = new Rows();
 
             // put all rows in the collection
-            while ( $row = $result->fetch_object(static::class) ) {
+            foreach ( $result as $row ) {
 
                 // add a new instance of this row to the collection
-                $rows->add_row ( $row->loaded_from_database () );
+                $rows->add_row ( ( new static( $row ) )->loaded_from_database () );
 
             }
 
