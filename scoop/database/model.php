@@ -292,6 +292,11 @@ abstract class Model extends Model\Generic {
             }
         }
 
+        // don't insert auto increment columns
+        if ( array_key_exists(static::AUTO_INCREMENT_COLUMN, $columns) ) {
+            unset($columns[static::AUTO_INCREMENT_COLUMN]);
+        }
+
         $columnNames = '';
         $values = '';
         $queryParams = [];
