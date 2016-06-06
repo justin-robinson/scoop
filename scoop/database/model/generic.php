@@ -115,7 +115,7 @@ class Generic implements \JsonSerializable {
      */
     public function __isset ( $name ) {
 
-        return isset($name, $this->dBValuesArray);
+        return isset($this->dBValuesArray[$name]);
     }
 
     /**
