@@ -9,7 +9,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
 
     public function test_get_db_config () {
 
-        $expected = require "../configs/db.php";
+        $expected = require __DIR__ . "/../configs/db.php";
 
         $this->assertEquals($expected, Config::get_db_config());
     }
