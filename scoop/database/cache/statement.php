@@ -11,14 +11,6 @@ use LRUCache\LRUCache;
 class Statement extends LRUCache {
 
     /**
-     * Statement constructor.
-     */
-    public function __construct () {
-
-        parent::__construct( 500 );
-    }
-
-    /**
      *
      */
     public function __destruct () {
@@ -36,7 +28,7 @@ class Statement extends LRUCache {
      */
     public function put ( $key, $value ) {
 
-        $isMysqliStatement = is_a ( $value, 'mysqli_stmt' );
+        $isMysqliStatement = is_a ( $value, \mysqli_stmt::class);
 
         if ( $isMysqliStatement ) {
             parent::put($key, $value);
