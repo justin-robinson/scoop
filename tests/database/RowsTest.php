@@ -115,23 +115,41 @@ class RowsTest extends PHPUnit_Framework_TestCase {
 
     public function test_iterator () {
 
-        foreach ( $this->rows as $i => $row ) {
+        $rows = new Rows();
 
-            $this->assertEquals( $i, $row->name );
+        $numRows = 0;
+
+        foreach ( range(0,10) as $i ) {
+            $rows->add_row(new \Scoop\Database\Model\Generic(['v'=>$i]));
+            $numRows++;
+        }
+
+        foreach ( $rows as $i => $row ) {
+
+            $this->assertEquals( $i, $row->v );
 
             if ( $i > 5 ) {
                 break;
             }
         }
 
-        foreach ( $this->rows as $i => $row ) {
+        foreach ( $rows as $i => $row ) {
 
             if ( $i <= 5 ) {
                 continue;
             }
 
-            $this->assertEquals( $i, $row->name );
+            $this->assertEquals( $i, $row->v );
         }
+
+        $rowsIteratedOver = 0;
+        foreach ( $rows as $i => $row ) {
+
+            $this->assertEquals( $i, $row->v );
+            ++$rowsIteratedOver;
+        }
+
+        $this->assertEquals($numRows, $rowsIteratedOver, "iterator should iterate over all rows");
     }
 
     public function test_arrayAccess () {
