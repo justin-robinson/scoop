@@ -3,7 +3,7 @@
 
 // parse cli args
 require_once dirname ( __FILE__ ) . '/../scoop/commandline.php';
-$args = \Scoop\CommandLine::parseArgs ( $_SERVER['argv'] );
+$args = \Scoop\CommandLine::parse_args ( $_SERVER['argv'] );
 
 // special help args
 if ( isset( $args['help'] ) || isset( $args['h'] ) ) {
