@@ -9,12 +9,21 @@ class ClassGenClassTest extends PHPUnit_Framework_TestCase {
 
     public function test___construct () {
 
-        $class = new ClassGenClass( 'testClass', ['otherTestClass'], 'test\Class\Namespace', 'Iterator' );
+        $class = new ClassGenClass( 'testClass', 'otherTestClass', 'test\Class\Namespace', ['Iterator'] );
 
         $this->assertEquals('testClass', $class->name);
-        $this->assertEquals(['otherTestClass'], $class->extends);
+        $this->assertEquals('otherTestClass', $class->extends);
         $this->assertEquals('test\Class\Namespace', $class->namespace);
-        $this->assertEquals('Iterator', $class->implements);
+        $this->assertEquals(['Iterator'], $class->implements);
+    }
+
+    public function test_append_use () {
+
+        $class  = new ClassGenClass('testClass');
+
+        $class->append_use('otherTestClass');
+
+        $this->assertEquals(['otherTestClass'], $class->use);
     }
 
     public function test_get_header () {
