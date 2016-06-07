@@ -299,13 +299,11 @@ class Connection {
      * Private clone method to prevent cloning of the instance of the
      * *Singleton* instance.
      */
-    private function __clone () {
-    }
+    private function __clone () {}
 
     /**
      * Private unserialize method to prevent unserializing of the *Singleton*
      * instance.
      */
-    private function __wakeup () {
-    }
+    private function __wakeup () {}
 }
