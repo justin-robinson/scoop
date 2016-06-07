@@ -46,14 +46,12 @@ class ClassGenClass extends ClassGenAbstract {
      * @param string $namespace
      * @param array  $implements
      */
-    public function __construct ( $name, $extends = null, $namespace = '', $implements = [ ] ) {
+    public function __construct ( $name, $extends = '', $namespace = '', $implements = [ ] ) {
 
-        $this->name = $name;
-        $this->extends = $extends;
-        $this->namespace = $namespace;
-        $this->implements = $implements;
-
-        return $this;
+        $this->set_name($name)
+             ->set_extends($extends)
+             ->set_namespace($namespace)
+             ->set_implements($implements);
     }
 
     /**
