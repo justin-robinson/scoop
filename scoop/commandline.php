@@ -27,25 +27,29 @@ class CommandLine {
         // first element is the script name
         array_shift ( $argv );
 
+        // how many args we have
         self::$numArgs = count ( $argv );
 
+        // storage for our parsed args
         self::$args = [];
 
-        foreach ( $argv as $argIndex => $arg ) {
+        // parse each arg
+        for ( $argvIndex = 0; $argvIndex < self::$numArgs; $argvIndex++) {
 
-            if ( !array_key_exists($argIndex, $argv) ) {
-                continue;
-            }
+            // get the arg
+            $arg = $argv[$argvIndex];
 
             // --foo --bar=baz
             if ( substr ( $arg, 0, 2 ) === '--' ) {
-                self::parse_long_opt($argv, $argIndex);
+                self::parse_long_opt($argv, $argvIndex);
             }
+            // -k -k=value
             else if ( substr ( $arg, 0, 1 ) === '-' ) {
-                self::parse_short_opt( $argv, $argIndex );
+                self::parse_short_opt( $argv, $argvIndex );
             }
+            // plain arg
             else {
-                self::parse_opt($argv, $argIndex);
+                self::parse_opt($argv, $argvIndex);
             }
         }
 
@@ -97,13 +101,14 @@ class CommandLine {
 
     /**
      * @param $argv
-     * @param $index
+     * @param $argvIndex
      */
-    private static function parse_long_opt ( &$argv, $index ) {
+    private static function parse_long_opt ( &$argv, &$argvIndex ) {
 
-        $arg = $argv[$index];
-        $nextIndex = $index + 1;
+        $arg = $argv[$argvIndex];
+        $nextIndex = $argvIndex + 1;
 
+        // where the equal sign is
         $eqPos = strpos ( $arg, '=' );
 
         // --foo
@@ -113,11 +118,12 @@ class CommandLine {
             // --foo value
             if ( $nextIndex < self::$numArgs && $argv[$nextIndex][0] !== '-' ) {
                 $value = $argv[$nextIndex];
-                unset($argv[$nextIndex]);
+                ++$argvIndex;
             } else {
                 $value = isset( self::$args[$key] ) ? self::$args[$key] : true;
             }
-        } // --bar=baz
+        }
+        // --bar=baz
         else {
             $key = substr ( $arg, 2, $eqPos - 2 );
             $value = substr ( $arg, $eqPos + 1 );
@@ -128,18 +134,19 @@ class CommandLine {
 
     /**
      * @param $argv
-     * @param $index
+     * @param $argvIndex
      */
-    private static function parse_short_opt ( &$argv, $index ) {
+    private static function parse_short_opt ( &$argv, &$argvIndex ) {
 
-        $arg = $argv[$index];
-        $nextIndex = $index+1;
+        $arg = $argv[$argvIndex];
+        $nextIndex = $argvIndex+1;
 
         // -k=value
         if ( substr ( $arg, 2, 1 ) === '=' ) {
             $key = substr ( $arg, 1, 1 );
             $value = substr ( $arg, 3 );
-        } // -abc
+        }
+        // -abc
         else {
             $chars = str_split ( substr ( $arg, 1 ) );
             foreach ( $chars as $char ) {
@@ -149,7 +156,7 @@ class CommandLine {
             // -a value1 -abc value2
             if ( $nextIndex < self::$numArgs && $argv[$nextIndex][0] !== '-' ) {
                 $value = $argv[$nextIndex];
-                unset($argv[$nextIndex]);
+                ++$argvIndex;
             }
         }
 
@@ -158,10 +165,10 @@ class CommandLine {
 
     /**
      * @param $argv
-     * @param $index
+     * @param $argvIndex
      */
-    private static function parse_opt ( &$argv, $index ) {
+    private static function parse_opt ( &$argv, &$argvIndex ) {
 
-        self::$args[] = $argv[$index];
+        self::$args[] = $argv[$argvIndex];
     }
 }
