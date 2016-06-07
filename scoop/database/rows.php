@@ -21,11 +21,6 @@ class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
     private $rowsStorageArray = [ ];
 
     /**
-     * @var int
-     */
-    private $position = 0;
-
-    /**
      * @return string
      */
     public function __toString () {
