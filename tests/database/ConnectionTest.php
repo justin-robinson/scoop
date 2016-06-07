@@ -7,6 +7,13 @@ use Scoop\Database\Connection;
  */
 class ConnectionTest extends PHPUnit_Framework_TestCase {
 
+    public function test_connect () {
+
+        Connection::connect();
+
+        $this->assertEquals(true, Connection::is_connected(), "connection should exist after calling connect");
+    }
+
     public function test_execute_select () {
 
         $sql = "
@@ -68,5 +75,30 @@ class ConnectionTest extends PHPUnit_Framework_TestCase {
         $this->expectException( Exception::class );
         Connection::get_bind_type( new stdClass() );
 
+    }
+
+    public function test_get_statement_from_sql () {
+
+        $this->expectException(Exception::class);
+
+        \Scoop\Database\Model\Generic::query(
+            "SELECT
+                *
+            FROM
+              `something`.`that_doesnt_exist`"
+        );
+    }
+
+    public function test_get_sql_history () {
+
+        $this->assertEquals([], Connection::get_sql_history(), "sql history should be empty if logging is disabled");
+
+        Connection::set_logging_enabled(true);
+
+        \DB\Scoop\Test::fetch_by_id(1);
+
+        $this->assertNotEmpty(Connection::get_sql_history(), "sql history should not be empty after enabling logging and running a query");
+
+        Connection::set_logging_enabled(false);
     }
 }
