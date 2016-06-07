@@ -17,7 +17,10 @@ class CommandLineTest extends PHPUnit_Framework_TestCase {
             'short-opt-value',
             '--long-opt',
             'long-opt-value',
-            '--long=equals'
+            '--long=equals',
+            '-s=equals',
+            '--foo',
+            'bar'
         ];
 
         $expected = [
@@ -25,10 +28,12 @@ class CommandLineTest extends PHPUnit_Framework_TestCase {
             'two',
             'o' => 'short-opt-value',
             'long-opt' => 'long-opt-value',
-            'long' => 'equals'
+            'long' => 'equals',
+            's' => 'equals',
+            'foo' => 'bar'
         ];
 
-        $this->assertEquals($expected, CommandLine::parseArgs($argv));
+        $this->assertEquals($expected, CommandLine::parse_args( $argv));
     }
 
     public function testGetBoolean () {
@@ -47,14 +52,14 @@ class CommandLineTest extends PHPUnit_Framework_TestCase {
             'pop'
         ];
 
-        CommandLine::parseArgs($argv);
+        CommandLine::parse_args( $argv);
 
-        $this->assertTrue( CommandLine::getBoolean( 's' ), "cli arg value 'y' should be returned as true");
-        $this->assertFalse( CommandLine::getBoolean( 'b' ), "cli arg value 'false' should be returned as false" );
-        $this->assertTrue( CommandLine::getBoolean( 'i' ), "cli arg value '1' should be returned as true");
-        $this->assertTrue( CommandLine::getBoolean( 'B' ), "cli arg value 'B' should be returned as true");
-        $this->assertFalse( CommandLine::getBoolean( 'dne' ), "cli arg value 'dne' should be returned as false");
-        $this->assertEquals('default', CommandLine::getBoolean( 'a', 'default' ), "cli arg value 'a' should be return the default value");
+        $this->assertTrue( CommandLine::get_boolean( 's' ), "cli arg value 'y' should be returned as true");
+        $this->assertFalse( CommandLine::get_boolean( 'b' ), "cli arg value 'false' should be returned as false" );
+        $this->assertTrue( CommandLine::get_boolean( 'i' ), "cli arg value '1' should be returned as true");
+        $this->assertTrue( CommandLine::get_boolean( 'B' ), "cli arg value 'B' should be returned as true");
+        $this->assertFalse( CommandLine::get_boolean( 'dne' ), "cli arg value 'dne' should be returned as false");
+        $this->assertEquals( 'default', CommandLine::get_boolean( 'a', 'default' ), "cli arg value 'a' should be return the default value");
 
     }
 }
