@@ -14,7 +14,7 @@ class StatementTest extends PHPUnit_Framework_TestCase {
 
     public function __construct () {
 
-        $this->cache = new Statement();
+        $this->cache = new Statement(500);
 
         $dbConfig = \Scoop\Config::get_db_config();
 
@@ -38,5 +38,17 @@ class StatementTest extends PHPUnit_Framework_TestCase {
         $this->cache->put(2, $this->cache->get(0));
 
         $this->assertTrue( $this->cache->exists( 2 ), "putting a mysql_stmt should work" );
+    }
+
+    public function test___destruct () {
+
+        $statement = $this->cache->get(0);
+        
+        unset($this->cache);
+
+        $this->expectException(Exception::class);
+
+        $statement->sqlstate;
+
     }
 }
