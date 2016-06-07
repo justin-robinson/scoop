@@ -35,6 +35,135 @@ class RowsTest extends PHPUnit_Framework_TestCase {
         }
     }
 
+    public function test___toString () {
+
+        $expected = "array (
+  0 => 
+  DB\Scoop\Test::__set_state(array(
+     'dBValuesArray' => 
+    array (
+      'id' => NULL,
+      'name' => 0,
+      'dateTimeAdded' => NULL,
+    ),
+     'loadedFromDb' => false,
+     'orignalDbValuesArray' => NULL,
+  )),
+  1 => 
+  DB\Scoop\Test::__set_state(array(
+     'dBValuesArray' => 
+    array (
+      'id' => NULL,
+      'name' => 1,
+      'dateTimeAdded' => NULL,
+    ),
+     'loadedFromDb' => false,
+     'orignalDbValuesArray' => NULL,
+  )),
+  2 => 
+  DB\Scoop\Test::__set_state(array(
+     'dBValuesArray' => 
+    array (
+      'id' => NULL,
+      'name' => 2,
+      'dateTimeAdded' => NULL,
+    ),
+     'loadedFromDb' => false,
+     'orignalDbValuesArray' => NULL,
+  )),
+  3 => 
+  DB\Scoop\Test::__set_state(array(
+     'dBValuesArray' => 
+    array (
+      'id' => NULL,
+      'name' => 3,
+      'dateTimeAdded' => NULL,
+    ),
+     'loadedFromDb' => false,
+     'orignalDbValuesArray' => NULL,
+  )),
+  4 => 
+  DB\Scoop\Test::__set_state(array(
+     'dBValuesArray' => 
+    array (
+      'id' => NULL,
+      'name' => 4,
+      'dateTimeAdded' => NULL,
+    ),
+     'loadedFromDb' => false,
+     'orignalDbValuesArray' => NULL,
+  )),
+  5 => 
+  DB\Scoop\Test::__set_state(array(
+     'dBValuesArray' => 
+    array (
+      'id' => NULL,
+      'name' => 5,
+      'dateTimeAdded' => NULL,
+    ),
+     'loadedFromDb' => false,
+     'orignalDbValuesArray' => NULL,
+  )),
+  6 => 
+  DB\Scoop\Test::__set_state(array(
+     'dBValuesArray' => 
+    array (
+      'id' => NULL,
+      'name' => 6,
+      'dateTimeAdded' => NULL,
+    ),
+     'loadedFromDb' => false,
+     'orignalDbValuesArray' => NULL,
+  )),
+  7 => 
+  DB\Scoop\Test::__set_state(array(
+     'dBValuesArray' => 
+    array (
+      'id' => NULL,
+      'name' => 7,
+      'dateTimeAdded' => NULL,
+    ),
+     'loadedFromDb' => false,
+     'orignalDbValuesArray' => NULL,
+  )),
+  8 => 
+  DB\Scoop\Test::__set_state(array(
+     'dBValuesArray' => 
+    array (
+      'id' => NULL,
+      'name' => 8,
+      'dateTimeAdded' => NULL,
+    ),
+     'loadedFromDb' => false,
+     'orignalDbValuesArray' => NULL,
+  )),
+  9 => 
+  DB\Scoop\Test::__set_state(array(
+     'dBValuesArray' => 
+    array (
+      'id' => NULL,
+      'name' => 9,
+      'dateTimeAdded' => NULL,
+    ),
+     'loadedFromDb' => false,
+     'orignalDbValuesArray' => NULL,
+  )),
+  10 => 
+  DB\Scoop\Test::__set_state(array(
+     'dBValuesArray' => 
+    array (
+      'id' => NULL,
+      'name' => 10,
+      'dateTimeAdded' => NULL,
+    ),
+     'loadedFromDb' => false,
+     'orignalDbValuesArray' => NULL,
+  )),
+)";
+
+        $this->assertEquals($expected, (string)$this->rows);
+    }
+
     public function test_add_row () {
 
         $rows = new Rows();
@@ -54,6 +183,8 @@ class RowsTest extends PHPUnit_Framework_TestCase {
         foreach ( range(0,10) as $i) {
             $this->assertEquals( $i, $this->rows->get( $i )->name, "get should return the correct index" );
         }
+
+        $this->assertNull($this->rows->get(++$i), "get should return null if the index dne");
     }
 
     public function test_get_rows () {

@@ -48,7 +48,7 @@ class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
     /**
      * @param int $index
      *
-     * @return Generic
+     * @return Generic|null
      */
     public function get ( $index ) {
 
