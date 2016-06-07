@@ -130,4 +130,14 @@ class Config {
 
         self::$options[$name] = $option;
     }
+
+    /**
+     * @param $name
+     */
+    public static function unset_option ( $name ) {
+
+        if ( self::option_exists($name) ) {
+            unset(self::$options[$name]);
+        }
+    }
 }

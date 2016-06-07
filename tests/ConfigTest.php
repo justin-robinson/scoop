@@ -14,6 +14,28 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($expected, Config::get_db_config());
     }
 
+    public function test_get_sites_folder () {
+
+        $sitesFolder = Config::get_option('sites_folder');
+
+        Config::set_option('sites_folder', '/tmp/sites');
+
+        $this->assertEquals('/tmp/sites', Config::get_sites_folder());
+
+        Config::set_option('sites_folder', $sitesFolder);
+    }
+
+    public function test_get_shared_class_path () {
+
+        $sharedClassPathParentDirectory = Config::get_option('shared_classpath_parent_directory');
+        
+        Config::unset_option('shared_classpath_parent_directory');
+
+        $this->assertNull(Config::get_shared_class_path(), 'shared class path should be null if the parent directory is undefined');
+
+        Config::set_option('shared_classpath_parent_directory', $sharedClassPathParentDirectory);
+    }
+
     public function test_option_exists () {
 
         $value = rand(1,99999);
