@@ -31,7 +31,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
         
         Config::unset_option('shared_classpath_parent_directory');
 
-        $this->assertNull(Config::get_shared_class_path(), 'shared class path should be null if the parent directory is undefined');
+        $this->assertEmpty(Config::get_shared_class_path(), 'shared class path should be empty if the parent directory is undefined');
 
         Config::set_option('shared_classpath_parent_directory', $sharedClassPathParentDirectory);
     }
