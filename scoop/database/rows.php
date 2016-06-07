@@ -48,9 +48,9 @@ class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
     /**
      * @param int $index
      *
-     * @return Generic
+     * @return Generic|null
      */
-    public function get ( int $index ) : Generic {
+    public function get ( int $index ) {
 
         if( !array_key_exists( $index, $this->rowsStorageArray ) ) {
             return null;
