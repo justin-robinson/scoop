@@ -21,6 +21,7 @@ class ClassGenGeneratorTest extends PHPUnit_Framework_TestCase {
         $generator = new ClassGenGenerator( $this->class, '/tmp/testClass.php' );
 
         $property = new ClassGenProperty( 'p1' );
+        $property->set_public();
         $generator->add_property( $property );
 
         $property = new ClassGenProperty( 'p2' );
