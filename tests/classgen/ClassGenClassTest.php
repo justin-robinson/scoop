@@ -7,23 +7,28 @@ use Scoop\ClassGen\ClassGenClass;
  */
 class ClassGenClassTest extends PHPUnit_Framework_TestCase {
 
-    private $class;
+    public function test___construct () {
 
-    public function __construct () {
+        $class = new ClassGenClass( 'testClass', ['otherTestClass'], 'test\Class\Namespace', 'Iterator' );
 
-        $this->class = new ClassGenClass( 'testClass' );
+        $this->assertEquals('testClass', $class->name);
+        $this->assertEquals(['otherTestClass'], $class->extends);
+        $this->assertEquals('test\Class\Namespace', $class->namespace);
+        $this->assertEquals('Iterator', $class->implements);
     }
 
     public function test_get_header () {
+
+        $class = new ClassGenClass( 'testClass' );
 
         $expected =
             "<?php
 
 class testClass {
 ";
-        $this->assertEquals( $expected, $this->class->get_header() );
+        $this->assertEquals( $expected, $class->get_header() );
 
-        $this->class->set_namespace( 'testNamespace' );
+        $class->set_namespace( 'testNamespace' );
         $expected =
             "<?php
 
@@ -31,7 +36,7 @@ namespace testNamespace;
 
 class testClass {
 ";
-        $this->assertEquals( $expected, $this->class->get_header(), "namespace should be in the class header" );
+        $this->assertEquals( $expected, $class->get_header(), "namespace should be in the class header" );
 
         $expected =
             "<?php
@@ -40,8 +45,8 @@ namespace testNamespace;
 
 class testClass extends testBaseClass {
 ";
-        $this->class->set_extends( 'testBaseClass' );
-        $this->assertEquals( $expected, $this->class->get_header(), "class should extend another class" );
+        $class->set_extends( 'testBaseClass' );
+        $this->assertEquals( $expected, $class->get_header(), "class should extend another class" );
 
         $expected =
             "<?php
@@ -50,8 +55,8 @@ namespace testNamespace;
 
 class testClass extends testBaseClass implements Interface1, Interface2, Interface3 {
 ";
-        $this->class->set_implements( [ 'Interface1', 'Interface2', 'Interface3' ] );
-        $this->assertEquals( $expected, $this->class->get_header(), "class should implement interfaces" );
+        $class->set_implements( [ 'Interface1', 'Interface2', 'Interface3' ] );
+        $this->assertEquals( $expected, $class->get_header(), "class should implement interfaces" );
 
         $expected =
             "<?php
@@ -63,11 +68,11 @@ namespace testNamespace;
  */
 class testClass extends testBaseClass implements Interface1, Interface2, Interface3 {
 ";
-        $this->class->set_phpDoc(
+        $class->set_phpDoc(
             '/**
  * Class testClass
  */' );
-        $this->assertEquals( $expected, $this->class->get_header(), "class should have a phpdoc block" );
+        $this->assertEquals( $expected, $class->get_header(), "class should have a phpdoc block" );
 
         $expected =
             "<?php
@@ -82,8 +87,8 @@ use someTestClass;
  */
 class testClass extends testBaseClass implements Interface1, Interface2, Interface3 {
 ";
-        $this->class->set_use( [ 'someTestClass', 'someOtherTestClass' ] );
-        $this->assertEquals( $expected, $this->class->get_header(), "class should use classes in alphabetical order" );
+        $class->set_use( [ 'someTestClass', 'someOtherTestClass' ] );
+        $this->assertEquals( $expected, $class->get_header(), "class should use classes in alphabetical order" );
 
         $expected =
             "<?php
@@ -98,8 +103,8 @@ use someTestClass;
  */
 abstract class testClass extends testBaseClass implements Interface1, Interface2, Interface3 {
 ";
-        $this->class->set_abstract();
-        $this->assertEquals( $expected, $this->class->get_header(), "class should be abstract" );
+        $class->set_abstract();
+        $this->assertEquals( $expected, $class->get_header(), "class should be abstract" );
 
         $expected =
             "<?php
@@ -114,13 +119,13 @@ use someTestClass;
  */
 final class testClass extends testBaseClass implements Interface1, Interface2, Interface3 {
 ";
-        $this->class->set_abstract(false);
-        $this->class->set_final();
-        $this->assertEquals( $expected, $this->class->get_header(), "class should be final" );
+        $class->set_abstract(false);
+        $class->set_final();
+        $this->assertEquals( $expected, $class->get_header(), "class should be final" );
 
         $this->expectException( \Exception::class );
-        $this->class->set_abstract();
-        $this->class->get_header();
+        $class->set_abstract();
+        $class->get_header();
 
     }
 
