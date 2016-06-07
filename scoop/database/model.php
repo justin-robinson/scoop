@@ -307,7 +307,7 @@ abstract class Model extends Model\Generic {
             $columnNames .= "`{$columnName}`,";
             $updateColumnValues .= "{$columnName}=VALUES({$columnName}),";
 
-            if ( is_object($value) && is_a($value, '\Scoop\Database\Literal') ) {
+            if ( is_object($value) && is_a($value, Literal::class) ) {
                 $values .= "{$value},";
             } else {
                 // value placeholder
