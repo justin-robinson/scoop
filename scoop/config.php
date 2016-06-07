@@ -82,7 +82,7 @@ class Config {
                 self::get_option ( 'shared_classpath_parent_directory' ) . self::get_option ( 'classpath_folder_name' ) );
         }
 
-        return null;
+        return '';
 
     }
 
