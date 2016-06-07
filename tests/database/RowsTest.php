@@ -154,17 +154,35 @@ class RowsTest extends PHPUnit_Framework_TestCase {
 
     public function test_arrayAccess () {
 
-        $this->assertEquals( 0, $this->rows[0]->name, "getting row by array index should work"  );
+        $rows = new Rows();
 
-        $i = $this->lastIndex+1;
+        $numRows = 0;
 
-        $this->rows[$i] = new Test(['name' => $i]);
+        foreach ( range(0,10) as $i ) {
+            $rows->add_row(new Test(['name'=>$i]));
+            $numRows++;
+        }
 
-        $this->assertEquals( $i, $this->rows[$i]->name, "setting row by array index should work" );
+        $this->assertEquals( 0, $rows[0]->name, "getting row by array index should work"  );
 
-        unset($this->rows[$i]);
+        ++$i;
 
-        $this->assertNull( $this->rows[$i], "unset on rows should remove row from storage array");
+        $this->assertFalse(isset($rows[$i]), "new offset shouldn't exist yet");
+        $rows[$i] = new Test(['name' => $i]);
+        $this->assertTrue(isset($rows[$i]), "setting an offset should work if it's a generic class");
+
+        $rows[$i+1] = new stdClass();
+        $this->assertFalse(isset($rows[$i+1]), "setting an offset should fail if it's not a generic class");
+
+        ++$i;
+        $this->assertFalse(isset($rows[$i]), "new offset shouldn't exist yet");
+        $rows[] = new Test(['name' => $i]);
+        $this->assertTrue(isset($rows[$i]), "appending to the rows class should append to the internal storage array");
+
+        $this->assertEquals( $i, $rows[$i]->name, "setting row by array index should work" );
+
+        unset($rows[$i]);
+        $this->assertNull( $rows[$i], "unset on rows should remove row from storage array");
     }
     
     public function test_jsonSerialize () {
