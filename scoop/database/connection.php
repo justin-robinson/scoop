@@ -78,7 +78,7 @@ class Connection {
         // we will manually commit our sql changes
         $this->mysqli->autocommit ( false );
 
-        $this->statementCache = new Statement();
+        $this->statementCache = new Statement(500);
     }
 
     /**
