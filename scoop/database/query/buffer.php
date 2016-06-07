@@ -93,17 +93,17 @@ class Buffer {
     /**
      * Buffers inserts to the db
      * @param \Scoop\Database\Model $model
+     *
+     * @return bool
      */
     public function insert ( \Scoop\Database\Model &$model ) {
 
-        if ( $this->maxSize === 0 ) {
+        // don't insert if the maxSize is less than 1
+        // don't insert something that isn't the model we are expecting
+        if( $this->maxSize <= 0 || $this->modelClass !== get_class( $model ) ) {
             return false;
         }
 
-        // don't insert something that isn't the model we are expecting
-        if( $this->modelClass !== get_class( $model ) ) {
-            return false;
-        }
 
         list($_, $values, $queryParams, $_) = $model->get_sql_insert_values();
 
