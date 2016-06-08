@@ -194,7 +194,7 @@ class ClassGenGenerator {
     private function create_path () {
 
         // break file path up
-        $dirname = pathinfo ( $this->filepath, PATHINFO_DIRNAME );
+        $dirname = dirname($this->filepath);
 
         // create directory if it doesn't exist
         if ( !( $created = file_exists ( $dirname ) ) ) {
