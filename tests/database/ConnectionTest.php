@@ -92,8 +92,17 @@ class ConnectionTest extends PHPUnit_Framework_TestCase {
 
     public function test_execute_failure () {
 
+        $test = \DB\Scoop\Test::fetch_one();
+
         $this->expectException(Exception::class);
-        \DB\Scoop\Test::query("select * from `scoop`.`tableDNE`");
+        \DB\Scoop\Test::query(
+            "INSERT INTO
+              scoop.test
+             (id)
+             VALUES
+             (?, ?)",
+            [$test->id]
+        );
     }
 
     public function test_get_bind_type () {
