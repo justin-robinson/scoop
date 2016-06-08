@@ -81,6 +81,24 @@ $sql=
 
 \DB\Model\Generic::fetch($sql);
 
+// Mass sql insertions with a query buffer
+$maxSize = 1000;
+$buffer = new Buffer($maxSize, \DB\JorPw\Test::class);
+
+// insert 2001 models into the buffer
+// it will flush every 1000 inserts
+foreach ( range(0,2001) as $i ) {
+    
+    // new model to be inserted
+    $model = new \DB\JorPw\Test(['name' => $i]);
+    
+    // give model to the buffer
+    $buffer->insert($model);
+}
+
+// flush any remaining models in the buffer
+$buffer->flush();
+
 ```
 
 ###Setup
