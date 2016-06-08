@@ -68,6 +68,8 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 
         $test = new Test();
         $test->name = 'inserted from phpunit';
+
+        $this->assertFalse($test->delete(), 'deleting a record not in the database should fail');
         $test->save();
 
         $id = $test->id;
