@@ -1,17 +1,37 @@
 <?php
 
 use Scoop\Database\Connection;
+use Scoop\Database\Model\Generic;
 
 /**
  * Class ConnectionTest
  */
 class ConnectionTest extends PHPUnit_Framework_TestCase {
 
-    public function test_connect () {
+    /**
+     * @var Connection
+     */
+    public $connection;
 
-        Connection::connect();
+    /**
+     * ConnectionTest constructor.
+     */
+    public function __construct () {
 
-        $this->assertEquals(true, Connection::is_connected(), "connection should exist after calling connect");
+        $this->connection = new Connection(\Scoop\Config::get_db_config());
+    }
+
+    public function test___construct () {
+
+        $dbConfig = \Scoop\Config::get_db_config();
+
+        $connection = new Connection($dbConfig);
+
+        $this->assertInstanceOf(Connection::class, $connection);
+
+        $dbConfig['password'] = 'wrong';
+        $this->expectException(Exception::class);
+        $connection = new Connection($dbConfig);
     }
 
     public function test_execute_select () {
@@ -26,7 +46,7 @@ class ConnectionTest extends PHPUnit_Framework_TestCase {
 
         $queryParams = [1];
 
-        $result = Connection::execute( $sql, $queryParams );
+        $result = $this->connection->execute( $sql, $queryParams );
 
         $this->assertEquals(1, $result->num_rows, "select should return a row");
     }
@@ -42,10 +62,10 @@ class ConnectionTest extends PHPUnit_Framework_TestCase {
 
         $queryParams = ['inserted from phpunit'];
 
-        Connection::execute( $sql, $queryParams );
+        $this->connection->execute( $sql, $queryParams );
 
-        $id = Connection::get_insert_id();
-        $affectedRows = Connection::get_affected_rows();
+        $id = $this->connection->get_insert_id();
+        $affectedRows = $this->connection->get_affected_rows();
 
         $this->assertNotEmpty( $id, "db auto_increment id should be saved upon insert" );
         $this->assertEquals( 1, $affectedRows, "only one row should have been inserted");
@@ -59,21 +79,21 @@ class ConnectionTest extends PHPUnit_Framework_TestCase {
 
             $queryParams = [$id];
 
-            Connection::execute( $sql, $queryParams );
+            $this->connection->execute( $sql, $queryParams );
         }
     }
 
     public function test_get_bind_type () {
 
-        $this->assertEquals( 's', Connection::get_bind_type( null ), "null should be bound as a string");
-        $this->assertEquals( 's', Connection::get_bind_type( 'string' ) );
-        $this->assertEquals( 's', Connection::get_bind_type( new Scoop\Database\Literal( 'NOW()' ) ) );
-        $this->assertEquals( 'i', Connection::get_bind_type( 1 ) );
-        $this->assertEquals( 'i', Connection::get_bind_type( true ) );
-        $this->assertEquals( 'd', Connection::get_bind_type( 1.1 ) );
+        $this->assertEquals( 's', $this->connection->get_bind_type( null ), "null should be bound as a string");
+        $this->assertEquals( 's', $this->connection->get_bind_type( 'string' ) );
+        $this->assertEquals( 's', $this->connection->get_bind_type( new Scoop\Database\Literal( 'NOW()' ) ) );
+        $this->assertEquals( 'i', $this->connection->get_bind_type( 1 ) );
+        $this->assertEquals( 'i', $this->connection->get_bind_type( true ) );
+        $this->assertEquals( 'd', $this->connection->get_bind_type( 1.1 ) );
 
         $this->expectException( Exception::class );
-        Connection::get_bind_type( new stdClass() );
+        $this->connection->get_bind_type( new stdClass() );
 
     }
 
@@ -91,14 +111,14 @@ class ConnectionTest extends PHPUnit_Framework_TestCase {
 
     public function test_get_sql_history () {
 
-        $this->assertEquals([], Connection::get_sql_history(), "sql history should be empty if logging is disabled");
+        $this->assertEquals([], $this->connection->get_sql_history(), "sql history should be empty if logging is disabled");
 
-        Connection::set_logging_enabled(true);
+        Generic::$connection->set_logging_enabled(true);
 
         \DB\Scoop\Test::fetch_by_id(1);
 
-        $this->assertNotEmpty(Connection::get_sql_history(), "sql history should not be empty after enabling logging and running a query");
+        $this->assertNotEmpty(Generic::$connection->get_sql_history(), "sql history should not be empty after enabling logging and running a query");
 
-        Connection::set_logging_enabled(false);
+        Generic::$connection->set_logging_enabled(false);
     }
 }
