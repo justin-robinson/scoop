@@ -210,7 +210,7 @@ abstract class Model extends Model\Generic {
         if ( $result ) {
 
             // get auto incremented id if one was generated
-            if ( $ID = Connection::get_insert_id () ) {
+            if ( $ID = self::$connection->get_insert_id () ) {
 
                 $this->__set(static::AUTO_INCREMENT_COLUMN, $ID);
 

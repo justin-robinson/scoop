@@ -60,6 +60,3 @@ if ( \Scoop\Environment::is_internal_ip ($clientIP, $serverIP) ) {
     ini_set ( 'display_errors', 'Off' );
     ini_set ( 'display_startup_errors', 'Off' );
 }
-
-// connect to mysql server
-Scoop\Database\Connection::connect ();
