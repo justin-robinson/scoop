@@ -100,7 +100,7 @@ class ConnectionTest extends PHPUnit_Framework_TestCase {
               scoop.test
              (id)
              VALUES
-             (?, ?)",
+             (?)",
             [$test->id]
         );
     }
