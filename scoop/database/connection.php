@@ -65,10 +65,10 @@ class Connection {
             $config['port'] );
 
         // die on error
-        if ( $this->mysqli->connect_error ) {
-            throw new \Exception( 'Connect Error (' . $this->mysqli->connect_errno . ') '
-                . $this->mysqli->connect_error );
-        }
+//        if ( $this->mysqli->connect_error ) {
+//            throw new \Exception( 'Connect Error (' . $this->mysqli->connect_errno . ') '
+//                . $this->mysqli->connect_error );
+//        }
 
         // we will manually commit our sql changes
         $this->mysqli->autocommit ( false );
@@ -81,7 +81,7 @@ class Connection {
      */
     public function __destruct () {
 
-        if ( isset( $this->mysqli ) ) {
+        if ( isset( $this->mysqli ) && !$this->mysqli->connect_error ) {
             $threadId = $this->mysqli->thread_id;
             $this->mysqli->kill ( $threadId );
             $this->mysqli->close ();
