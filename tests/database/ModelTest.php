@@ -87,11 +87,29 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 
         $this->assertNotEmpty( $test->id, "save should save the model to the db and update the auto_increment column" );
 
+        $this->assertFalse($test->save(), "saving a clean db model should return false");
+
+        $test->name .= $test->name;
+        $test->set_literal('dateTimeAdded', 'NOW()');
+        $test->save();
+
+        $this->assertEquals($test->name, Test::fetch_by_id($test->id)->name, "saving an existing db model should do an update");
         $test->delete();
 
     }
 
     public function test_get_dirty_columns () {
+
+        $values = [
+            'id' => 1,
+            'name' => 'inserted from phpunit',
+            'dateTimeAdded' => new \Scoop\Database\Literal('NOW()'),
+        ];
+
+        $test = new Test($values);
+
+        unset($values['id']);
+        $this->assertEquals($values, $test->get_dirty_columns(), "dirty columns on a new model should be the dbvalues array without an autoincrement column");
 
         $test = Test::fetch_one();
 
@@ -130,5 +148,14 @@ class ModelTest extends PHPUnit_Framework_TestCase {
     public function test_fetch_has_many () {
         
         
+    }
+
+    public function test_has_id () {
+
+        $test = new Test();
+        $this->assertFalse($test->has_id(), "models without an id should say they don't have an id");
+
+        $test = Test::fetch_one();
+        $this->assertTrue($test->has_id(), "models with an id should say they have an id");
     }
 }

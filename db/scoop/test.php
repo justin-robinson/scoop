@@ -13,6 +13,10 @@ namespace DB\Scoop;
  */
 class Test extends \DBCore\Scoop\Test {
 
+    public function validate () {
+        return true;
+    }
+
 }
 
 ?>
