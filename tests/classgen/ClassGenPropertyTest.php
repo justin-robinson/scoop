@@ -26,5 +26,13 @@ class ClassGenPropertyTest extends PHPUnit_Framework_TestCase {
         $property->set_const();
         $expected = ClassGenGenerator::$indentation . 'const NAME = \'value\';' . PHP_EOL;
         $this->assertEquals( $expected, $property->get_header(), "constants should be uppercased");
+
+        $property = new ClassGenProperty('name');
+        $property->set_value(['key' => 'value']);
+        $expected = ClassGenGenerator::$indentation . 'public $name = ' . PHP_EOL .
+            ClassGenGenerator::$indentation . ClassGenGenerator::$indentation . 'array (' . PHP_EOL .
+            ClassGenGenerator::$indentation . ClassGenGenerator::$indentation . "  'key' => 'value'," . PHP_EOL .
+            ClassGenGenerator::$indentation . ClassGenGenerator::$indentation . ");" . PHP_EOL;
+        $this->assertEquals($expected, $property->get_header(), "arrays should be formatted properly");
     }
 }
