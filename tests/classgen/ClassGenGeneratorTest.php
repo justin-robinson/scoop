@@ -40,6 +40,10 @@ class ClassGenGeneratorTest extends PHPUnit_Framework_TestCase {
         $property->set_static( true );
         $generator->add_property( $property );
 
+        $property = new ClassGenProperty( 'p5' );
+        $property->visibility = 'super private';
+        $generator->add_property( $property );
+
         $fileContents = $generator->get_file_contents();
 
         $expectedContents =
