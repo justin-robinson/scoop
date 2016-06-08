@@ -133,11 +133,11 @@ abstract class ClassGenAbstract {
     }
 
     /**
-     * @param bool $isAbstract
+     * @param bool $isConst
      */
-    public function set_const ( bool $isAbstract = true ) {
+    public function set_const ( bool $isConst = true ) {
 
-        $this->modifiers[self::MODIFIER_CONST] = $isAbstract;
+        $this->modifiers[self::MODIFIER_CONST] = $isConst;
     }
 
 }
