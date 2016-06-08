@@ -30,8 +30,8 @@ class ConnectionTest extends PHPUnit_Framework_TestCase {
         $this->assertInstanceOf(Connection::class, $connection);
 
         $dbConfig['password'] = 'wrong';
-        $this->expectException(Exception::class);
-        $connection = new Connection($dbConfig);
+        $this->expectException(\mysqli_sql_exception::class);
+        new Connection($dbConfig);
     }
 
     public function test_execute_select () {
