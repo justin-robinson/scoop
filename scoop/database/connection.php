@@ -66,7 +66,7 @@ class Connection {
 
         // die on error
         if ( $this->mysqli->connect_error ) {
-            die( 'Connect Error (' . $this->mysqli->connect_errno . ') '
+            throw new \Exception( 'Connect Error (' . $this->mysqli->connect_errno . ') '
                 . $this->mysqli->connect_error );
         }
 
