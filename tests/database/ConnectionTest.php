@@ -90,6 +90,12 @@ class ConnectionTest extends PHPUnit_Framework_TestCase {
         }
     }
 
+    public function test_execute_failure () {
+
+        $this->expectException(Exception::class);
+        \DB\Scoop\Test::query("select * from `scoop`.`tableDNE`");
+    }
+
     public function test_get_bind_type () {
 
         $this->assertEquals( 's', $this->connection->get_bind_type( null ), "null should be bound as a string");
