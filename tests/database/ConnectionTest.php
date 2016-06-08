@@ -7,10 +7,6 @@ use Scoop\Database\Connection;
  */
 class ConnectionTest extends PHPUnit_Framework_TestCase {
 
-    /**
-     * @covers Connection::__construct
-     * @throws Exception
-     */
     public function test_connect () {
 
         Connection::connect();
