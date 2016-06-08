@@ -173,12 +173,14 @@ abstract class Model extends Model\Generic {
 
     /**
      * Save this instance to the database
+     *
+     * @return bool
      */
-    public function save () {
+    public function save () : bool {
 
         // don't attempt to save if nothing has changed
         if ( $this->loadedFromDb && empty($this->get_dirty_columns()) ) {
-            return;
+            return false;
         }
 
         // validate if we can
@@ -218,6 +220,8 @@ abstract class Model extends Model\Generic {
 
             $this->loaded_from_database ();
         }
+
+        return true;
 
     }
 
