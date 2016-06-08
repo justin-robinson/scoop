@@ -64,6 +64,9 @@ class EnvironmentTest extends PHPUnit_Framework_TestCase {
         $clientIp = '22.22.22.22';
         $this->assertFalse(Environment::is_internal_ip($clientIp, $serverIp), "public and different client and server ips should be marked as external");
 
+        $clientIp = '1.1';
+        $this->assertFalse(Environment::is_internal_ip($clientIp, $serverIp), "client ip without 4 octets should be marked as external");
+
     }
 
     public function test_constant_is_defined_and_equals () {
