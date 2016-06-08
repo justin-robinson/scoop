@@ -2,6 +2,7 @@
 
 namespace Scoop\Database\Query;
 
+use Scoop\Database\Model\Generic;
 use Scoop\Database\Connection;
 
 /**
@@ -153,10 +154,10 @@ class Buffer {
             ";
 
         // do the insert
-        Connection::execute( $sql, $this->queryParams );
+        Generic::query( $sql, $this->queryParams );
 
         // update models with their autoincrement ids
-        $insertId = Connection::get_insert_id();
+        $insertId = Generic::$connection->get_insert_id();
         if ( $insertId ) {
             foreach ( $this->models as &$model ) {
                 $model->__set( $model::AUTO_INCREMENT_COLUMN, $insertId++ );

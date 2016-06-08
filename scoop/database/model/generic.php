@@ -2,6 +2,7 @@
 
 namespace Scoop\Database\Model;
 
+use Scoop\Config;
 use Scoop\Database\Connection;
 use Scoop\Database\Rows;
 
@@ -37,6 +38,11 @@ class Generic implements \JsonSerializable {
     protected $orignalDbValuesArray;
 
     /**
+     * @var Connection
+     */
+    public static $connection;
+
+    /**
      * Generic constructor.
      *
      * @param array $dataArray
@@ -47,6 +53,12 @@ class Generic implements \JsonSerializable {
 
     }
 
+    public static function connect () {
+
+        if ( is_null(self::$connection) ) {
+            self::$connection = new Connection(Config::get_db_config());
+        }
+    }
 
     /**
      * run a raw sql query
@@ -58,8 +70,10 @@ class Generic implements \JsonSerializable {
      * @throws \Exception
      */
     public static function query ( $sql, $queryParams = [ ] ) {
+        
+        self::connect();
 
-        $result = Connection::execute ( $sql, $queryParams );
+        $result = self::$connection->execute ( $sql, $queryParams );
 
         // format the data if it was a select
         if ( $result && !empty( $result->num_rows ) ) {
@@ -75,8 +89,8 @@ class Generic implements \JsonSerializable {
 
             }
 
-        } else if ( Connection::get_affected_rows () >= 1 ) {
-            $rows = Connection::get_affected_rows ();
+        } else if ( self::$connection->get_affected_rows () >= 1 ) {
+            $rows = self::$connection->get_affected_rows ();
         } else {
             $rows = false;
         }

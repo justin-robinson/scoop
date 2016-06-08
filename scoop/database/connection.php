@@ -25,27 +25,22 @@ class Connection {
     /**
      * @var int
      */
-    private static $affectedRows;
+    private $affectedRows;
 
     /**
      * @var string[]
      */
-    private static $sqlHistoryArray = [ ];
+    private $sqlHistoryArray = [ ];
 
     /**
      * @var bool
      */
-    private static $loggingEnabled = false;
-
-    /**
-     * @var Connection
-     */
-    private static $instance;
+    private $loggingEnabled = false;
 
     /**
      * @var int
      */
-    private static $insertId;
+    private $insertId;
 
     /**
      * @var \mysqli
@@ -57,7 +52,7 @@ class Connection {
      *
      * @param $config string[]
      */
-    protected function __construct ( $config ) {
+    public function __construct ( $config ) {
 
         mysqli_report ( MYSQLI_REPORT_STRICT );
 
@@ -68,12 +63,6 @@ class Connection {
             $config['password'],
             '',
             $config['port'] );
-
-        // die on error
-        if ( $this->mysqli->connect_error ) {
-            die( 'Connect Error (' . $this->mysqli->connect_errno . ') '
-                . $this->mysqli->connect_error );
-        }
 
         // we will manually commit our sql changes
         $this->mysqli->autocommit ( false );
@@ -86,7 +75,7 @@ class Connection {
      */
     public function __destruct () {
 
-        if ( isset( $this->mysqli ) ) {
+        if ( isset( $this->mysqli ) && !$this->mysqli->connect_error ) {
             $threadId = $this->mysqli->thread_id;
             $this->mysqli->kill ( $threadId );
             $this->mysqli->close ();
@@ -100,18 +89,16 @@ class Connection {
      * @return bool|\mysqli_result
      * @throws \Exception
      */
-    public static function execute ( $sql, $queryParams ) {
-
-        $self = self::get_instance ();
+    public function execute ( $sql, $queryParams ) {
 
         // log the query
-        static::log_sql ( $sql, $queryParams );
+        $this->log_sql ( $sql, $queryParams );
 
         // start sql transaction
-        $self->mysqli->begin_transaction ();
+        $this->mysqli->begin_transaction ();
 
         // use cache to get prepared statement
-        $statement = $self->get_statement_from_sql ( $sql );
+        $statement = $this->get_statement_from_sql ( $sql );
 
         // bind params
         if ( is_array ( $queryParams ) && !empty( $queryParams ) ) {
@@ -126,71 +113,30 @@ class Connection {
 
         // execute statement
         if ( !$statement->execute () ) {
-            $self->mysqli->rollback ();
+            $this->mysqli->rollback ();
             throw new \Exception(
                 'MySQL Error Number ( ' . $statement->errno . ' )' . $statement->error . PHP_EOL . $sql . PHP_EOL);
         }
 
         // commit this transaction
-        $self->mysqli->commit ();
+        $this->mysqli->commit ();
 
         // save info for latest query
-        static::$insertId = $statement->insert_id;
-        static::$affectedRows = $statement->affected_rows;
+        $this->insertId = $statement->insert_id;
+        $this->affectedRows = $statement->affected_rows;
 
         return $statement->get_result ();
 
     }
 
     /**
-     * @return Connection
-     */
-    public static function get_instance () {
-
-        if ( !static::is_connected () ) {
-            static::connect ();
-        }
-
-        return static::$instance;
-    }
-
-    /**
-     * Connects to db and initializes cache
-     * return @void
-     */
-    public static function connect () {
-
-        if ( !self::is_connected () ) {
-
-            $config = Config::get_db_config ();
-
-            // did we get the file?
-            if ( !$config ) {
-                throw new \Exception( 'failed to load db credentials' );
-            }
-
-            // create a new instance of this class to connect to our db
-            static::$instance = new static( $config );
-        }
-
-    }
-
-    /**
-     * @return bool
-     */
-    public static function is_connected () {
-
-        return is_a ( static::$instance, __CLASS__ );
-    }
-
-    /**
      * @param $sql string
      * @param $queryParams array
      */
-    public static function log_sql ( $sql, $queryParams ) {
+    public function log_sql ( $sql, $queryParams ) {
 
-        if ( static::get_logging_enabled () ) {
-            static::$sqlHistoryArray[] = [$sql, $queryParams];
+        if ( $this->get_logging_enabled () ) {
+            $this->sqlHistoryArray[] = [$sql, $queryParams];
         }
 
     }
@@ -198,17 +144,17 @@ class Connection {
     /**
      * @return bool
      */
-    public static function get_logging_enabled () {
+    public function get_logging_enabled () {
 
-        return self::$loggingEnabled;
+        return $this->loggingEnabled;
     }
 
     /**
      * @param bool $loggingEnabled
      */
-    public static function set_logging_enabled ( $loggingEnabled ) {
+    public function set_logging_enabled ( $loggingEnabled ) {
 
-        self::$loggingEnabled = $loggingEnabled;
+        $this->loggingEnabled = $loggingEnabled;
     }
 
     /**
@@ -274,25 +220,25 @@ class Connection {
     /**
      * @return int
      */
-    public static function get_affected_rows () {
+    public function get_affected_rows () {
 
-        return static::$affectedRows;
+        return $this->affectedRows;
     }
 
     /**
      * @return int|null
      */
-    public static function get_insert_id () {
+    public function get_insert_id () {
 
-        return static::$insertId;
+        return $this->insertId;
     }
 
     /**
      * @return array
      */
-    public static function get_sql_history () {
+    public function get_sql_history () {
 
-        return self::$sqlHistoryArray;
+        return $this->sqlHistoryArray;
     }
 
     /**
