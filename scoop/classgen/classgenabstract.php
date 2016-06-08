@@ -72,7 +72,9 @@ abstract class ClassGenAbstract {
      */
     public function get_visibility () : string {
 
-        return $this->visibilityStrings[$this->visibility];
+        return isset($this->visibilityStrings[$this->visibility])
+            ? $this->visibilityStrings[$this->visibility]
+            : '';
     }
 
     /**
