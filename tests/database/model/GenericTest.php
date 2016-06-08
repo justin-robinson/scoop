@@ -55,6 +55,19 @@ class GenericTest extends PHPUnit_Framework_TestCase {
         $this->generic->one = 1;
     }
 
+    public function test___toString () {
+
+        $expected = [
+            'id' => null,
+            'name' => 'something',
+            'dateTimeAdded' => '0'
+        ];
+
+        $test = new \DB\Scoop\Test($expected);
+
+        $this->assertEquals(var_export($expected, true), (string)$test, "generics should be castable to strings as an array of their data");
+    }
+
     public function test_get_column_names () {
 
         $expectedColumnNames = ['one', 'two'];
@@ -62,6 +75,15 @@ class GenericTest extends PHPUnit_Framework_TestCase {
         foreach ( $this->generic->get_column_names() as $i => $columnName ) {
             $this->assertEquals( $expectedColumnNames[$i], $columnName );
         }
+    }
+
+    public function test_is_loaded_from_db () {
+
+        $generic = new Generic();
+
+        $this->assertFalse($generic->is_loaded_from_database(), "created models should not be marked loaded from the database");
+
+        $this->assertTrue(\DB\Scoop\Test::fetch_one()->is_loaded_from_database(), "fetched models should be marked as loaded from the database");
     }
 
     public function test_populate () {
