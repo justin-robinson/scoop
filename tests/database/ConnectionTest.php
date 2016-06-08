@@ -34,6 +34,13 @@ class ConnectionTest extends PHPUnit_Framework_TestCase {
         new Connection($dbConfig);
     }
 
+    public function test___destruct () {
+
+        $connection = new Connection(\Scoop\Config::get_db_config());
+
+        unset($connection);
+    }
+
     public function test_execute_select () {
 
         $sql = "
