@@ -113,7 +113,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
 
         $classPath = Config::get_site_class_path_by_name($siteName);
 
-        $this->assertEquals(1, preg_match(self::REGEX_FILE_PATH, $classPath), "site classpath should be a valid file path");
+        $this->assertEquals(1, preg_match(self::REGEX_FILE_PATH, $classPath), "site classpath should be a valid file path => " . $classPath);
 
         $this->assertNotFalse(strpos($classPath, $siteName), "site classpath should contain the sitename");
     }
