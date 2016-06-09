@@ -75,38 +75,13 @@ class test {
 
         $generator = new ClassGenGenerator( $this->class, $filePath);
 
-        $this->delete_directory($dirname);
+        \Scoop\File::delete_directory($dirname);
 
         $generator->save();
 
         $this->assertFileExists($filePath, "saving a class generator should write to the file system");
 
-        $this->delete_directory($dirname);
-
-    }
-
-    private function delete_directory ( $dirname ) {
-
-            if (!file_exists( $dirname)) {
-                return true;
-            }
-
-            if (!is_dir( $dirname)) {
-                return unlink( $dirname);
-            }
-
-            foreach ( scandir( $dirname) as $item) {
-                if ($item == '.' || $item == '..') {
-                    continue;
-                }
-
-                if (!$this->delete_directory( $dirname . DIRECTORY_SEPARATOR . $item)) {
-                    return false;
-                }
-
-            }
-
-            return rmdir( $dirname);
+        \Scoop\File::delete_directory($dirname);
 
     }
 
