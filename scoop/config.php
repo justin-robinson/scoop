@@ -32,12 +32,12 @@ class Config {
         if ( self::option_exists ( 'server_document_root' ) ) {
             $siteClassPath = self::get_option ( 'server_document_root' );
         } else if ( self::option_exists ( 'site_name' ) ) {
-            $siteClassPath = self::get_sites_folder () . '/' . self::get_option ( 'site_name' );
+            $siteClassPath = self::get_sites_folder () . DIRECTORY_SEPARATOR . self::get_option ( 'site_name' );
         } else {
-            $siteClassPath = self::get_shared_class_path() . '/../';
+            $siteClassPath = self::get_shared_class_path() . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR;
         }
 
-        return $siteClassPath . '/' . self::get_option ( 'classpath_folder_name' );
+        return $siteClassPath . DIRECTORY_SEPARATOR . self::get_option ( 'classpath_folder_name' ) . DIRECTORY_SEPARATOR;
 
     }
 
@@ -46,7 +46,7 @@ class Config {
      *
      * @return bool
      */
-    public static function option_exists ( $name ) {
+    public static function option_exists ( $name ) : bool {
 
         return array_key_exists ( $name, self::$options );
     }
@@ -79,7 +79,9 @@ class Config {
         if ( self::option_exists ( 'shared_classpath_parent_directory' ) ) {
 
             return Path::make_absolute (
-                self::get_option ( 'shared_classpath_parent_directory' ) . self::get_option ( 'classpath_folder_name' ) );
+                self::get_option ( 'shared_classpath_parent_directory' ) .
+                self::get_option ( 'classpath_folder_name' )
+            ) . DIRECTORY_SEPARATOR;
         }
 
         return '';
@@ -91,10 +93,9 @@ class Config {
      */
     public static function get_db_config () : array {
 
-        $ScoopDB = require self::get_option ( 'install_dir' ) . '/configs/db.php';
+        $ScoopDB = require self::get_option ( 'install_dir' ) . DIRECTORY_SEPARATOR . 'configs' . DIRECTORY_SEPARATOR . 'db.php';
 
-        $siteDBConfigPath = self::get_site_class_path ()
-            . '/../' . self::get_option ( 'configpath_folder_name' ) . '/db.php';
+        $siteDBConfigPath = self::get_site_db_config_path();
 
         if ( file_exists ( $siteDBConfigPath ) ) {
             $siteDB = require $siteDBConfigPath;
@@ -109,9 +110,17 @@ class Config {
      *
      * @return string
      */
-    public static function get_site_class_path_by_name ( $siteName ) {
+    public static function get_site_class_path_by_name ( $siteName ) : string {
 
-        return self::get_sites_folder () . '/' . $siteName . '/' . self::get_option ( 'classpath_folder_name' );
+        return self::get_sites_folder () . DIRECTORY_SEPARATOR . $siteName . DIRECTORY_SEPARATOR . self::get_option ( 'classpath_folder_name' ) . DIRECTORY_SEPARATOR;
+    }
+
+    /**
+     * @return string
+     */
+    public static function get_site_db_config_path () : string {
+
+        return self::get_site_class_path () . '..' . DIRECTORY_SEPARATOR . self::get_option ( 'configpath_folder_name' ) . DIRECTORY_SEPARATOR . 'db.php';
     }
 
     /**
