@@ -13,7 +13,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
      * [\w -!@#%&<>\$\^\*\(\)\+\|\.]*   optional folder name with special characters allowed
      * [\/\\\]                          required trailing / or \ on folder name
      */
-    const REGEX_FILE_PATH = '/^([a-z]:)?[\/\\\\]([\w -!@#%&<>\$\^\*\(\)\+\|\.]*[\/\\\\])*$/i';
+    const REGEX_FILE_PATH = '/^([a-z]:)?[\/\\\\]([\w !@#%&<>\-\$\^\*\(\)\+\|\.]*[\/\\\\])*$/i';
 
     public function test_get_class_paths () {
 
