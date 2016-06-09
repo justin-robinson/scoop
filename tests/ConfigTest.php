@@ -107,6 +107,21 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
         Config::set_option('shared_classpath_parent_directory', $sharedClassPathParentDirectory);
     }
 
+    public function test_get_site_class_path () {
+
+        $siteName = 'jor.pw';
+
+        Config::set_option('site_name', 'jor.pw');
+
+        $classPath = Config::get_site_class_path();
+
+        $this->assertEquals(1, preg_match(self::REGEX_FILE_PATH, $classPath), "site classpath should be a valid file path => " . $classPath);
+
+        $this->assertNotFalse(strpos($classPath, $siteName), "site classpath should contain the sitename");
+
+        Config::unset_option('site_name');
+    }
+
     public function test_get_site_class_path_by_name () {
 
         $siteName = 'jor.pw';
