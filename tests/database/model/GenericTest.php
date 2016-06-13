@@ -32,6 +32,15 @@ class GenericTest extends PHPUnit_Framework_TestCase {
         $rows = Generic::query( "SELECT * FROM `scoop`.`test` LIMIT ?", [ $limit ] );
 
         $this->assertEquals( $limit, $rows->get_num_rows() );
+        
+        $dbConfig = \Scoop\Config::get_db_config();
+        $dbConfig['database'] = 'scoop';
+        $connection = new \Scoop\Database\Connection($dbConfig);
+
+        $rows = Generic::query( "SELECT * FROM test LIMIT ?", [ $limit ], $connection);
+
+        $this->assertEquals($limit, $rows->get_num_rows());
+
     }
 
     public function test___get () {
