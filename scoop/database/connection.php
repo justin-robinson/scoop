@@ -61,14 +61,8 @@ class Connection {
             $config['host'],
             $config['user'],
             $config['password'],
-            '',
+            $config['database'],
             $config['port'] );
-
-        // die on error
-//        if ( $this->mysqli->connect_error ) {
-//            throw new \Exception( 'Connect Error (' . $this->mysqli->connect_errno . ') '
-//                . $this->mysqli->connect_error );
-//        }
 
         // we will manually commit our sql changes
         $this->mysqli->autocommit ( false );
@@ -89,13 +83,13 @@ class Connection {
     }
 
     /**
-     * @param $sql
-     * @param $queryParams
+     * @param string $sql
+     * @param array  $queryParams
      *
      * @return bool|\mysqli_result
      * @throws \Exception
      */
-    public function execute ( $sql, $queryParams ) {
+    public function execute ( string $sql, $queryParams = [] ) {
 
         // log the query
         $this->log_sql ( $sql, $queryParams );
