@@ -29,9 +29,16 @@ class ConnectionTest extends PHPUnit_Framework_TestCase {
 
         $this->assertInstanceOf(Connection::class, $connection);
 
+        $dbConfig['database'] = 'scoop';
+        $connection = new Connection($dbConfig);
+        $result = $connection->execute('select * from test limit 1');
+        $this->assertEquals(1, $result->num_rows, 'specifying a database for a connection should work');
+        unset($connection);
+
         $dbConfig['password'] = 'wrong';
         $this->expectException(\mysqli_sql_exception::class);
         new Connection($dbConfig);
+
     }
 
     public function test___destruct () {
