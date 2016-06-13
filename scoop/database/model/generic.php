@@ -63,17 +63,21 @@ class Generic implements \JsonSerializable {
     /**
      * run a raw sql query
      *
-     * @param       $sql
-     * @param array $queryParams
+     * @param string     $sql
+     * @param array      $queryParams
+     * @param Connection $connection
      *
      * @return bool|int|Rows
      * @throws \Exception
      */
-    public static function query ( $sql, $queryParams = [ ] ) {
-        
-        self::connect();
+    public static function query ( $sql, $queryParams = [ ], Connection $connection = null ) {
 
-        $result = self::$connection->execute ( $sql, $queryParams );
+        if ( $connection === null ) {
+            self::connect();
+            $connection = self::$connection;
+        }
+
+        $result = $connection->execute ( $sql, $queryParams );
 
         // format the data if it was a select
         if ( $result && !empty( $result->num_rows ) ) {
@@ -89,8 +93,8 @@ class Generic implements \JsonSerializable {
 
             }
 
-        } else if ( self::$connection->get_affected_rows () >= 1 ) {
-            $rows = self::$connection->get_affected_rows ();
+        } else if ( $connection->get_affected_rows () >= 1 ) {
+            $rows = $connection->get_affected_rows ();
         } else {
             $rows = false;
         }

@@ -61,7 +61,7 @@ class Connection {
             $config['host'],
             $config['user'],
             $config['password'],
-            '',
+            $config['database'],
             $config['port'] );
 
         // we will manually commit our sql changes
@@ -83,13 +83,13 @@ class Connection {
     }
 
     /**
-     * @param $sql
-     * @param $queryParams
+     * @param string $sql
+     * @param array  $queryParams
      *
      * @return bool|\mysqli_result
      * @throws \Exception
      */
-    public function execute ( $sql, $queryParams ) {
+    public function execute ( $sql, $queryParams = []) {
 
         // log the query
         $this->log_sql ( $sql, $queryParams );
