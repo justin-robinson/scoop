@@ -70,7 +70,7 @@ class Generic implements \JsonSerializable {
      * @return bool|int|Rows
      * @throws \Exception
      */
-    public static function query ( $sql, $queryParams = [ ], Connection $connection = null ) {
+    public static function query ( $sql, $queryParams = [], Connection $connection = null ) {
 
         if ( $connection === null ) {
             self::connect();

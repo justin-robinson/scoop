@@ -89,7 +89,7 @@ class Connection {
      * @return bool|\mysqli_result
      * @throws \Exception
      */
-    public function execute ( $sql, $queryParams = []) {
+    public function execute ( $sql, $queryParams = [] ) {
 
         // log the query
         $this->log_sql ( $sql, $queryParams );
