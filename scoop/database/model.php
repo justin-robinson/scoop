@@ -282,6 +282,20 @@ abstract class Model extends Model\Generic {
     }
 
     /**
+     * Reloads model from the database
+     */
+    public function reload () {
+
+        // don't reload something that wasn't loaded from the database
+        if ( !$this->loadedFromDb ) {
+            return;
+        }
+
+        // repopulate with fetched data
+        $this->populate(static::fetch_by_id($this->__get(static::AUTO_INCREMENT_COLUMN))->to_array());
+    }
+
+    /**
      * @return array
      */
     public function get_sql_insert_values () {
