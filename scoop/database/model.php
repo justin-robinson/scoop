@@ -284,10 +284,10 @@ abstract class Model extends Model\Generic {
 
     /**
      * Reloads model from the database
-     * 
+     *
      * @return bool
      */
-    public function reload () {
+    public function reload () : bool {
 
         // don't reload something that wasn't loaded from the database
         if ( !$this->loadedFromDb ) {
