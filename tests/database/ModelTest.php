@@ -146,6 +146,19 @@ class ModelTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals( $dataArray['name'], $test->name );
         $this->assertEquals( $dataArray['dateTimeAdded'], $test->dateTimeAdded );
     }
+
+    public function test_reload () {
+
+        $test = new Test(['name' => 'inserted from phpunit']);
+        $test->save();
+
+        $this->assertEquals(null, $test->dateTimeAdded);
+
+        $test->reload();
+        $this->assertNotEquals(null, $test->dateTimeAdded);
+
+        $test->delete();
+    }
     
     public function test_fetch_has_many () {
         
