@@ -152,12 +152,17 @@ class ModelTest extends PHPUnit_Framework_TestCase {
     public function test_reload () {
 
         $test = new Test(['name' => 'inserted from phpunit']);
+
+        $this->assertFalse($test->reload(), 'reloading a new model should return false');
         $test->save();
 
-        $this->assertEquals(null, $test->dateTimeAdded);
+        $this->assertNull($test->dateTimeAdded);
 
-        $test->reload();
-        $this->assertNotEquals(null, $test->dateTimeAdded);
+        $this->assertTrue($test->reload());
+        $this->assertNotNull($test->dateTimeAdded);
+
+        $test->id = -1;
+        $this->assertFalse($test->reload());
 
         $test->delete();
     }
