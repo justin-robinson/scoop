@@ -321,11 +321,9 @@ abstract class Model extends Model\Generic {
             }
         }
 
-        if ( !$this->loaded_from_database() ) {
-            // don't insert auto increment columns
-            if ( array_key_exists(static::AUTO_INCREMENT_COLUMN, $columns) ) {
-                unset($columns[static::AUTO_INCREMENT_COLUMN]);
-            }
+        // don't insert auto increment column for new models
+        if ( !$this->is_loaded_from_database() && array_key_exists(static::AUTO_INCREMENT_COLUMN, $columns)) {
+            unset($columns[static::AUTO_INCREMENT_COLUMN]);
         }
 
         $columnNames = '';
