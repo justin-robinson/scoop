@@ -211,6 +211,7 @@ class ScoopRun {
                     $this->primaryKeys = [ ];
                     $this->nonNullColumns = [ ];
                     $this->dBColumnsArray = [ ];
+                    $this->dbValuesArray = [ ];
 
                 }
 
@@ -225,7 +226,11 @@ class ScoopRun {
 
                 if ( $row->IS_NULLABLE === 'NO' ) {
                     $this->nonNullColumns[] = $row->COLUMN_NAME;
+                    $this->dbValuesArray[$row->COLUMN_NAME] = $row->COLUMN_DEFAULT;
+                } else {
+                    $this->dbValuesArray[$row->COLUMN_NAME] = null;
                 }
+
 
                 // parse extra column properties into array
                 $extras = explode ( ',', $row->EXTRA );
@@ -402,7 +407,7 @@ class ScoopRun {
         $columnProperties = new \Scoop\ClassGen\ClassGenProperty( 'dBColumnPropertiesArray', $this->dBColumnsArray );
         $columnProperties->isStatic = true;
 
-        $columnValues = new \Scoop\ClassGen\ClassGenProperty( 'dBValuesArray', array_fill_keys ( array_keys ( $this->dBColumnsArray ), null ) );
+        $columnValues = new \Scoop\ClassGen\ClassGenProperty( 'dBValuesArray', $this->dbValuesArray );
         $columnValues->set_protected ();
 
         $this->coreGenerator->add_property ( $AIProperty );
