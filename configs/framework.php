@@ -10,7 +10,7 @@ $ScoopConfig = [
      * Can be relative to Scoop install directory
      * \Scoop\Config::get_option('install_dir') or an absolute path
      */
-    'shared_classpath_parent_directory' => '../../../scoop/',
+    'shared_classpath_parent_directory' => '../../scoop/',
     'classpath_folder_name'             => 'classes',
     'configpath_folder_name'            => 'configs',
     'sites_folder'                      => '../',

@@ -406,14 +406,14 @@ class ScoopRun {
         $columnProperties = new \Scoop\ClassGen\ClassGenProperty( 'dBColumnPropertiesArray', $this->dBColumnsArray );
         $columnProperties->isStatic = true;
 
-        $columnValues = new \Scoop\ClassGen\ClassGenProperty( 'dBValuesArray', $this->dbValuesArray );
-        $columnValues->set_protected ();
+        $defaultColumnValues = new \Scoop\ClassGen\ClassGenProperty( 'dBColumnDefaultValuesArray', $this->dbValuesArray );
+        $defaultColumnValues->set_static();
 
         $this->coreGenerator->add_property ( $AIProperty );
         $this->coreGenerator->add_property ( $this->primaryKeys );
         $this->coreGenerator->add_property ( $this->nonNullColumns );
         $this->coreGenerator->add_property ( $columnProperties );
-        $this->coreGenerator->add_property ( $columnValues );
+        $this->coreGenerator->add_property ( $defaultColumnValues );
 
         // save file if we have one
         if ( isset( $this->coreGenerator ) ) {

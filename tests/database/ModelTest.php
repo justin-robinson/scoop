@@ -156,7 +156,7 @@ class ModelTest extends PHPUnit_Framework_TestCase {
         $this->assertFalse($test->reload(), 'reloading a new model should return false');
         $test->save();
 
-        $this->assertNull($test->dateTimeAdded);
+        $this->assertEquals(Test::$dBColumnDefaultValuesArray['dateTimeAdded'], $test->dateTimeAdded);
 
         $this->assertTrue($test->reload());
         $this->assertNotNull($test->dateTimeAdded);
