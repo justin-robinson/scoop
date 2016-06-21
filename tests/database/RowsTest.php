@@ -44,7 +44,7 @@ class RowsTest extends PHPUnit_Framework_TestCase {
     array (
       'id' => NULL,
       'name' => 0,
-      'dateTimeAdded' => NULL,
+      'dateTimeAdded' => 'CURRENT_TIMESTAMP',
     ),
      'loadedFromDb' => false,
      'orignalDbValuesArray' => NULL,
@@ -55,7 +55,7 @@ class RowsTest extends PHPUnit_Framework_TestCase {
     array (
       'id' => NULL,
       'name' => 1,
-      'dateTimeAdded' => NULL,
+      'dateTimeAdded' => 'CURRENT_TIMESTAMP',
     ),
      'loadedFromDb' => false,
      'orignalDbValuesArray' => NULL,
@@ -66,7 +66,7 @@ class RowsTest extends PHPUnit_Framework_TestCase {
     array (
       'id' => NULL,
       'name' => 2,
-      'dateTimeAdded' => NULL,
+      'dateTimeAdded' => 'CURRENT_TIMESTAMP',
     ),
      'loadedFromDb' => false,
      'orignalDbValuesArray' => NULL,
@@ -77,7 +77,7 @@ class RowsTest extends PHPUnit_Framework_TestCase {
     array (
       'id' => NULL,
       'name' => 3,
-      'dateTimeAdded' => NULL,
+      'dateTimeAdded' => 'CURRENT_TIMESTAMP',
     ),
      'loadedFromDb' => false,
      'orignalDbValuesArray' => NULL,
@@ -88,7 +88,7 @@ class RowsTest extends PHPUnit_Framework_TestCase {
     array (
       'id' => NULL,
       'name' => 4,
-      'dateTimeAdded' => NULL,
+      'dateTimeAdded' => 'CURRENT_TIMESTAMP',
     ),
      'loadedFromDb' => false,
      'orignalDbValuesArray' => NULL,
@@ -99,7 +99,7 @@ class RowsTest extends PHPUnit_Framework_TestCase {
     array (
       'id' => NULL,
       'name' => 5,
-      'dateTimeAdded' => NULL,
+      'dateTimeAdded' => 'CURRENT_TIMESTAMP',
     ),
      'loadedFromDb' => false,
      'orignalDbValuesArray' => NULL,
@@ -110,7 +110,7 @@ class RowsTest extends PHPUnit_Framework_TestCase {
     array (
       'id' => NULL,
       'name' => 6,
-      'dateTimeAdded' => NULL,
+      'dateTimeAdded' => 'CURRENT_TIMESTAMP',
     ),
      'loadedFromDb' => false,
      'orignalDbValuesArray' => NULL,
@@ -121,7 +121,7 @@ class RowsTest extends PHPUnit_Framework_TestCase {
     array (
       'id' => NULL,
       'name' => 7,
-      'dateTimeAdded' => NULL,
+      'dateTimeAdded' => 'CURRENT_TIMESTAMP',
     ),
      'loadedFromDb' => false,
      'orignalDbValuesArray' => NULL,
@@ -132,7 +132,7 @@ class RowsTest extends PHPUnit_Framework_TestCase {
     array (
       'id' => NULL,
       'name' => 8,
-      'dateTimeAdded' => NULL,
+      'dateTimeAdded' => 'CURRENT_TIMESTAMP',
     ),
      'loadedFromDb' => false,
      'orignalDbValuesArray' => NULL,
@@ -143,7 +143,7 @@ class RowsTest extends PHPUnit_Framework_TestCase {
     array (
       'id' => NULL,
       'name' => 9,
-      'dateTimeAdded' => NULL,
+      'dateTimeAdded' => 'CURRENT_TIMESTAMP',
     ),
      'loadedFromDb' => false,
      'orignalDbValuesArray' => NULL,
@@ -154,7 +154,7 @@ class RowsTest extends PHPUnit_Framework_TestCase {
     array (
       'id' => NULL,
       'name' => 10,
-      'dateTimeAdded' => NULL,
+      'dateTimeAdded' => 'CURRENT_TIMESTAMP',
     ),
      'loadedFromDb' => false,
      'orignalDbValuesArray' => NULL,

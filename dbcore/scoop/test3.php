@@ -8,7 +8,7 @@ use Scoop\Database\Model;
  * Class Test3
  * @package DBCore\Scoop
  * @author jrobinson (robotically)
- * @date 2016/05/18
+ * @date 2016/06/21
  * @property mixed $id
  * @property mixed $name
  * @property mixed $dateTimeAdded
@@ -45,12 +45,11 @@ class Test3 extends Model {
           array (
           ),
         );
-
-    protected $dBValuesArray = 
+    public static $dBColumnDefaultValuesArray = 
         array (
           'id' => NULL,
           'name' => NULL,
-          'dateTimeAdded' => NULL,
+          'dateTimeAdded' => 'CURRENT_TIMESTAMP',
         );
 
 }
