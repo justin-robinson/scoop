@@ -143,7 +143,7 @@ class Buffer {
      */
     public function flush () {
 
-        $this->events->trigger('flush');
+        $this->events->trigger('flush', $this);
 
         if( $this->size === 0 ) {
             return false;

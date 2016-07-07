@@ -96,7 +96,7 @@ class BufferTest extends PHPUnit_Framework_TestCase {
             ]
         );
 
-        $onFlush = function () use ( $test ) {
+        $onFlush = function ($buffer) use ( $test ) {
             $test->dummy = 1;
         };
 

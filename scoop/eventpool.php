@@ -30,15 +30,16 @@ class EventPool {
     }
 
     /**
-     * @param $name
+     * @param       $name
+     * @param array ...$args
      */
-    public function trigger ($name) {
+    public function trigger ($name, ...$args) {
         if ( empty($this->events[$name]) ) {
             return;
         }
 
         foreach ( $this->events[$name] as $callback ) {
-            $callback();
+            $callback(...$args);
         }
     }
 
