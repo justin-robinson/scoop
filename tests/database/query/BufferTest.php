@@ -87,6 +87,30 @@ class BufferTest extends PHPUnit_Framework_TestCase {
         $this->assertFalse($buffer->flush(), "flushing a zero sized buffer should fail");
     }
 
+    public function test_on_flush_event () {
+
+        $test = new Test(
+            [
+                'name' => 'inserted from phpunit',
+                'dateTimeAdded' => new \Scoop\Database\Literal('NOW()'),
+            ]
+        );
+
+        $onFlush = function () use ( $test ) {
+            $test->dummy = 1;
+        };
+
+        $this->buffer->on_flush($onFlush);
+
+        $this->buffer->insert($test);
+
+        $this->buffer->flush();
+
+        $this->assertEquals(1, $test->dummy, "on flush callback should be called");
+
+        $test->delete();
+    }
+
     public function test_set_insert_ignore () {
 
         $this->buffer->set_insert_ignore(true);
