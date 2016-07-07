@@ -188,6 +188,14 @@ class Buffer {
     }
 
     /**
+     * @return \Scoop\Database\Model[]
+     */
+    public function get_models () {
+
+        return $this->models;
+    }
+
+    /**
      * @param callable $callback
      */
     public function on_flush( callable $callback ) {
