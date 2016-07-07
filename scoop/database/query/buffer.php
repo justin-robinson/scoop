@@ -3,7 +3,6 @@
 namespace Scoop\Database\Query;
 
 use Scoop\Database\Model\Generic;
-use Scoop\Database\Connection;
 use Scoop\EventPool;
 
 /**
@@ -17,6 +16,9 @@ class Buffer {
      */
     private $columnNames;
 
+    /**
+     * @var EventPool
+     */
     private $events;
 
     /**
