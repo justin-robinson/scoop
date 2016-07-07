@@ -2,8 +2,8 @@
 
 namespace Scoop\Database\Query;
 
-use Scoop\Database\Connection;
 use Scoop\Database\Model\Generic;
+use Scoop\EventPool;
 
 /**
  * Class Buffer
@@ -15,6 +15,11 @@ class Buffer {
      * @var
      */
     private $columnNames;
+
+    /**
+     * @var EventPool
+     */
+    private $events;
 
     /**
      * @var bool
@@ -66,6 +71,8 @@ class Buffer {
      */
     public function __construct ( int $maxSize, string $modelClass ) {
 
+        $this->events = new EventPool();
+
         $model = new $modelClass();
 
         if( !is_a( $model, \Scoop\Database\Model::class ) ) {
@@ -105,6 +112,7 @@ class Buffer {
             return false;
         }
 
+
         list($_, $values, $queryParams, $_) = $model->get_sql_insert_values();
 
         // add query params
@@ -134,6 +142,8 @@ class Buffer {
      * @throws \Exception
      */
     public function flush () {
+
+        $this->events->trigger('flush');
 
         if( $this->size === 0 ) {
             return false;
@@ -177,6 +187,17 @@ class Buffer {
         return $this->insertIgnore;
     }
 
+    /**
+     * @param callable $callback
+     */
+    public function on_flush( callable $callback ) {
+
+        $this->events->on('flush', $callback);
+    }
+
+    /**
+     * @param bool $insertIgnore
+     */
     public function set_insert_ignore ( bool $insertIgnore = true ) {
 
         $this->insertIgnore = $insertIgnore;
