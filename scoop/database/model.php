@@ -85,6 +85,17 @@ abstract class Model extends Model\Generic {
     }
 
     /**
+     * @param int $limit
+     * @param int $offset
+     *
+     * @return bool|int|Rows
+     */
+    public static function fetch_all( int $limit = 1000, int $offset = 0 ) {
+
+        return static::fetch($limit, $offset);
+    }
+
+    /**
      * @param $ID
      *
      * @return bool|Model
