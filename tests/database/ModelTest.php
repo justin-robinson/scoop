@@ -8,6 +8,22 @@ use Scoop\Database\Model;
  */
 class ModelTest extends PHPUnit_Framework_TestCase {
 
+    public function test_fetch_all () {
+
+        $numRowsInDB = (Model\Generic::query('select count(*) as count from scoop.test'))->first()->count;
+        $numRowsFetched = 0;
+
+        $limit = 1000;
+        $offset = 0;
+
+        while ( $tests = Test::fetch_all($limit, $offset) ) {
+            $numRowsFetched += $tests->get_num_rows();
+            $offset += $limit;
+        }
+
+        $this->assertEquals($numRowsInDB, $numRowsFetched, "fetch_all should fetch all rows");
+    }
+
     public function test_fetch_one () {
 
         $test = Test::fetch_one();
@@ -165,11 +181,6 @@ class ModelTest extends PHPUnit_Framework_TestCase {
         $this->assertFalse($test->reload());
 
         $test->delete();
-    }
-    
-    public function test_fetch_has_many () {
-        
-        
     }
 
     public function test_has_id () {
