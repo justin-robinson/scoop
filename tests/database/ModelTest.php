@@ -10,7 +10,8 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 
     public function test_fetch_all () {
 
-        $numRowsInDB = (Model\Generic::query('select count(*) as count from scoop.test'))->first()->count;
+        $countQuery = Model\Generic::query('select count(*) as count from scoop.test');
+        $numRowsInDB = $countQuery->first()->count;
         $numRowsFetched = 0;
 
         $limit = 1000;
