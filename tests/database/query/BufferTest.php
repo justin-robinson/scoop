@@ -23,7 +23,7 @@ class BufferTest extends PHPUnit_Framework_TestCase {
      */
     private $testModels;
 
-    public function __construct () {
+    public function setUp () {
 
         $this->buffer = new Buffer($this->maxSize, Test::class);
 
@@ -46,6 +46,17 @@ class BufferTest extends PHPUnit_Framework_TestCase {
         $buffer = new Buffer($this->maxSize, Test::class);
 
         $this->assertInstanceOf(Buffer::class, $buffer);
+    }
+
+    public function test_get_models () {
+
+        $this->buffer->insert(new Test());
+
+        $models = $this->buffer->get_models();
+
+        $this->assertTrue(is_array($models), "get_models should return an array");
+
+        $this->assertInstanceOf(Test::class, current($models), "buffer models should only contain the Test class");
     }
 
     public function test_insert () {
