@@ -2,6 +2,7 @@
 
 namespace Scoop\Database\Query;
 
+use Scoop\Database\Model;
 use Scoop\Database\Model\Generic;
 use Scoop\EventPool;
 
@@ -104,7 +105,7 @@ class Buffer {
      *
      * @return bool
      */
-    public function insert ( \Scoop\Database\Model &$model ) {
+    public function insert ( Model $model ) {
 
         // don't insert if the maxSize is less than 1
         // don't insert something that isn't the model we are expecting
