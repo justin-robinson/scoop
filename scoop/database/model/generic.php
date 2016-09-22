@@ -71,12 +71,11 @@ class Generic implements \JsonSerializable {
     /**
      * run a raw sql query
      *
-     * @param string      $sql
-     * @param array       $queryParams
-     * @params Connection $connection
+     * @param string          $sql
+     * @param array           $queryParams
+     * @param Connection|null $connection
      *
      * @return bool|int|Rows
-     * @throws \Exception
      */
     public static function query ( string $sql, $queryParams = [], Connection $connection = null ) {
 
