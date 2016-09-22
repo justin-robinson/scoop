@@ -312,7 +312,7 @@ class ScoopRun {
 
         $starttime = microtime ( true );
         $startmem = memory_get_usage ();
-        $rows = \DB\JorPw\Test::fetch ();
+        $rows = \DB\Scoop\Test::fetch_all();
         $fetchMemIncrease = memory_get_usage () - $startmem;
         $fetchTime = microtime ( true ) - $starttime;
         echo "fetch: $fetchMemIncrease bytes $fetchTime seconds" . PHP_EOL;
