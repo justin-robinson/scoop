@@ -37,17 +37,17 @@ class ClassGenGenerator {
     /**
      * @var array ClassGenProperty[]
      */
+    public $publicPropertiesArray = [ ];
+
+    /**
+     * @var array ClassGenProperty[]
+     */
     public $privatePropertiesArray = [ ];
 
     /**
      * @var array ClassGenProperty[]
      */
     public $protectedPropertiesArray = [ ];
-
-    /**
-     * @var array ClassGenProperty[]
-     */
-    public $publicPropertiesArray = [ ];
 
     /**
      * @var array ClassGenProperty[]
@@ -92,6 +92,11 @@ class ClassGenGenerator {
                     break;
             }
         }
+    }
+
+    public function add_function ( ClassGenFunction $function ) {
+
+        $this->functionsArray[] = $function;
     }
 
     /**
@@ -152,6 +157,14 @@ class ClassGenGenerator {
             $classBody .= PHP_EOL;
         }
         $classBody = PHP_EOL . $classBody;
+
+        foreach ( $this->functionsArray as $function ) {
+            $functionBody = $function->get();
+            $functionBody = self::$indentation . preg_replace('/\n/', PHP_EOL . self::$indentation, $functionBody);
+
+            $classBody .= $functionBody . PHP_EOL . PHP_EOL;
+        }
+
         return $this->class->get_header() . $classBody . $this->class->get_footer ();
     }
 
