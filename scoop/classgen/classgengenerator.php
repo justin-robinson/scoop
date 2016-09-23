@@ -169,7 +169,7 @@ class ClassGenGenerator {
     }
 
     /**
-     * @throws \Exception
+     * @return int
      */
     public function save () {
 
