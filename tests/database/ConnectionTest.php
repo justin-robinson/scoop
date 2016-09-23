@@ -101,7 +101,9 @@ class ConnectionTest extends PHPUnit_Framework_TestCase {
 
         $test = \DB\Scoop\Test::fetch_one();
 
-        $this->expectException(Exception::class);
+        $this->expectException(\Scoop\Exception\Database\Mysql::class);
+        $this->expectExceptionCode(1062);
+        $this->expectExceptionMessageRegExp("/.*Duplicate entry '\d*' for key '\w*'.*/i");
         \DB\Scoop\Test::query(
             "INSERT INTO
               scoop.test

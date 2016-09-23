@@ -4,6 +4,7 @@ namespace Scoop\Database;
 
 use Scoop\Config;
 use Scoop\Database\Cache\Statement;
+use Scoop\Exception\Database\Mysql;
 
 /**
  * Singleton instance mysqli wrapper
@@ -87,7 +88,7 @@ class Connection {
      * @param array  $queryParams
      *
      * @return bool|\mysqli_result
-     * @throws \Exception
+     * @throws Mysql
      */
     public function execute ( $sql, $queryParams = [] ) {
 
@@ -114,8 +115,7 @@ class Connection {
         // execute statement
         if ( !$statement->execute () ) {
             $this->mysqli->rollback ();
-            throw new \Exception(
-                'MySQL Error Number ( ' . $statement->errno . ' )' . $statement->error . PHP_EOL . $sql . PHP_EOL);
+            throw new Mysql($statement->error, $statement->errno, null, $sql);
         }
 
         // commit this transaction
