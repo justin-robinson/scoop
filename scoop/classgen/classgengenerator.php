@@ -186,6 +186,8 @@ class ClassGenGenerator {
     }
 
     /**
+     * @return int
+     *
      * @throws \Exception
      */
     public function save () {
@@ -194,9 +196,12 @@ class ClassGenGenerator {
         $this->create_path ();
 
         // save file and set permissions
-        if ( file_put_contents ( $this->filepath, $this->get_file_contents() ) ) {
+        $saved = file_put_contents ( $this->filepath, $this->get_file_contents() );
+        if ( $saved ) {
             chmod ( $this->filepath, 0777 );
         }
+
+        return $saved;
 
     }
 
