@@ -45,6 +45,9 @@ class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
         return $this->get(0);
     }
 
+    /**
+     * @return null|Generic
+     */
     public function last () {
 
         end($this->rowsStorageArray);
