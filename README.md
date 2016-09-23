@@ -14,10 +14,7 @@
 * One installation can manage and segregate multiple code bases and db connections
 * All configs are in php ( configs/db.php is the only one you'll need to touch )
 * DB file generation just works ( bin/scoop --action generate_db_model )
-* You can override any class or config option on a global or per site basis
-
-PS. do a `composer install` for some colorized output on db model generation
-
+* You can override any class or config option on a global or per site basis\
 
 [Wiki][1]
 
