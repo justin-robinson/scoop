@@ -9,6 +9,20 @@ namespace Scoop;
 class File {
 
     /**
+     * @param $path
+     * @return bool
+     */
+    public static function create_path ($path) : bool {
+
+        // create directory if it doesn't exist
+        if ( !( $created = file_exists ( $path ) ) ) {
+            $created = mkdir ( $path, 0777, true );
+        }
+
+        return $created;
+    }
+
+    /**
      * @param $dirname
      *
      * @return bool

@@ -7,6 +7,15 @@ use Scoop\File;
  */
 class FileTest extends PHPUnit_Framework_TestCase {
 
+    public function test_create_path () {
+
+        $path = getcwd() . DIRECTORY_SEPARATOR . microtime();
+
+        $this->assertTrue(File::create_path($path));
+
+        File::delete_directory($path);
+    }
+
     public function test_delete_directory () {
 
         $fileName = getcwd() . DIRECTORY_SEPARATOR . microtime();
