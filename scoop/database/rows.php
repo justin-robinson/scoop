@@ -40,9 +40,16 @@ class Rows implements \Iterator, \ArrayAccess, \JsonSerializable {
     /**
      * @return Generic
      */
-    public function first () : Generic {
+    public function first () {
 
         return $this->get(0);
+    }
+
+    public function last () {
+
+        end($this->rowsStorageArray);
+
+        return $this->get(key($this->rowsStorageArray));
     }
 
     /**
