@@ -170,6 +170,8 @@ class ClassGenGenerator {
 
     /**
      * @return int
+     *
+     * @throws \Exception
      */
     public function save () {
 
