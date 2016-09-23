@@ -44,7 +44,7 @@ class ClassGenFunction extends ClassGenAbstract {
                 throw new \Exception("Function can't be final and abstract");
             }
 
-            if ($this->get_visibility() === self::VISIBILITY_PRIVATE) {
+            if ($this->get_visibility() === 'private') {
                 throw new \Exception("Function can't be private and abstract");
             }
 
