@@ -94,6 +94,11 @@ class ClassGenGenerator {
         }
     }
 
+    public function add_function ( ClassGenFunction $function ) {
+
+        $this->functionsArray[] = $function;
+    }
+
     /**
      * @return string
      * @throws \Exception
@@ -168,6 +173,13 @@ class ClassGenGenerator {
         }
 
         $classBody = PHP_EOL . $classBody;
+
+        foreach ( $this->functionsArray as $function ) {
+            $functionBody = $function->get();
+            $functionBody = self::$indentation . preg_replace('/\n/', PHP_EOL . self::$indentation, $functionBody);
+
+            $classBody .= $functionBody . PHP_EOL . PHP_EOL;
+        }
 
         return $this->class->get_header() . $classBody . $this->class->get_footer ();
 

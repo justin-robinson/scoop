@@ -11,7 +11,7 @@ class ClassGenGeneratorTest extends PHPUnit_Framework_TestCase {
 
     private $class;
 
-    public function __construct () {
+    public function setUp () {
 
         $this->class = new ClassGenClass('test');
     }
@@ -66,6 +66,42 @@ class test {
 ?>';
 
         $this->assertEquals( $expectedContents, $fileContents, "class properties should be included and sorted correctly" );
+    }
+
+    public function test_add_function () {
+
+
+        $generator = new ClassGenGenerator( $this->class, '/tmp/testClass.php' );
+
+        $property = new ClassGenProperty( 'p1' );
+        $property->set_public();
+        $generator->add_property( $property );
+
+        $function = new \Scoop\ClassGen\ClassGenFunction('testFunction', '', '$one = 1;');
+        $generator->add_function($function);
+
+        $function = new \Scoop\ClassGen\ClassGenFunction('testFunction2', '', '$two = 2;');
+        $generator->add_function($function);
+
+        $expected = '<?php
+
+class test {
+
+    public $p1 = NULL;
+
+    public function testFunction () {
+        $one = 1;
+    }
+
+    public function testFunction2 () {
+        $two = 2;
+    }
+
+}
+
+?>';
+
+        $this->assertEquals($expected, $generator->get_file_contents());
     }
 
     public function test_save () {
