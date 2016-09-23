@@ -23,7 +23,7 @@ class RowsTest extends PHPUnit_Framework_TestCase {
      */
     private $lastIndex = 10;
 
-    public function __construct () {
+    public function setUp () {
 
         foreach ( range(0,$this->lastIndex) as $i ) {
             $this->rowData[$i] = new Test(['name' => $i]);
@@ -176,6 +176,11 @@ class RowsTest extends PHPUnit_Framework_TestCase {
     public function test_first() {
 
         $this->assertEquals( 0, $this->rows->first()->name, "first should return the first row added" );
+    }
+
+    public function test_last() {
+
+        $this->assertEquals( $this->lastIndex, $this->rows->last()->name, "last should return the last row added");
     }
 
     public function test_get() {
