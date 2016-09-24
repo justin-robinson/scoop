@@ -82,4 +82,16 @@ public function testFunction ($one = 1, $two = 2) {
 
         $this->assertEquals($expected, $this->function->get());
     }
+
+    public function test_static_function () {
+
+        $this->function->set_static();
+
+        $expected =
+            'static public function testFunction ($one = 1, $two = 2) {
+    echo $one + $two;
+}';
+
+        $this->assertEquals($expected, $this->function->get());
+    }
 }

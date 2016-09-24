@@ -24,9 +24,9 @@ class ClassGenFunction extends ClassGenAbstract {
     public $body;
 
     /**
-     * @var
+     * @var bool
      */
-    public $isStatic;
+    private $isStatic;
 
     /**
      * @var string
@@ -59,10 +59,25 @@ class ClassGenFunction extends ClassGenAbstract {
     }
 
     /**
+     * @param $isStatic bool
+     */
+    public function set_static ( $isStatic = true ) {
+
+        $this->isStatic = (bool)$isStatic;
+    }
+
+    /**
      * @return string
      */
     public function get_phpdoc() {
         return $this->phpdoc;
+    }
+
+    /**
+     * @return bool
+     */
+    public function is_static() {
+        return $this->isStatic;
     }
 
     /**
@@ -90,6 +105,7 @@ class ClassGenFunction extends ClassGenAbstract {
         $header = empty($this->get_phpdoc()) ? '' : $this->get_phpdoc() . PHP_EOL;
         $header .= $this->is_final() ? 'final ' : '';
         $header .= $this->is_abstract() ? 'abstract ' : '';
+        $header .= $this->is_static() ? 'static ' : '';
 
         $visibility = $this->get_visibility();
         $header.= empty($visibility) ? '' : $visibility . ' ';
