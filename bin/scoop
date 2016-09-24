@@ -189,6 +189,16 @@ class ScoopRun {
                             ->set_namespace ( $namespace );
                     $this->generator = new \Scoop\ClassGen\ClassGenGenerator( $dbClass, $filepath );
 
+                    $presaveFunction = new \Scoop\ClassGen\ClassGenFunction(
+                        'presave',
+                        '',
+                        '',
+                        '/**
+ * Extra processing before a database save
+ */');
+
+                    $this->generator->add_function($presaveFunction);
+
                     $dbCoreClass = new \Scoop\ClassGen\ClassGenClass( $coreName );
                     $dbCoreClass->set_extends ( 'Model' )
                                 ->set_namespace ( $coreNamespace )

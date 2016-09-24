@@ -206,8 +206,8 @@ abstract class Model extends Model\Generic {
         }
 
         // validate if we can
-        if( method_exists( $this, 'validate' ) ) {
-            $this->validate();
+        if( method_exists( $this, 'presave' ) ) {
+            $this->presave();
         }
 
         list($columnNames, $values, $queryParams, $updateColumnValues) =
