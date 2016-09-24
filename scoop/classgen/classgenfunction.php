@@ -8,15 +8,30 @@ namespace Scoop\ClassGen;
  */
 class ClassGenFunction extends ClassGenAbstract {
 
+    /**
+     * @var
+     */
     public $name;
 
+    /**
+     * @var string
+     */
     public $args;
 
+    /**
+     * @var null|string
+     */
     public $body;
 
-    public $isStatic;
+    /**
+     * @var bool
+     */
+    private $isStatic;
 
-    public $phpdoc;
+    /**
+     * @var string
+     */
+    private $phpdoc;
 
     /**
      * ClassGenFunction constructor.
@@ -33,6 +48,7 @@ class ClassGenFunction extends ClassGenAbstract {
             ? "// TODO: Implement {$name}() function."
             : $body;
         $this->phpdoc = $phpdoc;
+        $this->isStatic = false;
         $this->set_public();
     }
 
@@ -44,10 +60,25 @@ class ClassGenFunction extends ClassGenAbstract {
     }
 
     /**
+     * @param $isStatic bool
+     */
+    public function set_static ( bool $isStatic = true ) {
+
+        $this->isStatic = $isStatic;
+    }
+
+    /**
      * @return string
      */
     public function get_phpdoc() : string {
         return $this->phpdoc;
+    }
+
+    /**
+     * @return bool
+     */
+    public function is_static() : bool {
+        return $this->isStatic;
     }
 
     /**
@@ -72,9 +103,10 @@ class ClassGenFunction extends ClassGenAbstract {
         }
 
         // the function name and modifiers
-        $header = empty($this->phpdoc) ? '' : $this->phpdoc . PHP_EOL;
+        $header = empty($this->get_phpdoc()) ? '' : $this->get_phpdoc() . PHP_EOL;
         $header .= $this->is_final() ? 'final ' : '';
         $header .= $this->is_abstract() ? 'abstract ' : '';
+        $header .= $this->is_static() ? 'static ' : '';
 
         $visibility = $this->get_visibility();
         $header.= empty($visibility) ? '' : $visibility . ' ';
