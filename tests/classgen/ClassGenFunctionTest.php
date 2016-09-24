@@ -69,4 +69,17 @@ class ClassGenFunctionTest extends PHPUnit_Framework_TestCase {
 
         $this->assertEquals($expected, $this->function->get());
     }
+
+    public function test_phpdoc () {
+
+        $this->function->set_phpdoc('/** this is a test */');
+
+        $expected =
+'/** this is a test */
+public function testFunction ($one = 1, $two = 2) {
+    echo $one + $two;
+}';
+
+        $this->assertEquals($expected, $this->function->get());
+    }
 }
