@@ -48,6 +48,7 @@ class ClassGenFunction extends ClassGenAbstract {
             ? "// TODO: Implement {$name}() function."
             : $body;
         $this->phpdoc = $phpdoc;
+        $this->isStatic = false;
         $this->set_public();
     }
 
