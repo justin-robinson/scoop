@@ -79,7 +79,7 @@ abstract class Model extends Model\Generic {
     /**
      * @return string
      */
-    public static function get_sql_table_name () : string {
+    public static function get_sql_table_name () {
 
         return "`" . static::SCHEMA . "`.`" . static::TABLE . "`";
     }
@@ -90,7 +90,7 @@ abstract class Model extends Model\Generic {
      *
      * @return bool|int|Rows
      */
-    public static function fetch_all( int $limit = 1000, int $offset = 0 ) {
+    public static function fetch_all($limit = 1000, $offset = 0 ) {
 
         return static::fetch($limit, $offset);
     }
@@ -162,7 +162,7 @@ abstract class Model extends Model\Generic {
     /**
      * @return bool
      */
-    public function delete () : bool {
+    public function delete () {
 
         // don't delete things we didn't get from the db or that doesn't have a primary key
         if( !$this->loadedFromDb || empty(static::PRIMARY_KEYS) ) {
@@ -198,7 +198,7 @@ abstract class Model extends Model\Generic {
      * Save this instance to the database
      * @return bool
      */
-    public function save () : bool {
+    public function save () {
 
         // don't attempt to save if nothing has changed
         if( $this->loadedFromDb && empty($this->get_dirty_columns()) ) {
@@ -260,7 +260,7 @@ abstract class Model extends Model\Generic {
      * Get columns that have changed since we loaded from the db
      * @return array
      */
-    public function get_dirty_columns () : array {
+    public function get_dirty_columns () {
 
         $dbValuesArray = $this->get_db_values_array();
 
@@ -279,7 +279,7 @@ abstract class Model extends Model\Generic {
     /**
      * @return array
      */
-    public function get_column_names () : array {
+    public function get_column_names () {
 
         return array_keys( static::$dBColumnPropertiesArray );
     }
@@ -287,7 +287,7 @@ abstract class Model extends Model\Generic {
     /**
      * @return bool
      */
-    public function has_id () : bool {
+    public function has_id () {
 
         $IDColumn = static::AUTO_INCREMENT_COLUMN;
 
@@ -308,7 +308,7 @@ abstract class Model extends Model\Generic {
      * Reloads model from the database
      * @return bool
      */
-    public function reload () : bool {
+    public function reload () {
 
         // don't reload something that wasn't loaded from the database
         if( !$this->loadedFromDb ) {
