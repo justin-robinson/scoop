@@ -16,20 +16,38 @@ class ClassGenFunction extends ClassGenAbstract {
 
     public $isStatic;
 
+    public $phpdoc;
+
     /**
      * ClassGenFunction constructor.
      * @param $name
      * @param string $args
      * @param null $body
+     * @param string $phpdoc
      */
-    public function __construct($name, $args = '', $body = null) {
+    public function __construct($name, $args = '', $body = null, $phpdoc = '') {
 
         $this->name = $name;
         $this->args = $args;
         $this->body = $body === null
             ? "// TODO: Implement {$name}() function."
             : $body;
+        $this->phpdoc = $phpdoc;
         $this->set_public();
+    }
+
+    /**
+     * @param string $phpdoc
+     */
+    public function set_phpdoc($phpdoc) {
+        $this->phpdoc = $phpdoc;
+    }
+
+    /**
+     * @return string
+     */
+    public function get_phpdoc() {
+        return $this->phpdoc;
     }
 
     /**
@@ -54,16 +72,19 @@ class ClassGenFunction extends ClassGenAbstract {
         }
 
         // the function name and modifiers
-        $header = $this->is_final() ? 'final ' : '';
+        $header = empty($this->phpdoc) ? '' : $this->phpdoc . PHP_EOL;
+        $header .= $this->is_final() ? 'final ' : '';
         $header .= $this->is_abstract() ? 'abstract ' : '';
 
         $visibility = $this->get_visibility();
         $header.= empty($visibility) ? '' : $visibility . ' ';
         $header .= 'function ' . $this->name . " ({$this->args})";
 
+        $body = empty($this->body) ? '' : ClassGenGenerator::$indentation . $this->body . PHP_EOL;
+
         $header .= $this->is_abstract()
             ? ';'
-            : (' {' . PHP_EOL . ClassGenGenerator::$indentation . $this->body . PHP_EOL . '}');
+            : (' {' . PHP_EOL . $body . '}');
 
         return $header;
     }

@@ -8,7 +8,7 @@ use Scoop\Database\Model;
  * Class Test2
  * @package DBCore\Scoop
  * @author jrobinson (robotically)
- * @date 2016/06/21
+ * @date 2016/09/24
  * @property mixed $id
  * @property mixed $name
  * @property mixed $dateTimeAdded
