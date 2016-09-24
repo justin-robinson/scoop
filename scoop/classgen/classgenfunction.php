@@ -80,11 +80,11 @@ class ClassGenFunction extends ClassGenAbstract {
         $header.= empty($visibility) ? '' : $visibility . ' ';
         $header .= 'function ' . $this->name . " ({$this->args})";
 
-        $this->body = empty($this->body) ? '' : ClassGenGenerator::$indentation . $this->body . PHP_EOL;
+        $body = empty($this->body) ? '' : ClassGenGenerator::$indentation . $this->body . PHP_EOL;
 
         $header .= $this->is_abstract()
             ? ';'
-            : (' {' . PHP_EOL . $this->body . '}');
+            : (' {' . PHP_EOL . $body . '}');
 
         return $header;
     }
