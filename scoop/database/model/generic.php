@@ -35,7 +35,7 @@ class Generic implements \JsonSerializable {
     /**
      * @var array
      */
-    protected $orignalDbValuesArray;
+    protected $originalDbValuesArray;
 
     /**
      * @var Connection
@@ -174,7 +174,7 @@ class Generic implements \JsonSerializable {
 
         $this->loadedFromDb = true;
 
-        $this->orignalDbValuesArray = $this->dBValuesArray;
+        $this->originalDbValuesArray = $this->dBValuesArray;
 
         return $this;
 

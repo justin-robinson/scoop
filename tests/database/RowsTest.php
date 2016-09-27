@@ -47,7 +47,7 @@ class RowsTest extends PHPUnit_Framework_TestCase {
       'dateTimeAdded' => 'CURRENT_TIMESTAMP',
     ),
      'loadedFromDb' => false,
-     'orignalDbValuesArray' => NULL,
+     'originalDbValuesArray' => NULL,
   )),
   1 => 
   DB\Scoop\Test::__set_state(array(
@@ -58,7 +58,7 @@ class RowsTest extends PHPUnit_Framework_TestCase {
       'dateTimeAdded' => 'CURRENT_TIMESTAMP',
     ),
      'loadedFromDb' => false,
-     'orignalDbValuesArray' => NULL,
+     'originalDbValuesArray' => NULL,
   )),
   2 => 
   DB\Scoop\Test::__set_state(array(
@@ -69,7 +69,7 @@ class RowsTest extends PHPUnit_Framework_TestCase {
       'dateTimeAdded' => 'CURRENT_TIMESTAMP',
     ),
      'loadedFromDb' => false,
-     'orignalDbValuesArray' => NULL,
+     'originalDbValuesArray' => NULL,
   )),
   3 => 
   DB\Scoop\Test::__set_state(array(
@@ -80,7 +80,7 @@ class RowsTest extends PHPUnit_Framework_TestCase {
       'dateTimeAdded' => 'CURRENT_TIMESTAMP',
     ),
      'loadedFromDb' => false,
-     'orignalDbValuesArray' => NULL,
+     'originalDbValuesArray' => NULL,
   )),
   4 => 
   DB\Scoop\Test::__set_state(array(
@@ -91,7 +91,7 @@ class RowsTest extends PHPUnit_Framework_TestCase {
       'dateTimeAdded' => 'CURRENT_TIMESTAMP',
     ),
      'loadedFromDb' => false,
-     'orignalDbValuesArray' => NULL,
+     'originalDbValuesArray' => NULL,
   )),
   5 => 
   DB\Scoop\Test::__set_state(array(
@@ -102,7 +102,7 @@ class RowsTest extends PHPUnit_Framework_TestCase {
       'dateTimeAdded' => 'CURRENT_TIMESTAMP',
     ),
      'loadedFromDb' => false,
-     'orignalDbValuesArray' => NULL,
+     'originalDbValuesArray' => NULL,
   )),
   6 => 
   DB\Scoop\Test::__set_state(array(
@@ -113,7 +113,7 @@ class RowsTest extends PHPUnit_Framework_TestCase {
       'dateTimeAdded' => 'CURRENT_TIMESTAMP',
     ),
      'loadedFromDb' => false,
-     'orignalDbValuesArray' => NULL,
+     'originalDbValuesArray' => NULL,
   )),
   7 => 
   DB\Scoop\Test::__set_state(array(
@@ -124,7 +124,7 @@ class RowsTest extends PHPUnit_Framework_TestCase {
       'dateTimeAdded' => 'CURRENT_TIMESTAMP',
     ),
      'loadedFromDb' => false,
-     'orignalDbValuesArray' => NULL,
+     'originalDbValuesArray' => NULL,
   )),
   8 => 
   DB\Scoop\Test::__set_state(array(
@@ -135,7 +135,7 @@ class RowsTest extends PHPUnit_Framework_TestCase {
       'dateTimeAdded' => 'CURRENT_TIMESTAMP',
     ),
      'loadedFromDb' => false,
-     'orignalDbValuesArray' => NULL,
+     'originalDbValuesArray' => NULL,
   )),
   9 => 
   DB\Scoop\Test::__set_state(array(
@@ -146,7 +146,7 @@ class RowsTest extends PHPUnit_Framework_TestCase {
       'dateTimeAdded' => 'CURRENT_TIMESTAMP',
     ),
      'loadedFromDb' => false,
-     'orignalDbValuesArray' => NULL,
+     'originalDbValuesArray' => NULL,
   )),
   10 => 
   DB\Scoop\Test::__set_state(array(
@@ -157,7 +157,7 @@ class RowsTest extends PHPUnit_Framework_TestCase {
       'dateTimeAdded' => 'CURRENT_TIMESTAMP',
     ),
      'loadedFromDb' => false,
-     'orignalDbValuesArray' => NULL,
+     'originalDbValuesArray' => NULL,
   )),
 )";
 
