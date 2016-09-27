@@ -268,7 +268,7 @@ abstract class Model extends Model\Generic {
         unset($dbValuesArray[static::AUTO_INCREMENT_COLUMN]);
 
         if( $this->loadedFromDb ) {
-            $dirtyColumns = array_diff_assoc( $dbValuesArray, $this->orignalDbValuesArray );
+            $dirtyColumns = array_diff_assoc( $dbValuesArray, $this->originalDbValuesArray );
         } else {
             $dirtyColumns = $dbValuesArray;
         }
