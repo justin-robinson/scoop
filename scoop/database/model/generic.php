@@ -166,20 +166,35 @@ class Generic implements \JsonSerializable {
      */
     public function is_loaded_from_database () : bool {
 
+        return $this->get_loaded_from_datbase();
+    }
+
+    /**
+     * @return bool
+     */
+    public function get_loaded_from_datbase () : bool {
+
         return $this->loadedFromDb;
     }
 
     /**
      * Mark this object as loaded from the database
+     * @return Generic
      */
-    public function loaded_from_database () {
+    public function loaded_from_database () : self {
+        return $this->set_loaded_from_database(true);
+    }
 
-        $this->loadedFromDb = true;
+    /**
+     * @param bool $loadedFromDb
+     * @return Generic
+     */
+    public function set_loaded_from_database ($loadedFromDb = true) : self {
+        $this->loadedFromDb = $loadedFromDb;
 
         $this->originalDbValuesArray = $this->dBValuesArray;
 
         return $this;
-
     }
 
     /**
