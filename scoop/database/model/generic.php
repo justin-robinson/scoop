@@ -166,13 +166,13 @@ class Generic implements \JsonSerializable {
      */
     public function is_loaded_from_database () : bool {
 
-        return $this->get_loaded_from_datbase();
+        return $this->get_loaded_from_database();
     }
 
     /**
      * @return bool
      */
-    public function get_loaded_from_datbase () : bool {
+    public function get_loaded_from_database () : bool {
 
         return $this->loadedFromDb;
     }
