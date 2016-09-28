@@ -172,9 +172,10 @@ class Generic implements \JsonSerializable {
      * @return $this
      */
     public function set_loaded_from_database ($loadedFromDb = true) {
-        $this->loadedFromDb = $loadedFromDb;
 
-        $this->originalDbValuesArray = $this->dBValuesArray;
+        if ( $this->loadedFromDb = $loadedFromDb ) {
+            $this->originalDbValuesArray = $this->dBValuesArray;
+        }
 
         return $this;
     }
