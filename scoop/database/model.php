@@ -240,7 +240,7 @@ abstract class Model extends Model\Generic {
 
             }
 
-            $this->loaded_from_database();
+            $this->set_loaded_from_database(true);
         }
 
         return true;
@@ -336,7 +336,7 @@ abstract class Model extends Model\Generic {
         // remove columns marked by the db to be NON NULL but we have them locally as null
         foreach ( static::NON_NULL_COLUMNS as $columnName ) {
             $columnIsNull = array_key_exists( $columnName, $columns ) && is_null( $columns[$columnName] );
-            if( $columnName === static::AUTO_INCREMENT_COLUMN && $this->is_loaded_from_database() ) {
+            if( $columnName === static::AUTO_INCREMENT_COLUMN && $this->get_loaded_from_database() ) {
                 continue;
             }
             if( $columnIsNull ) {
@@ -345,7 +345,7 @@ abstract class Model extends Model\Generic {
         }
 
         // don't insert auto increment column for new models
-        if( !$this->is_loaded_from_database() && array_key_exists( static::AUTO_INCREMENT_COLUMN, $columns ) ) {
+        if( !$this->get_loaded_from_database() && array_key_exists( static::AUTO_INCREMENT_COLUMN, $columns ) ) {
             unset($columns[static::AUTO_INCREMENT_COLUMN]);
         }
 

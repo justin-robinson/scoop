@@ -90,9 +90,9 @@ class GenericTest extends PHPUnit_Framework_TestCase {
 
         $generic = new Generic();
 
-        $this->assertFalse($generic->is_loaded_from_database(), "created models should not be marked loaded from the database");
+        $this->assertFalse($generic->get_loaded_from_database(), "created models should not be marked loaded from the database");
 
-        $this->assertTrue(\DB\Scoop\Test::fetch_one()->is_loaded_from_database(), "fetched models should be marked as loaded from the database");
+        $this->assertTrue(\DB\Scoop\Test::fetch_one()->get_loaded_from_database(), "fetched models should be marked as loaded from the database");
     }
 
     public function test_populate () {
