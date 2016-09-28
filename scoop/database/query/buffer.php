@@ -169,7 +169,7 @@ class Buffer {
         if ( $insertId ) {
             foreach ( $this->models as &$model ) {
                 $model->__set( $model::AUTO_INCREMENT_COLUMN, $insertId++ );
-                $model->loaded_from_database();
+                $model->set_loaded_from_database(true);
             }
         }
 
