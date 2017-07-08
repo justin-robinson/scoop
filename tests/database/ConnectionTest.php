@@ -6,7 +6,7 @@ use Scoop\Database\Model\Generic;
 /**
  * Class ConnectionTest
  */
-class ConnectionTest extends PHPUnit_Framework_TestCase {
+class ConnectionTest extends \PHPUnit\Framework\TestCase {
 
     /**
      * @var Connection
@@ -19,6 +19,7 @@ class ConnectionTest extends PHPUnit_Framework_TestCase {
     public function __construct () {
 
         $this->connection = new Connection(\Scoop\Config::get_db_config());
+        parent::__construct();
     }
 
     public function test___construct () {
@@ -46,6 +47,8 @@ class ConnectionTest extends PHPUnit_Framework_TestCase {
         $connection = new Connection(\Scoop\Config::get_db_config());
 
         unset($connection);
+
+        $this->assertFalse(isset($connection));
     }
 
     public function test_execute_select () {

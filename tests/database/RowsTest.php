@@ -6,7 +6,7 @@ use Scoop\Database\Rows;
 /**
  * Class RowsTest
  */
-class RowsTest extends PHPUnit_Framework_TestCase {
+class RowsTest extends \PHPUnit\Framework\TestCase {
 
     /**
      * @var Rows

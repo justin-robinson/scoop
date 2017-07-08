@@ -5,7 +5,7 @@ use Scoop\Environment;
 /**
  * Class EnvironmentTest
  */
-class EnvironmentTest extends PHPUnit_Framework_TestCase {
+class EnvironmentTest extends \PHPUnit\Framework\TestCase {
 
     public function test_get_environment () {
 

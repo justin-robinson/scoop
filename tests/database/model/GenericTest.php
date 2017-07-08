@@ -5,7 +5,7 @@ use Scoop\Database\Model\Generic;
 /**
  * Class GenericTest
  */
-class GenericTest extends PHPUnit_Framework_TestCase {
+class GenericTest extends \PHPUnit\Framework\TestCase {
 
     /**
      * @var Generics
@@ -23,6 +23,8 @@ class GenericTest extends PHPUnit_Framework_TestCase {
     public function __construct () {
 
         $this->generic = new Generic($this->genericData);
+
+        parent::__construct();
     }
 
     public function test_query () {

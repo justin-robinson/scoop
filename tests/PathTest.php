@@ -5,7 +5,7 @@ use Scoop\Path;
 /**
  * Class PathTest
  */
-class PathTest extends PHPUnit_Framework_TestCase {
+class PathTest extends \PHPUnit\Framework\TestCase {
 
     public function test_is_absolute () {
 

@@ -5,7 +5,7 @@ use Scoop\File;
 /**
  * Class FileTest
  */
-class FileTest extends PHPUnit_Framework_TestCase {
+class FileTest extends \PHPUnit\Framework\TestCase {
 
     public function test_create_path () {
 

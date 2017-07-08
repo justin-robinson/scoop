@@ -6,7 +6,7 @@ use Scoop\Database\Query\Buffer;
 /**
  * Class BufferTest
  */
-class BufferTest extends PHPUnit_Framework_TestCase {
+class BufferTest extends \PHPUnit\Framework\TestCase {
 
     /**
      * @var Buffer

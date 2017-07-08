@@ -5,7 +5,7 @@ use Scoop\Database\Cache\Statement;
 /**
  * Class StatementTest
  */
-class StatementTest extends PHPUnit_Framework_TestCase {
+class StatementTest extends \PHPUnit\Framework\TestCase {
 
     /**
      * @var Statement
@@ -27,6 +27,8 @@ class StatementTest extends PHPUnit_Framework_TestCase {
                 $dbConfig['port']
             ),
             '' ));
+
+        parent::__construct();
     }
 
     public function test_put () {

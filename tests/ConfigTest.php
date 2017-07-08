@@ -5,7 +5,7 @@ use Scoop\Config;
 /**
  * Class ConfigTest
  */
-class ConfigTest extends PHPUnit_Framework_TestCase {
+class ConfigTest extends \PHPUnit\Framework\TestCase {
 
     /**
      * ([a-z]:)?                        optional windows C: drive stuff

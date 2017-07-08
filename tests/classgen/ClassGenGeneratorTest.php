@@ -7,7 +7,7 @@ use Scoop\ClassGen\ClassGenProperty;
 /**
  * Class ClassGenClassTest
  */
-class ClassGenGeneratorTest extends PHPUnit_Framework_TestCase {
+class ClassGenGeneratorTest extends \PHPUnit\Framework\TestCase {
 
     private $class;
 

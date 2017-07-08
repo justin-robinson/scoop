@@ -6,7 +6,7 @@ use Scoop\ClassGen\ClassGenProperty;
 /**
  * Class ClassGenPropertyTest
  */
-class ClassGenPropertyTest extends PHPUnit_Framework_TestCase {
+class ClassGenPropertyTest extends \PHPUnit\Framework\TestCase {
 
     public function test_get_header () {
 

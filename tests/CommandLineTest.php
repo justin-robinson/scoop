@@ -5,7 +5,7 @@ use Scoop\CommandLine;
 /**
  * Class CommandLineTest
  */
-class CommandLineTest extends PHPUnit_Framework_TestCase {
+class CommandLineTest extends \PHPUnit\Framework\TestCase {
 
     public function testParseArgs () {
 

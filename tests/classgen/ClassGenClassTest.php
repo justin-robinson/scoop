@@ -5,7 +5,7 @@ use Scoop\ClassGen\ClassGenClass;
 /**
  * Class ClassGenClassTest
  */
-class ClassGenClassTest extends PHPUnit_Framework_TestCase {
+class ClassGenClassTest extends \PHPUnit\Framework\TestCase {
 
     public function test___construct () {
 

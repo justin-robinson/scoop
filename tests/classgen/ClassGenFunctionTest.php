@@ -1,6 +1,6 @@
 <?php
 
-class ClassGenFunctionTest extends PHPUnit_Framework_TestCase {
+class ClassGenFunctionTest extends \PHPUnit\Framework\TestCase {
 
     /**
      * @var \Scoop\ClassGen\ClassGenFunction
